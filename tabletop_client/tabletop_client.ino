@@ -114,7 +114,7 @@ void httpRequest(int onOrOff) {
 //
 //    PostData =  "{ \"status\": " +  String(onOrOff) +", \"clientName\"" + ":\""+ clientName+ "\"}";
 
-    client.println("POST /tabletop/home/update?status="+ String(onOrOff) + "&clientName=" + clientName  +" HTTP/1.1");
+    client.println("POST /tabletop/home/update?status="+ String(onOrOff) + "&name=" + clientName  +" HTTP/1.1");
 
 
     client.println("Host: "+ String(server) );
