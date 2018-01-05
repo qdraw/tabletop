@@ -1,6 +1,10 @@
 #include <SPI.h>
 #include <Ethernet2.h>
 
+String clientName = "tafelvoetbal";
+char Bearer[] = "kHZ6ody2nQ9dmcMSCk5m";
+char server[] = "demo.colours.ai";    // without http://
+
 // assign a MAC address for the ethernet controller.
 // fill in your address here:
 byte mac[] = { 0x90, 0xA2, 0xDA, 0x10, 0x23, 0x25 };
@@ -14,7 +18,9 @@ IPAddress myDns(8, 8, 8, 8);
 EthernetClient client;
 
 
-IPAddress server(149,210,217,195);
+// IPAddress server(149,210,217,195);
+
+
 
 unsigned long lastConnectionTime = 0;             // last time you connected to the server, in milliseconds
 const unsigned long postingInterval = 10L * 1000L; // delay between updates, in milliseconds
@@ -98,14 +104,43 @@ void httpRequest(int onOrOff) {
   client.stop();
 
   // if there's a successful connection:
-  if (client.connect(server, 5000)) {
+  if (client.connect(server, 80)) {
     Serial.println("connecting...");
-    // send the HTTP GET request:
-    client.println("GET /?status="+String(onOrOff)+" HTTP/1.1");
-    client.println("Host: vps.lucmulder.nl");
+    // send the HTTP POST request:
+
+    
+
+//    String PostData = String(13);
+//
+//    PostData =  "{ \"status\": " +  String(onOrOff) +", \"clientName\"" + ":\""+ clientName+ "\"}";
+
+    client.println("POST /tabletop/home/update?status="+ String(onOrOff) + "&clientName=" + clientName  +" HTTP/1.1");
+
+
+    client.println("Host: "+ String(server) );
+    client.println("Cache-Control: no-cache");
     client.println("User-Agent: arduino-ethernet");
-    client.println("Connection: close");
+    client.println("Accept: */*");
+    client.println("Authorization: Bearer " + String(Bearer));
     client.println();
+    client.println("Connection: close");
+
+//    client.println("Content-Type: application/json;");
+//    client.println("Content-Length: " + PostData.length() );
+
+
+//    client.println();
+//    client.println(PostData);
+//    client.println();  
+//     
+//    if (client.connected()) {
+//    Serial.println();
+//    Serial.println("disconnecting.");
+//    client.stop();
+//    }
+//    
+
+
 
     // note the time that the connection was made:
     lastConnectionTime = millis();
