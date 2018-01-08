@@ -18,6 +18,7 @@
 # ImageProcessor DiskCache 
 **/App_Data/cache/
 
-obj/*
-.vs/*
-bin/*
+**/obj/*
+**/.vs/*
+**/.vs*
+**/bin/*

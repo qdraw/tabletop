@@ -22,13 +22,22 @@ namespace tabletop.Controllers
         {
             if (ModelState.IsValid)
             {
+              
                 var newStatusContent = new UpdateStatus();
                 newStatusContent.Name = model.Name;
                 newStatusContent.Status = model.Status;
                 newStatusContent.DateTime = DateTime.UtcNow;
-                newStatusContent = _updateStatusContent.Add(newStatusContent);
+                if(newStatusContent.Status == 1)
+                {
+                    newStatusContent = _updateStatusContent.Add(newStatusContent);
 
-                return Content(newStatusContent.DateTime.ToString());
+                    return Content(newStatusContent.DateTime.ToString());
+                }
+                else
+                {
+                    return NotFound();
+                }
+
             }
             else
             {
