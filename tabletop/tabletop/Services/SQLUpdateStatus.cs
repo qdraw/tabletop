@@ -20,8 +20,8 @@ namespace tabletop.Services
 
         public UpdateStatus Add(UpdateStatus UpdateStatusContent)
         {
-            //_context.UpdateStatus.Add(UpdateStatusContent);
-            //_context.SaveChanges();
+            _context.UpdateStatus.Add(UpdateStatusContent);
+            _context.SaveChanges();
             return UpdateStatusContent;
         }
 

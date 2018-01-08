@@ -1,20 +1,4 @@
-﻿@using tabletop.Models
-@model UpdateStatus
-
-<form method="post">
-    @*<input type="text" name="Name" value="" />*@
-    <div>
-        <label asp-for="Name"></label>
-        <input asp-for="Name" />
-        <span asp-validation-for="Name"></span>
-    </div>
-    <div>
-        <label asp-for="Status"></label>
-        <input asp-for="Status" />
-        <span asp-validation-for="Status"></span>
-
-    </div>
-
-    <input type="submit" name="save" value="Save" />
-
-</form>
+﻿@page
+@model IndexModel
+@{
+}

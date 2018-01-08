@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using tabletop.Interfaces;
 //using tabletop.Services;
 using tabletop.Models;
@@ -6,7 +7,7 @@ using tabletop.Models;
 
 namespace tabletop.Controllers
 {
-    public class HomeController : Controller
+    public class ApiController : Controller
     {
         private IUpdateStatus _updateStatusContent;
 
@@ -29,15 +30,10 @@ namespace tabletop.Controllers
             return View();
         }
 
-        //public IActionResult Details(int id)
-        //{
-        //    var model = _restaurantData.Get(id);
-        //    if (model == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(model);
-        //}
+        public IActionResult Details(int id)
+        {
+            return View();
+        }
 
         //[HttpGet]
         //public IActionResult Create()
@@ -45,7 +41,7 @@ namespace tabletop.Controllers
         //    return View();
         //}
 
-        public HomeController(IUpdateStatus updateStatusContent)
+        public ApiController(IUpdateStatus updateStatusContent)
         {
             _updateStatusContent = updateStatusContent;
         }
@@ -58,9 +54,12 @@ namespace tabletop.Controllers
                 var newStatusContent = new UpdateStatus();
                 newStatusContent.Name = model.Name;
                 newStatusContent.Status = model.Status;
+                newStatusContent.DateTime = DateTime.UtcNow;
                 newStatusContent = _updateStatusContent.Add(newStatusContent);
 
-                return View("Index", newStatusContent);
+                return RedirectToAction(nameof(Details), new { id = newStatusContent.Id });
+
+                //return View("Index", newStatusContent);
             }
             else
             {
