@@ -7,9 +7,9 @@ export ASPNETCORE_ENVIRONMENT="Production"
 
 cd tabletop
 #hack to allow to do this multiple times
-rm -rf obj
-dotnet restore
-dotnet build
+#rm -rf obj
+#dotnet restore
+#dotnet build
 pm2 start --name tabletop dotnet -- run
 
-echo "User Service started"
+echo "tabletop started"
