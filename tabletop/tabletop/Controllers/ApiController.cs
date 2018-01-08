@@ -20,6 +20,36 @@ namespace tabletop.Controllers
         //    _greeter = greeter;
         //}
 
+
+        public IActionResult Details(int id)
+        {
+            var model = _updateStatusContent.Get(id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult GetLatestByName(string name)
+        {
+            var model = _updateStatusContent.GetLatestByName(name);
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return Content(model.DateTime.ToString());
+            // return View(model);
+        }
+
+        public ApiController(IUpdateStatus updateStatusContent)
+        {
+            _updateStatusContent = updateStatusContent;
+        }
+
+
         public IActionResult Index()
         {
             //var model = new HomeIndexViewModel();
@@ -30,24 +60,8 @@ namespace tabletop.Controllers
             return View();
         }
 
-        public IActionResult Details(int id)
-        {
-            return View();
-        }
-
-        //[HttpGet]
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        public ApiController(IUpdateStatus updateStatusContent)
-        {
-            _updateStatusContent = updateStatusContent;
-        }
-
         [HttpPost]
-        public IActionResult Index(UpdateStatus model)
+        public IActionResult Update(UpdateStatus model)
         {
             if (ModelState.IsValid)
             {

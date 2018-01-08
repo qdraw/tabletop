@@ -25,10 +25,16 @@ namespace tabletop.Services
             return UpdateStatusContent;
         }
 
-        //public Restaurant Get(int id)
-        //{
-        //    return _context.Restaurant.FirstOrDefault(r => r.Id == id);
-        //}
+        public UpdateStatus Get(int id)
+        {
+            return _context.UpdateStatus.FirstOrDefault(r => r.Id == id);
+        }
+
+        public UpdateStatus GetLatestByName(string name)
+        {
+            return _context.UpdateStatus.Where(b => b.Name == name)
+                    .LastOrDefault();
+        }
 
         //public IEnumerable<Restaurant> getAll()
         //{

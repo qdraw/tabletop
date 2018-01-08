@@ -1,0 +1,40 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using tabletop.Interfaces;
+//using tabletop.Services;
+using tabletop.Models;
+//using tabletop.ViewModels;
+
+namespace tabletop.Controllers
+{
+    public class HomeController : Controller
+    {
+        private IUpdateStatus _updateStatusContent;
+
+        public HomeController(IUpdateStatus updateStatusContent)
+        {
+            _updateStatusContent = updateStatusContent;
+        }
+
+
+        [HttpGet]
+        public IActionResult Update(UpdateStatus model)
+        {
+            if (ModelState.IsValid)
+            {
+                var newStatusContent = new UpdateStatus();
+                newStatusContent.Name = model.Name;
+                newStatusContent.Status = model.Status;
+                newStatusContent.DateTime = DateTime.UtcNow;
+                newStatusContent = _updateStatusContent.Add(newStatusContent);
+
+                return Content(newStatusContent.DateTime.ToString());
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+    }
+}
