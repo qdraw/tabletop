@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include <Ethernet2.h>
 
-String clientName = "tafelvoetbal";
+char clientName[] = "tafelvoetbal";
 char Bearer[] = "kHZ6ody2nQ9dmcMSCk5m";
 char server[] = "demo.colours.ai";    // without http://
 
@@ -89,7 +89,7 @@ void loop() {
     if (pirState == HIGH){
       // we have just turned of
       Serial.println("Motion ended!");
-      httpRequest(0);
+      // httpRequest(0);
       // We only want to print on the output change, not state
       pirState = LOW;
     }
@@ -97,8 +97,12 @@ void loop() {
 
 }
 
+
+
 // this method makes a HTTP connection to the server:
 void httpRequest(int onOrOff) {
+
+  
   // close any connection before send a new request.
   // This will free the socket on the WiFi shield
   client.stop();
@@ -108,37 +112,51 @@ void httpRequest(int onOrOff) {
     Serial.println("connecting...");
     // send the HTTP POST request:
 
-    
 
-//    String PostData = String(13);
-//
-//    PostData =  "{ \"status\": " +  String(onOrOff) +", \"clientName\"" + ":\""+ clientName+ "\"}";
-
-    client.println("POST /tabletop/home/update?status="+ String(onOrOff) + "&name=" + clientName  +" HTTP/1.1");
-
-
+    client.println("POST /tabletop/api/update?status="+ String(onOrOff) + "&name=" + clientName  +" HTTP/1.1");
     client.println("Host: "+ String(server) );
     client.println("Cache-Control: no-cache");
     client.println("User-Agent: arduino-ethernet");
+    client.println("Content-Type: application/x-www-form-urlencoded;");
+    client.println("Content-Length: 0");
     client.println("Accept: */*");
     client.println("Authorization: Bearer " + String(Bearer));
     client.println();
-    client.println("Connection: close");
-
-//    client.println("Content-Type: application/json;");
-//    client.println("Content-Length: " + PostData.length() );
 
 
-//    client.println();
-//    client.println(PostData);
-//    client.println();  
-//     
-//    if (client.connected()) {
-//    Serial.println();
-//    Serial.println("disconnecting.");
-//    client.stop();
-//    }
+
+    
+
+//    String PostData = String(13);
+//    PostData =  "{ \"status\": " +  String(onOrOff) +", \"clientName\"" + ":\""+ clientName+ "\"}";
+
+//    String PostData = String(13);
+//    PostData = "Name=Dion&Status=1";
 //    
+//    client.println(PostData);
+//
+//    
+//    client.println();
+
+
+//    client.println("Connection: close");
+
+    
+
+////    client.println("Content-Type: application/json;");
+////    client.println("Content-Length: " + PostData.length() );
+//
+//
+////    client.println();
+////    client.println(PostData);
+////    client.println();  
+////     
+////    if (client.connected()) {
+////    Serial.println();
+////    Serial.println("disconnecting.");
+////    client.stop();
+////    }
+////    
 
 
 

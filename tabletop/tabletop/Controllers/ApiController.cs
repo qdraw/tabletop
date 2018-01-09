@@ -71,9 +71,9 @@ namespace tabletop.Controllers
                 newStatusContent.DateTime = DateTime.UtcNow;
                 newStatusContent = _updateStatusContent.Add(newStatusContent);
 
-                return RedirectToAction(nameof(Details), new { id = newStatusContent.Id });
+                //return RedirectToAction(nameof(Details), new { id = newStatusContent.Id });
 
-                //return View("Index", newStatusContent);
+                return View(nameof(Details), newStatusContent);
             }
             else
             {
