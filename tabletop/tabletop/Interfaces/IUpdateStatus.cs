@@ -6,6 +6,12 @@ namespace tabletop.Interfaces
     public interface IUpdateStatus
     {
         UpdateStatus Add(UpdateStatus UpdateStatusContent);
+        UpdateStatus Update(UpdateStatus UpdateStatusContent);
+
+
+        IEnumerable<UpdateStatus> getLastMinute(string name);
+
+
         UpdateStatus Get(int id);
         UpdateStatus GetLatestByName(string name);
         IEnumerable<UpdateStatus> getAll();

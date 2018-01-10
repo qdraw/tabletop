@@ -124,15 +124,31 @@ namespace tabletop.Controllers
 
             if (ModelState.IsValid && BearerValid)
             {
-                var newStatusContent = new UpdateStatus();
-                newStatusContent.Name = model.Name;
-                newStatusContent.Status = model.Status;
-                newStatusContent.DateTime = DateTime.UtcNow;
-                newStatusContent = _updateStatusContent.Add(newStatusContent);
+
+                var getLastMinuteContent = _updateStatusContent.getLastMinute(model.Name);
+
+                var lenght1 = getLastMinuteContent.ToArray().Length;
+
+                if (lenght1 == 0) {
+                    var newStatusContent = new UpdateStatus();
+                    newStatusContent.Name = model.Name;
+                    newStatusContent.Status = model.Status;
+                    newStatusContent.DateTime = DateTime.UtcNow;
+                    newStatusContent.Weight = getLastMinuteContent.Count();
+                    newStatusContent = _updateStatusContent.Add(newStatusContent);
+                    return View(nameof(Details), newStatusContent);
+
+                }
+                else
+                {
+                    getLastMinuteContent.FirstOrDefault().Weight++;
+                    var newStatusContent = _updateStatusContent.Update(getLastMinuteContent.FirstOrDefault());
+
+                    return View(nameof(Details), newStatusContent);
+                }
 
                 //return RedirectToAction(nameof(Details), new { id = newStatusContent.Id });
 
-                return View(nameof(Details), newStatusContent);
             }
             else
             {

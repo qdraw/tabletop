@@ -19,7 +19,59 @@ namespace tabletop.Services
         }
 
 
+
         public UpdateStatus Add(UpdateStatus UpdateStatusContent)
+        {
+            UpdateStatusContent.Weight = 0;
+            _context.UpdateStatus.Add(UpdateStatusContent);
+            _context.SaveChanges();
+            return UpdateStatusContent;
+
+        }
+
+        //if (lastMinuteCount >= 1)
+        //{
+        //    //foreach (var r in lastMinuteRequests)
+        //    //{
+        //    //    r.Weight = lastMinuteCount;
+        //    //}
+
+        //    UpdateStatusContent.Weight = UpdateStatusContent.Weight++;
+        //    UpdateStatusContent.Id = lastMinuteRequests.FirstOrDefault().Id;
+        //    UpdateStatusContent.Name = lastMinuteRequests.FirstOrDefault().Name;
+        //    UpdateStatusContent.Status = 2;
+
+        //    //_context.Attach(UpdateStatusContent).State = EntityState.Modified;
+        //    //_context.SaveChanges();
+
+
+
+        //    //var newUpdateStatus = new UpdateStatus();
+        //    //newUpdateStatus.Weight++;
+        //    //newUpdateStatus.Id = lastMinuteRequests.FirstOrDefault().Id;
+        //    //newUpdateStatus.Name = lastMinuteRequests.FirstOrDefault().Name;
+        //    //newUpdateStatus.Status = 1;
+        //    //newUpdateStatus.DateTime = lastMinuteRequests.FirstOrDefault().DateTime;
+        //    //var db = new appDbContext();
+        //    //_context.Update(newUpdateStatus);
+        //    //_context.SaveChanges();
+
+        //    //_context.UpdateStatus.Update(newUpdateStatus);
+
+        //    return UpdateStatusContent;
+
+        //}
+
+        //else
+        //{
+
+        //    UpdateStatusContent.Weight = lastMinuteCount;
+
+
+        //}
+
+
+        public IEnumerable<UpdateStatus> getLastMinute(string name)
         {
             // round minute to 18:48 for example
             var now = DateTime.UtcNow;
@@ -28,55 +80,13 @@ namespace tabletop.Services
             var lastMinute = new DateTime(nowTicks - (nowTicks % (1000 * 1000 * 10 * 60))); // 60
             //var lastMinute = DateTime.UtcNow.Subtract(new TimeSpan(0, 0, 30, 0));
 
+            // UpdateStatusContent.Name.ToString()
             var lastMinuteRequests = _context.UpdateStatus
                 .Where(p => p.DateTime > lastMinute)
-                .Where(b => b.Name == UpdateStatusContent.Name.ToString());
+                .Where(b => b.Name == name);
 
-            var lastMinuteCount = lastMinuteRequests.ToArray().Length;
-
-            if (lastMinuteCount >= 1)
-            {
-                //foreach (var r in lastMinuteRequests)
-                //{
-                //    r.Weight = lastMinuteCount;
-                //}
-
-                UpdateStatusContent.Weight = UpdateStatusContent.Weight++;
-                UpdateStatusContent.Id = lastMinuteRequests.FirstOrDefault().Id;
-                UpdateStatusContent.Name = lastMinuteRequests.FirstOrDefault().Name;
-                UpdateStatusContent.Status = 2;
-
-                //_context.Attach(UpdateStatusContent).State = EntityState.Modified;
-                //_context.SaveChanges();
-
-
-
-                //var newUpdateStatus = new UpdateStatus();
-                //newUpdateStatus.Weight++;
-                //newUpdateStatus.Id = lastMinuteRequests.FirstOrDefault().Id;
-                //newUpdateStatus.Name = lastMinuteRequests.FirstOrDefault().Name;
-                //newUpdateStatus.Status = 1;
-                //newUpdateStatus.DateTime = lastMinuteRequests.FirstOrDefault().DateTime;
-                //var db = new appDbContext();
-                //_context.Update(newUpdateStatus);
-                //_context.SaveChanges();
-
-                //_context.UpdateStatus.Update(newUpdateStatus);
-
-                return UpdateStatusContent;
-
-            }
-
-            else
-            {
-
-                UpdateStatusContent.Weight = lastMinuteCount;
-
-                _context.UpdateStatus.Add(UpdateStatusContent);
-                _context.SaveChanges();
-                return UpdateStatusContent;
-            }
-
+            //var lastMinuteCount = lastMinuteRequests.ToArray().Length;
+            return lastMinuteRequests;
         }
 
         public UpdateStatus Get(int id)
@@ -109,6 +119,8 @@ namespace tabletop.Services
 
         public UpdateStatus Update(UpdateStatus UpdateStatusContent)
         {
+            _context.Attach(UpdateStatusContent).State = EntityState.Modified;
+            _context.SaveChanges();
             return UpdateStatusContent;
         }
 
