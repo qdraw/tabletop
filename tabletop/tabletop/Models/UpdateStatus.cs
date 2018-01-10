@@ -20,6 +20,6 @@ namespace tabletop.Models
 
         public DateTime DateTime { get; set; }
 
-
+        public int Weight { get; set; }
     }
 }
