@@ -16,7 +16,7 @@ namespace tabletop.Controllers
             _updateStatusContent = updateStatusContent;
         }
 
-        public IActionResult Index()
+        public IActionResult List()
         {
             var model = new RecentStatusClass();
             model.RecentStatus = _updateStatusContent.getAll();

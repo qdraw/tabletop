@@ -82,13 +82,14 @@ namespace tabletop.Controllers
         }
 
         [HttpGet]
-        [Produces("application/json")]
         public IActionResult getRecentByName(string name)
         {
             var model = new RecentStatusClass();
             model.RecentStatus = _updateStatusContent.getRecentByName(name);
             List<UpdateStatus> ListOf = model.RecentStatus.ToList();
+
             return Json(ListOf);
+            
         }
 
 
