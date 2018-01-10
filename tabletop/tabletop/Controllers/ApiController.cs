@@ -42,6 +42,7 @@ namespace tabletop.Controllers
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public IActionResult GetLatestByName(string name)
         {
             var model = _updateStatusContent.GetLatestByName(name);
@@ -82,6 +83,7 @@ namespace tabletop.Controllers
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public IActionResult getRecentByName(string name)
         {
             var model = new RecentStatusClass();
@@ -91,6 +93,18 @@ namespace tabletop.Controllers
             return Json(ListOf);
             
         }
+
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public IActionResult DistinctNames()
+        //{
+        //    var model = new RecentStatusClass();
+        //    model.RecentStatus = _updateStatusContent.getRecentByName(name);
+        //    List<UpdateStatus> ListOf = model.RecentStatus.ToList();
+
+        //    return Json(ListOf);
+
+        //}
 
 
         public IActionResult Index()
