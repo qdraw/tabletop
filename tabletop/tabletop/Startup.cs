@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using tabletop.Data;
 using tabletop.Interfaces;
 using tabletop.Services;
+using tabletop.Models;
+using Microsoft.Extensions.Logging;
 
 namespace tabletop
 {
@@ -31,12 +33,13 @@ namespace tabletop
 
             services.AddDbContext<appDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IUpdateStatus, SQLUpdateStatus>();
-
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            IHostingEnvironment env, 
+            ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {

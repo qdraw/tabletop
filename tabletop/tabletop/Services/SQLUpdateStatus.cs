@@ -30,15 +30,34 @@ namespace tabletop.Services
             return _context.UpdateStatus.FirstOrDefault(r => r.Id == id);
         }
 
+        public IEnumerable<UpdateStatus> getAll()
+        {
+            return _context.UpdateStatus.OrderBy(r => r.Id);
+        }
+
+        public IEnumerable<UpdateStatus> getAllByName(string name)
+        {
+            return _context.UpdateStatus.Where(b => b.Name == name);
+        }
+
         public UpdateStatus GetLatestByName(string name)
         {
             return _context.UpdateStatus.Where(b => b.Name == name)
                     .LastOrDefault();
         }
 
-        //public IEnumerable<Restaurant> getAll()
+        public IEnumerable<UpdateStatus> getRecentByName(string name)
+        {
+            return _context.UpdateStatus
+                .Where(p => p.DateTime > DateTime.Now.Subtract(new TimeSpan(0, 8, 0, 0)))
+                .Where(b => b.Name == name);
+        }
+
+        //public IEnumerable<RecentStatusList> GetRecentStatusList()
         //{
-        //    return _context.Restaurant.OrderBy(r => r.Name);
+        //    return _context.UpdateStatus..OrderBy(r => r.Name);
         //}
+
+
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using tabletop.Interfaces;
-//using tabletop.Services;
 using tabletop.Models;
-//using tabletop.ViewModels;
+
 
 namespace tabletop.Controllers
 {
@@ -11,6 +13,14 @@ namespace tabletop.Controllers
     {
         private IUpdateStatus _updateStatusContent;
 
+        IConfiguration _iconfiguration;
+
+        public ApiController(IUpdateStatus updateStatusContent, IConfiguration iconfiguration)
+        {
+            _updateStatusContent = updateStatusContent;
+            _iconfiguration = iconfiguration;
+
+        }
         //private IRestaurantData _restaurantData;
         //private IGreeter _greeter;
 
@@ -44,9 +54,41 @@ namespace tabletop.Controllers
             // return View(model);
         }
 
-        public ApiController(IUpdateStatus updateStatusContent)
+
+        [HttpGet]
+        [Produces("application/json")]
+        public IActionResult getAll(string name)
         {
-            _updateStatusContent = updateStatusContent;
+
+            System.Diagnostics.Debug.WriteLine("name");
+            System.Diagnostics.Debug.WriteLine(name);
+
+            if (string.IsNullOrEmpty(name))
+            {
+                //System.Diagnostics.Debug.WriteLine(name.Length);
+                var model = new RecentStatusClass();
+                model.RecentStatus = _updateStatusContent.getAll();
+                List<UpdateStatus> ListOf = model.RecentStatus.ToList();
+                return Json(ListOf);
+            }
+
+            else {
+                var model = new RecentStatusClass();
+                model.RecentStatus = _updateStatusContent.getAllByName(name);
+                List<UpdateStatus> ListOf = model.RecentStatus.ToList();
+                return Json(ListOf);
+            }
+            
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        public IActionResult getRecentByName(string name)
+        {
+            var model = new RecentStatusClass();
+            model.RecentStatus = _updateStatusContent.getRecentByName(name);
+            List<UpdateStatus> ListOf = model.RecentStatus.ToList();
+            return Json(ListOf);
         }
 
 
@@ -63,7 +105,9 @@ namespace tabletop.Controllers
         [HttpPost]
         public IActionResult Update(UpdateStatus model)
         {
-            if (ModelState.IsValid)
+            var BearerValid = IsBearerValid(Request);
+
+            if (ModelState.IsValid && BearerValid)
             {
                 var newStatusContent = new UpdateStatus();
                 newStatusContent.Name = model.Name;
@@ -77,9 +121,33 @@ namespace tabletop.Controllers
             }
             else
             {
-                return View();
+                return NotFound();
             }
         }
+
+
+        //public List<string> ListBearer()
+        //{
+        //    var BearerList = _iconfiguration.GetSection("bearer").Get<List<string>>();
+        //    return BearerList;
+        //}
+
+        public bool IsBearerValid(Microsoft.AspNetCore.Http.HttpRequest request)
+        {
+            if ((Request.Headers["Authorization"].ToString() ?? "").Trim().Length > 0)
+            {
+                var _bearer = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var BearerList = _iconfiguration.GetSection("bearer").Get<List<string>>();
+                return BearerList.Exists(element => element == _bearer);
+            }
+            else
+            {
+                return false;
+            }
+            
+            
+        }
+
 
 
         //[HttpPost]

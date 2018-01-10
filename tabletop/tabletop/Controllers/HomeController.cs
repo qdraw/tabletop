@@ -16,34 +16,42 @@ namespace tabletop.Controllers
             _updateStatusContent = updateStatusContent;
         }
 
-
-        [HttpGet]
-        public IActionResult Update(UpdateStatus model)
+        public IActionResult Index()
         {
-            if (ModelState.IsValid)
-            {
-              
-                var newStatusContent = new UpdateStatus();
-                newStatusContent.Name = model.Name;
-                newStatusContent.Status = model.Status;
-                newStatusContent.DateTime = DateTime.UtcNow;
-                if(newStatusContent.Status == 1)
-                {
-                    newStatusContent = _updateStatusContent.Add(newStatusContent);
+            var model = new RecentStatusClass();
+            model.RecentStatus = _updateStatusContent.getAll();
 
-                    return Content(newStatusContent.DateTime.ToString());
-                }
-                else
-                {
-                    return NotFound();
-                }
-
-            }
-            else
-            {
-                return NotFound();
-            }
+            return View(model);
         }
+
+
+        //[HttpGet]
+        //public IActionResult Update(UpdateStatus model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+
+        //        var newStatusContent = new UpdateStatus();
+        //        newStatusContent.Name = model.Name;
+        //        newStatusContent.Status = model.Status;
+        //        newStatusContent.DateTime = DateTime.UtcNow;
+        //        if(newStatusContent.Status == 1)
+        //        {
+        //            newStatusContent = _updateStatusContent.Add(newStatusContent);
+
+        //            return Content(newStatusContent.DateTime.ToString());
+        //        }
+        //        else
+        //        {
+        //            return NotFound();
+        //        }
+
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+        //}
 
     }
 }

@@ -1,1 +1,21 @@
-﻿
+﻿@using tabletop.Models
+@model RecentStatusClass
+
+@{
+    ViewBag.Title = "Homepage";
+}
+
+<h1></h1>
+<table>
+    @foreach (var restaurant in Model.RecentStatus)
+    {
+        <tr>
+            <td>@restaurant.Id</td>
+            <td>@restaurant.Name</td>
+            <td><a asp-action="Details" asp-route-id="@restaurant.Id">More..</a></td>
+
+            @*<td>@Html.ActionLink("Go","Details", new { id=restaurant.Id} )</td>*@
+
+        </tr>
+    }
+</table>

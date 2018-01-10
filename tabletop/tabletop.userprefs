@@ -1,0 +1,25 @@
+﻿<Properties StartupConfiguration="{C72F83EF-FBE2-4B32-AB4B-06A392576D74}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="tabletop/Models/RecentStatues.cs">
+    <Files>
+      <File FileName="tabletop/Data/appDbContext.cs" Line="14" Column="13" />
+      <File FileName="tabletop/appsettings.json" Line="1" Column="1" />
+      <File FileName="tabletop/Program.cs" Line="1" Column="1" />
+      <File FileName="tabletop/Startup.cs" Line="1" Column="1" />
+      <File FileName="tabletop/Views/Api/Details.cshtml" Line="1" Column="1" />
+      <File FileName="tabletop/Views/Api/Index.cshtml" Line="1" Column="16" />
+      <File FileName="tabletop/Models/UpdateStatus.cs" Line="26" Column="1" />
+      <File FileName="tabletop/Models/GetLatestByName.cs" Line="1" Column="1" />
+      <File FileName="tabletop/Models/RecentStatues.cs" Line="20" Column="1" />
+      <File FileName="tabletop/Interfaces/IUpdateStatus.cs" Line="1" Column="1" />
+      <File FileName="tabletop/Properties/launchSettings.json" Line="1" Column="1" />
+      <File FileName="tabletop/Services/SQLUpdateStatus.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.tabletop PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>
