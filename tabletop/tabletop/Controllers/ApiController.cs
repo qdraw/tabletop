@@ -50,8 +50,9 @@ namespace tabletop.Controllers
             {
                 return NotFound();
             }
+            return Json(model.DateTime.ToString());
 
-            return Content(model.DateTime.ToString());
+            // return Content(model.DateTime.ToString());
             // return View(model);
         }
 
@@ -79,7 +80,7 @@ namespace tabletop.Controllers
                 List<UpdateStatus> ListOf = model.RecentStatus.ToList();
                 return Json(ListOf);
             }
-            
+
         }
 
         [HttpGet]
@@ -91,7 +92,7 @@ namespace tabletop.Controllers
             List<UpdateStatus> ListOf = model.RecentStatus.ToList();
 
             return Json(ListOf);
-            
+
         }
 
         //[HttpGet]
@@ -175,8 +176,8 @@ namespace tabletop.Controllers
             {
                 return false;
             }
-            
-            
+
+
         }
 
 

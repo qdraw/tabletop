@@ -5,7 +5,10 @@
     <title></title>
 </head>
 <body>
+    <h1 id="getLatestbyname"></h1>
+    <h2> activiteit van de laatste 8 uur: </h2>
 <div id="data"></div>
+<div>Deze pagina wordt niet automatisch geupdate</div>
 
 <script type="text/javascript" src="js/vendor/d3.v4.min.js"></script>
 <script type="text/javascript">
@@ -18,8 +21,10 @@ function loadJSON(path, success, error)	{
 					if (success)
 						success(JSON.parse(xhr.responseText));
 				} else {
-					if (error)
+					if (error) {
+                        console.log("err");
 						error(xhr);
+                        }
 				}
 			}
 		};
@@ -28,55 +33,154 @@ function loadJSON(path, success, error)	{
 	}
 
 	function loadDATA() {
-		loadJSON("getRecentByName_name_tafelvoetbal.json?" + Date.now(),
+
+        var url = "api/getRecentByName?name=tafelvoetbal";
+        // var url = "getRecentByName_name_tafelvoetbal.json?" + Date.now();
+		loadJSON(url,
 				 function(data) {
-                     console.log(data);
-                     data = parseData(data)
-                     barChart(data,"#data")
+                     listOfData = parseData(data)
+                     barChart(listOfData,"#data")
                  },
                 function(xhr) { console.error(xhr); }
        )
+       url = "api/getLatestbyname?name=tafelvoetbal"
+       loadJSON(url,
+                function(data) {
+                    document.querySelector('#getLatestbyname').innerHTML = "Laatste activiteit (tijd is in utc)"  + data;
+                },
+               function(xhr) { console.error(xhr); }
+      )
    }
    loadDATA()
 
    function parseData(data) {
 
-       var eighthoursago = Math.floor((Date.now() - 28800)/1000);
-       console.log(eighthoursago);
-       var eighthours = [];
-       var counthours = Math.floor((Date.now() - 28800)/1000);
-       var unixTimeInterval = 28800
-       for (var i = 0; i < unixTimeInterval/60; i++) {
+       var now = new Date();
+       var Offset = now.getTimezoneOffset() * 60;
+       var utc_timestamp_unix = Math.floor((now/1000) + Offset); // in seconds
+       var eighthoursago_unix = Math.floor(((utc_timestamp_unix) - 28800)); // in seconds
+       var steps = 60; // in seconds
 
-           eighthours.push({
-               "label": "nu",
-               "value": 1
-           })
-           counthours += unixTimeInterval;
+       console.log(utc_timestamp_unix,eighthoursago_unix);
+
+       function checkForData(start_search_unix) {
+           for (var i = 0; i < data.length; i++) {
+               var d = new Date(data[i].dateTime);
+                d_unixtimestamp = Math.floor(d/1000);
+                if (d_unixtimestamp >= start_search_unix && d_unixtimestamp <= start_search_unix+steps) {
+                    return i
+                }
+           }
+           return -1
        }
-       console.log(eighthours);
-       return eighthours;
+       var listOfData = [];
 
-       // var dateStart oor((dateEnd - dateStart) /1000);
 
-       // = new Date(data[0].dateTime);
-       //
-       // var dateEnd = new Date(data[data.length-1].dateTime);
-       //
-       // var usedTime = Math.fl
+       for (var i = eighthoursago_unix; i < utc_timestamp_unix; i = i + steps) {
+           var arrrayInt  = -1;
+           arrrayInt = checkForData(i);
+           var dateI = new Date(i*1000);
 
+           if (arrrayInt >= 0) {
+               listOfData.push({
+                    "label": dateI,
+                    "value":data[arrrayInt].weight + 1
+                })
+           }
+           else {
+
+               listOfData.push({
+                    "label": dateI,
+                    "value": 0
+                })
+           }
+       }
+       // console.log(listOfData);
+       return listOfData;
+   }
        // for (var i = 0; i < data.length; i++) {
        //      var d = new Date(data[i].dateTime);
+       //      d_timestamp = Math.floor(d/1000);
        //
-       //      data[i].label = Number(d);
-       //      data[i].value = 1;
+       //      if (d_timestamp >= startTimeStamp && d_timestamp <= startTimeStamp+steps) {
+       //          console.log(data[i].weight);
+       //          listOfData.push({
+       //              "label": String(d_timestamp),
+       //              "value":data[i].weight
+       //          })
+       //      }
+       //      else {
+       //          listOfData.push({
+       //              "label": String(d_timestamp),
+       //              "value": 0
+       //          })
+       //      }
+       //      startTimeStamp = startTimeStamp + steps;
+       //
+       //
        // }
-       // return data;
-   }
+       // console.log(listOfData);
+
+
+   // function LineChart(data,element) {
+   //     var svg = d3.select("svg"),
+   //          margin = {top: 20, right: 20, bottom: 30, left: 50},
+   //          width = +svg.attr("width") - margin.left - margin.right,
+   //          height = +svg.attr("height") - margin.top - margin.bottom,
+   //          g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+   //
+   //      // var parseTime = d3.timeParse("%d-%b-%y");
+   //
+   //      var x = d3.scaleTime()
+   //          .rangeRound([0, width]);
+   //
+   //      var y = d3.scaleLinear()
+   //          .rangeRound([height, 0]);
+   //
+   //      var line = d3.line()
+   //          .x(function(d) { return x(d.date); })
+   //          .y(function(d) { return y(d.value); });
+   //
+   //      // d3.tsv("data.tsv", function(d) {
+   //      //   d.date = parseTime(d.date);
+   //      //   d.close = +d.close;
+   //      //   return d;
+   //      // }, function(error, data) {
+   //      //   if (error) throw error;
+   //
+   //        x.domain(d3.extent(data, function(d) { return d.date; }));
+   //        y.domain(d3.extent(data, function(d) { return d.value; }));
+   //
+   //        g.append("g")
+   //            .attr("transform", "translate(0," + height + ")")
+   //            .call(d3.axisBottom(x))
+   //          .select(".domain")
+   //            .remove();
+   //
+   //        g.append("g")
+   //            .call(d3.axisLeft(y))
+   //          .append("text")
+   //            .attr("fill", "#000")
+   //            .attr("transform", "rotate(-90)")
+   //            .attr("y", 6)
+   //            .attr("dy", "0.71em")
+   //            .attr("text-anchor", "end")
+   //            .text("Price ($)");
+   //
+   //        g.append("path")
+   //            .datum(data)
+   //            .attr("fill", "none")
+   //            .attr("stroke", "steelblue")
+   //            .attr("stroke-linejoin", "round")
+   //            .attr("stroke-linecap", "round")
+   //            .attr("stroke-width", 1.5)
+   //            .attr("d", line);
+   //
+   // }
 
    function barChart(data,element) {
    		// set the dimensions and margins of the graph
-   		var margin = {top: 20, right: 20, bottom: 40, left: 40},
+   		var margin = {top: 20, right: 10, bottom: 40, left: 40},
    		width = 800 - margin.left - margin.right,
    		height = 300 - margin.top - margin.bottom;
 
@@ -97,8 +201,7 @@ function loadJSON(path, success, error)	{
    			.attr("width", width + margin.left + margin.right)
    			.attr("class","bar")
    			.attr("height", height + margin.top + margin.bottom)
-   			.attr("fill", "#008BFF")
-
+   			.attr("fill", "#000")
    			.append("g")
    			.attr("transform",
    			"translate(" + margin.left + "," + margin.top + ")");
@@ -120,12 +223,12 @@ function loadJSON(path, success, error)	{
    		// add the x Axis
    		svg.append("g")
    			.attr("transform", "translate(0," + height + ")")
-   			.attr("stroke", "white")
+   			.attr("stroke", "#fff")
    			.call(d3.axisBottom(x));
 
    		// add the y Axis
    		svg.append("g")
-   			.attr("stroke", "white")
+   			.attr("stroke", "#000")
    			.call(d3.axisLeft(y));
    	}
 </script>
