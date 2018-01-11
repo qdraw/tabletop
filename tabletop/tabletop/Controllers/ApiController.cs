@@ -50,7 +50,7 @@ namespace tabletop.Controllers
             {
                 return NotFound();
             }
-            return Json(model.DateTime.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz"));
+            return Json(model.DateTime.ToString("yyyy-MM-ddTHH\\:mm\\:ss+00:00"));
 
             // return Content(model.DateTime.ToString());
             // return View(model);

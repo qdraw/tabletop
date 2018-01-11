@@ -46,8 +46,10 @@ function loadJSON(path, success, error)	{
        loadJSON(url,
                 function(data) {
                     var d = new Date(data);
-                    console.log(d);
-                    document.querySelector('#getLatestbyname').innerHTML = "Laatste activiteit (tijd is in utc)"  + data;
+                    var offset = ((d.getTimezoneOffset() *-1) * 60 ) * 1000;
+                    var d_incloffset = Math.floor(Math.floor(d) + offset)/1000; // in seconds
+                    var d = new Date(d_incloffset*1000)
+                    document.querySelector('#getLatestbyname').innerHTML = "Laatste activiteit was op: "  + d.toLocaleDateString() + " " + d.toLocaleTimeString();
                 },
                function(xhr) { console.error(xhr); }
       )
