@@ -54,14 +54,28 @@ function loadJSON(path, success, error)	{
    loadDATA()
 
    function parseData(data) {
-
        var now = new Date();
+       var utc_timestamp_unix = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
+            now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds())/1000;
        var Offset = now.getTimezoneOffset() * 60;
+
+       // Nasty hack Safari is using utc by default
+       var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+               navigator.userAgent && !navigator.userAgent.match('CriOS');
+       console.log(isSafari);
+       if (isSafari) {
+           Offset = 0;
+       }
+       // end nasty hack
+
        var utc_timestamp_unix = Math.floor((now/1000) + Offset); // in seconds
-       var eighthoursago_unix = Math.floor(((utc_timestamp_unix) - 28800)); // in seconds
+       var eighthoursago_unix = Math.floor(utc_timestamp_unix - 28800); // in seconds
        var steps = 60; // in seconds
 
-       console.log(utc_timestamp_unix,eighthoursago_unix);
+       console.log("utc_timestamp_unix");
+       console.log(utc_timestamp_unix);
+       console.log("eighthoursago_unix");
+       console.log(eighthoursago_unix);
 
        function checkForData(start_search_unix) {
            for (var i = 0; i < data.length; i++) {
