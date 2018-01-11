@@ -8,3 +8,6 @@ export ASPNETCORE_ENVIRONMENT="Production"
 cd tabletop/bin/Debug/netcoreapp2.0/
 pm2 start --name tabletop ./linux-arm/publish/tabletop
 echo "tabletop started"
+
+#start on mac
+#dotnet run --launch-profile Production

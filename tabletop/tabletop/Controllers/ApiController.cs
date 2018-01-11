@@ -50,12 +50,20 @@ namespace tabletop.Controllers
             {
                 return NotFound();
             }
-            return Json(model.DateTime.ToString());
+            return Json(model.DateTime.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz"));
 
             // return Content(model.DateTime.ToString());
             // return View(model);
         }
 
+        [HttpGet]
+        [Produces("application/json")]
+        public IActionResult getUnixTime()
+        {
+            Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            return Json(unixTimestamp);
+
+        }
 
         [HttpGet]
         [Produces("application/json")]
@@ -130,6 +138,8 @@ namespace tabletop.Controllers
 
                 var lenght1 = getLastMinuteContent.ToArray().Length;
 
+                //getLastMinuteContent.Any();
+
                 if (lenght1 == 0) {
                     var newStatusContent = new UpdateStatus();
                     newStatusContent.Name = model.Name;
@@ -144,12 +154,8 @@ namespace tabletop.Controllers
                 {
                     getLastMinuteContent.FirstOrDefault().Weight++;
                     var newStatusContent = _updateStatusContent.Update(getLastMinuteContent.FirstOrDefault());
-
                     return View(nameof(Details), newStatusContent);
                 }
-
-                //return RedirectToAction(nameof(Details), new { id = newStatusContent.Id });
-
             }
             else
             {
