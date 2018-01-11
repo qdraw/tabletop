@@ -5,8 +5,8 @@ export ASPNETCORE_URLS="http://localhost:5145/"
 #export ASPNETCORE_URLS="http://*:5123"
 export ASPNETCORE_ENVIRONMENT="Production"
 
-cd tabletop/bin/Debug/netcoreapp2.0/
-pm2 start --name tabletop ./linux-arm/publish/tabletop
+cd tabletop/bin/release/netcoreapp2.0/linux-arm/publish
+pm2 start --name tabletop ./tabletop
 echo "tabletop started"
 
 #start on mac
