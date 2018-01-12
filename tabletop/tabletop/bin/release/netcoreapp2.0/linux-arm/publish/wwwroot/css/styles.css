@@ -1,0 +1,187 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+@font-face {
+  font-family: 'Gloriola Std';
+  font-style: normal;
+  font-weight: 300;
+  src: local("Gloriola Std Medium"), local("Gloriola-Std-Medium"), url(../fonts/GloriolaStd-Medium.woff2) format("woff2"), url(../fonts/GloriolaStd-Medium.woff) format("woff");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+body {
+	line-height: 1;
+	font-family: "Gloriola Std", sans-serif;
+
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+h1 {
+	color: #263238;
+	font-size: 30px;
+}
+
+
+
+.databox {
+	width: 100%;
+	display: block;
+	height: 70%;
+	background-color: #ccc;
+	margin-bottom: 2px;
+	border-bottom: 1px solid #000;
+}
+
+#data {
+	padding-top: 0.5%;
+	width: 80%;
+	display: block;
+	margin-right: 2px;
+	border-right: 5px solid red;
+}
+.notes .u6,
+.notes .u5,
+.notes .u4,
+.notes .u3,
+.notes .u2,
+.notes .u1,
+.notes .u0 {
+	width: 8.5%;
+	text-align: right;
+	display: inline-block;
+	padding-top: 0.5%;
+}
+
+.notes .u6 {
+	margin-left: 19.6%;
+	text-align: right;
+	display: inline-block;
+}
+
+@media screen and (min-width: 960px) and (max-width: 1200px) {
+
+	.databox {
+		transform:scaleY(1.4);
+		margin-top: 10%;
+	}
+	#data {
+		padding-top: 0.5%;
+		width: 90%;
+		display: block;
+		margin-left: -10%;
+		margin-right: 2px;
+		border-right: 5px solid red;
+	}
+
+	.notes {
+		margin-top: 7.5%;
+		margin-left: -5%;
+	}
+}
+
+@media screen and (min-width: 670px) and (max-width: 960px) {
+
+	.databox {
+		transform:scaleY(1.4);
+		margin-top: 10%;
+	}
+	#data {
+		padding-top: 0.5%;
+		width: 90%;
+		display: block;
+		margin-left: -10%;
+		margin-right: 2px;
+		border-right: 5px solid red;
+	}
+	.notes {
+		margin-top: 7.5%;
+		margin-left: -6%;
+	}
+}
+
+
+@media screen and (min-width: 460px) and (max-width: 670px) {
+
+	.databox {
+		transform:scaleY(2);
+		margin-top: 20%;
+		/* background-color: yellow; */
+
+	}
+	#data {
+		padding-top: 0.5%;
+		width: 90%;
+		display: block;
+		margin-left: -10%;
+		margin-right: 2px;
+		border-right: 5px solid red;
+	}
+	.notes {
+		margin-top: 18%;
+		margin-left: -9%;
+	}
+
+}
+
+@media screen and (max-width: 460px) {
+
+	.databox {
+		background-color: yellow;
+		transform:scaleY(2.4);
+		margin-top: 26%;
+	}
+	#data {
+		padding-top: 0.5%;
+		width: 90%;
+		display: block;
+		margin-left: -10%;
+		margin-right: 2px;
+		border-right: 5px solid red;
+	}
+	.notes {
+		margin-top: 26%;
+		margin-left: -18%;
+	}
+
+}

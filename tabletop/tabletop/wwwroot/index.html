@@ -2,12 +2,26 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <link rel="icon" type="image/png" id="dynamic-favicon" href="img/favicon_free.png" sizes="32x32" />
+    <title>Check de status</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <h1 id="getLatestbyname"></h1>
-    <h2> activiteit van de laatste 8 uur: </h2>
-    <svg id="data"></svg>
+
+    <div class="databox">
+        <svg id="data"></svg>
+    </div>
+    <div class="notes">
+        <span class="u6">-6 uur</span>
+        <span class="u5">-5 uur</span>
+        <span class="u4">-4 uur</span>
+        <span class="u3">-3 uur</span>
+        <span class="u2">-2 uur</span>
+        <span class="u1">-1 uur</span>
+        <span class="u0">nu</span>
+    </div>
 
 <script type="text/javascript" src="js/vendor/d3.v4.min.js"></script>
 <script type="text/javascript">
@@ -94,16 +108,14 @@ function loadJSON(path, success, error)	{
 
            if (arrrayInt >= 0) {
                listOfData.push({
-                    "id": "id_" + Math.ceil(Number(dateI)/1000),
-                    "label": dateI,
+                    "label":  Math.ceil(Number(dateI)/1000),
                     "value":data[arrrayInt].weight + 1
                 })
            }
            else {
 
                listOfData.push({
-                    "id": "id_" + Math.ceil(Number(dateI)/1000),
-                    "label": dateI,
+                    "label":  Math.ceil(Number(dateI)/1000),
                     "value": 0
                 })
            }
@@ -116,16 +128,16 @@ function loadJSON(path, success, error)	{
 
    function draw(data) {
 
-       var margin = {top: 10, right: 0, bottom: 20, left: 30},
+       var margin = {top: 0, right: 0, bottom: -8, left: 0},
        width = 800 + (margin.right - margin.left),
        height = 300 + (margin.top - margin.bottom);
 
        var bars = d3.select("#data")
            .attr("preserveAspectRatio", "xMinYMin meet")
            .attr("viewBox", "0 0 " + (width + margin.left + margin.right) + " " + height)
-           .attr("width", width + margin.left + margin.right)
+           // .attr("width", width + margin.left + margin.right)
            .attr("class","bar")
-           .attr("height", height + margin.top + margin.bottom)
+           // .attr("height", height + margin.top + margin.bottom)
            .attr("fill", "#000")
            .attr("transform","translate(" + margin.left + "," + margin.top + ")")
            .selectAll("rect")
@@ -152,9 +164,9 @@ function loadJSON(path, success, error)	{
            .call(d3.axisBottom(x));
 
        // add the y Axis
-       svg.append("g")
-           .attr("stroke", "#000")
-           .call(d3.axisLeft(y));
+       // svg.append("g")
+       //     // .attr("stroke", "#000")
+       //     .call(d3.axisLeft(y));
 
        // enter and update selection
        bars
@@ -172,6 +184,17 @@ function loadJSON(path, success, error)	{
    };
 
 </script>
+
+<!-- Google Analytics. -->
+<script type="text/javascript">
+	(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+	function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+	e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+	e.src='https://www.google-analytics.com/analytics.js';
+	r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+	ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/' });
+</script>
+<!-- end Google Analytics. -->
 
 </body>
 </html>
