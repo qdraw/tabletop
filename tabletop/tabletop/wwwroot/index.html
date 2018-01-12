@@ -38,7 +38,7 @@ function loadJSON(path, success, error)	{
 		loadJSON(url,
 				 function(data) {
                      listOfData = parseData(data)
-                     barChart(listOfData,"#data")
+                     AddBarChart(listOfData,"#data")
                  },
                 function(xhr) { console.error(xhr); }
        )
@@ -48,28 +48,49 @@ function loadJSON(path, success, error)	{
                     var d = new Date(data);
                     var d_incloffset = Math.floor(Math.floor(d))/1000; // in seconds
                     var d = new Date(d_incloffset*1000)
-                    document.querySelector('#getLatestbyname').innerHTML = "Laatste activiteit was op: "  + d.toLocaleDateString() + " " + d.toLocaleTimeString();
+                    document.querySelector('#getLatestbyname').innerHTML = "Laatste activiteit was op: "  + d.toLocaleDateString("NL-nl") + " " + d.toLocaleTimeString("NL-nl");
                 },
                function(xhr) { console.error(xhr); }
       )
    }
    loadDATA();
 
+   // setInterval(function(){
+   //     updateDATA();
+   // }, 10000);
+   //
+   // function updateDATA() {
+   //     // var url = "api/getRecentByName?name=tafelvoetbal";
+   //     var url = "getRecentByName_name_tafelvoetbal.json?" + Date.now();
+   //     loadJSON(url,
+   //              function(data) {
+   //                  listOfData = parseData(data)
+   //                  AddBarChart(listOfData,"#data")
+   //              },
+   //             function(xhr) { console.error(xhr); }
+   //    )
+   // }
+
+   // function updateLastMinute() {
+   //     // var url = "api/getlastminute?name=tafelvoetbal"
+   //     var url = "api/getRecentByName?name=tafelvoetbal";
+   //     loadJSON(url,
+   //              function(data) {
+   //                  // barChart(data,"#data")
+   //              },
+   //             function(xhr) { console.error(xhr); }
+   //     )
+   // }
+
+   function returnNowDate() {
+       var now = new Date();
+       var utc_timestamp_unix = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
+            now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds())/1000;
+       return utc_timestamp_unix;
+   }
    function parseData(data) {
 
-        var now = new Date();
-        var utc_timestamp_unix = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
-             now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds())/1000;
-        var Offset = now.getTimezoneOffset() * 60;
-
-        // Nasty hack Safari is using utc by default
-        var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
-                navigator.userAgent && !navigator.userAgent.match('CriOS');
-        console.log(isSafari);
-        if (isSafari) {
-            Offset = 0;
-        }
-        // end nasty hack
+       var utc_timestamp_unix = returnNowDate();
 
        var eighthoursago_unix = Math.floor(utc_timestamp_unix - 28800); // in seconds
        var steps = 60; // in seconds
@@ -101,6 +122,7 @@ function loadJSON(path, success, error)	{
 
            if (arrrayInt >= 0) {
                listOfData.push({
+                    "id": "id_" + Math.ceil(Number(dateI)/1000),
                     "label": dateI,
                     "value":data[arrrayInt].weight + 1
                 })
@@ -108,6 +130,7 @@ function loadJSON(path, success, error)	{
            else {
 
                listOfData.push({
+                    "id": "id_" + Math.ceil(Number(dateI)/1000),
                     "label": dateI,
                     "value": 0
                 })
@@ -118,59 +141,173 @@ function loadJSON(path, success, error)	{
    }
 
 
-   function barChart(data,element) {
+
+   function AddBarChart(data,element) {
    		// set the dimensions and margins of the graph
-   		var margin = {top: 10, right: 0, bottom: 20, left: 30},
-   		width = 800 + (margin.right - margin.left),
-   		height = 300;
+        var margin = {top: 10, right: 0, bottom: 20, left: 30},
+        width = 800 + (margin.right - margin.left),
+        height = 300 + (margin.top - margin.bottom);
 
-   		// set the ranges
-   		var x = d3.scaleBand()
-   			.range([0, width])
-   			.padding(0.1);
-   		var y = d3.scaleLinear()
-   			.range([height, 0]);
 
-   		// append the svg object to the body of the page
-   		// append a 'group' element to 'svg'
-   		// moves the 'group' element to the top left margin
-   		var svg = d3.select(element).append("svg")
-   				.attr("preserveAspectRatio", "xMinYMin meet")
-   				.attr("viewBox", "0 0 " + (width + margin.left + margin.right) + " " + height)
 
-   			.attr("width", width + margin.left + margin.right)
-   			.attr("class","bar")
-   			.attr("height", height + margin.top + margin.bottom)
-   			.attr("fill", "#000")
-   			.append("g")
-   			.attr("transform",
-   			"translate(" + margin.left + "," + margin.top + ")");
+       		// set the ranges
+       		var x = d3.scaleBand()
+       			.range([0, width])
+       			.padding(0.1);
+       		var y = d3.scaleLinear()
+       			.range([height, 0]);
 
-   		// Scale the range of the data in the domains
-   		x.domain(data.map(function(d) { return d.label; }));
-   		y.domain([0, d3.max(data, function(d) { return d.value; })]);
+            window["_d3_x"+ element.substring(1)] = x;
+            window["_d3_y"+ element.substring(1)] = y;
+            window["_d3_height"+ element.substring(1)] = height;
 
-   		// append the rectangles for the bar chart
-   		svg.selectAll(".bar")
-   			.data(data)
-   			.enter().append("rect")
-   			.attr("class", "bar")
-   			.attr("x", function(d) { return x(d.label); })
-   			.attr("width", x.bandwidth())
-   			.attr("y", function(d) { return y(d.value); })
-   			.attr("height", function(d) { return height - y(d.value); });
+            var svglength = document.querySelectorAll(element + " svg").length
+            if (svglength === 0) {
+             }
 
-   		// add the x Axis
-   		svg.append("g")
-   			.attr("transform", "translate(0," + height + ")")
-   			.attr("stroke", "#fff")
-   			.call(d3.axisBottom(x));
 
-   		// add the y Axis
-   		svg.append("g")
-   			.attr("stroke", "#000")
-   			.call(d3.axisLeft(y));
+            if (data.length >= 1) {
+                // append the svg object to the body of the page
+                // append a 'group' element to 'svg'
+                // moves the 'group' element to the top left margin
+                var svg = d3.select(element).append("svg")
+                        .attr("preserveAspectRatio", "xMinYMin meet")
+                        .attr("viewBox", "0 0 " + (width + margin.left + margin.right) + " " + height)
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("class","bar")
+                        .attr("height", height + margin.top + margin.bottom)
+                        .attr("fill", "#000")
+                        .append("g")
+                        .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+
+
+                // Scale the range of the data in the domains
+           		x.domain(data.map(function(d) { return d.label; }));
+           		y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
+           		// append the rectangles for the bar chart
+                svg = d3.select(element + " svg g");
+           		var bars = svg.selectAll(".bar")
+           			.data(data)
+           			.enter()
+                    .append("rect")
+           			.attr("class", "bar")
+                    .attr("id", function(d) {
+                        if (d.id !== undefined) {
+                            return d.id;
+                        }
+                     })
+           			.attr("x", function(d) { return x(d.label); })
+           			.attr("width", x.bandwidth())
+           			.attr("y", function(d) { return y(d.value); })
+           			.attr("height", function(d) { return height - y(d.value); });
+
+                    // if (svglength === 0) {}
+                        // add the x Axis
+               		svg.append("g")
+               			.attr("transform", "translate(0," + height + ")")
+               			.attr("stroke", "#fff")
+               			.call(d3.axisBottom(x));
+
+               		// add the y Axis
+               		svg.append("g")
+               			.attr("stroke", "#000")
+               			.call(d3.axisLeft(y));
+
+                     svg.exit().remove()
+
+
+            }
+
    	}
+
+    // function UpdateBarChart(data,element) {
+    //     if (document.querySelectorAll(element + " svg").length === 1) {
+    //
+    //         x = window["_d3_x"+ element.substring(1)];
+    //         y = window["_d3_y"+ element.substring(1)];
+    //         height = window["_d3_height"+ element.substring(1)];
+    //
+    //         // Scale the range of the data again
+    //         x.domain(data.map(function(d) { return d.label; }));
+    //         y.domain([0, d3.max(data, function(d) { return d.value; })]);
+    //
+    //         // Select the section we want to apply our changes to
+    //         // var svg = d3.select(element + " svg").transition();
+    //
+    //         var svg = d3.selectAll(element + " svg g")
+	// 				.remove()
+	// 				.exit()
+	// 				.data(data)
+    //
+    //         svg = d3.select(element + " svg g");
+    //         svg.selectAll(".bar")
+    //             .data(data)
+    //             .enter().append("rect")
+    //             .attr("class", "bar")
+    //             .attr("id", function(d) {
+    //                 if (d.id !== undefined) {
+    //                     return d.id;
+    //                 }
+    //              })
+    //             .attr("x", function(d) { return x(d.label); })
+    //             .attr("width", x.bandwidth())
+    //             .attr("y", function(d) { return y(d.value); })
+    //             .attr("height", function(d) { return height - y(d.value); });
+    //
+    //
+    //     }
+    // }
+
+
+
+
+    // function UpdateBarChart(data,element) {
+    //
+    //     var now = new Date();
+    //     var utc_timestamp_ceil = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
+    //          now.getUTCHours(), now.getUTCMinutes())
+    //     var utc_timestamp_ceil_unix = Math.ceil(utc_timestamp_ceil)/1000;
+    //
+    //     var existId = document.querySelectorAll("id_" + utc_timestamp_ceil_unix)[0];
+    //     if (existId === undefined) {
+    //          // var node = document.createElement("rect");
+    //          // node.className = "bar bar-1";
+    //          // document.querySelector("svg > g").appendChild(node);
+    //          var delelement = document.querySelectorAll("svg > g")[0];
+    //          delelement.children[0].style.width = "0px";
+    //
+    //          console.log(data);
+    //          var y = d3.scaleLinear()
+    //     			.range([height, 0]);
+    //         var x = d3.scaleBand()
+    //    			.range([0, width])
+    //    			.padding(0.1);
+    //    		x.domain(data.map(function(d) { return d.label; }));
+    //
+    //          y.domain([0, d3.max(data, function(d) { return d.value; })]);
+    //
+    //          // append the rectangles for the bar chart
+    //          d3.selectAll(".bar")
+    //              .data(data)
+    //              .enter().append("rect")
+    //              .attr("class", "bar")
+    //           .attr("id", function(d) {
+    //               if (d.id !== undefined) {
+    //                   return d.id;
+    //               }
+    //            })
+    //              .attr("x", function(d) { return x(d.label); })
+    //              .attr("width", x.bandwidth())
+    //              .attr("y", function(d) { return y(d.value); })
+    //              .attr("height", function(d) { return height - y(d.value); });
+    //
+    //      }
+    //
+    //     console.log(existId);
+    //
+    // }
+
 </script>
 
     <!-- <script type="text/javascript">

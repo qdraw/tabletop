@@ -22,7 +22,6 @@ namespace tabletop.Services
 
         public UpdateStatus Add(UpdateStatus UpdateStatusContent)
         {
-            UpdateStatusContent.Weight = 0;
             _context.UpdateStatus.Add(UpdateStatusContent);
             _context.SaveChanges();
             return UpdateStatusContent;

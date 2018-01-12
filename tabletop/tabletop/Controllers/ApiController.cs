@@ -103,6 +103,20 @@ namespace tabletop.Controllers
 
         }
 
+
+        [HttpGet]
+        [Produces("application/json")]
+        public IActionResult getLastMinute(string name)
+        {
+            var model = new RecentStatusClass();
+            model.RecentStatus = _updateStatusContent.getLastMinute(name);
+            List<UpdateStatus> ListOf = model.RecentStatus.ToList();
+            return Json(ListOf);
+
+        }
+
+        
+
         //[HttpGet]
         //[Produces("application/json")]
         //public IActionResult DistinctNames()
