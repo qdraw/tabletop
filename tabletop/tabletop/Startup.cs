@@ -31,8 +31,8 @@ namespace tabletop
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddDbContext<appDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IUpdateStatus, SQLUpdateStatus>();
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IUpdateStatus, SqlUpdateStatus>();
             services.AddMvc(options =>
             {
                 options.RespectBrowserAcceptHeader = true; // false by default
@@ -50,7 +50,7 @@ namespace tabletop
             }
 
 
-            app.UseMvc(configureRoutes);
+            app.UseMvc(ConfigureRoutes);
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -62,7 +62,7 @@ namespace tabletop
             });
         }
 
-        private void configureRoutes(IRouteBuilder routeBuilder)
+        private void ConfigureRoutes(IRouteBuilder routeBuilder)
         {
             // Home/Index/4 > HomeController
             routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");

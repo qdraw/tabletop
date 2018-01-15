@@ -10,7 +10,7 @@ using tabletop.Data;
 
 namespace tabletop.Migrations
 {
-    [DbContext(typeof(appDbContext))]
+    [DbContext(typeof(AppDbContext))]
     partial class appDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

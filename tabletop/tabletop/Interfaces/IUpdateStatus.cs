@@ -5,18 +5,20 @@ namespace tabletop.Interfaces
 {
     public interface IUpdateStatus
     {
-        UpdateStatus Add(UpdateStatus UpdateStatusContent);
-        UpdateStatus Update(UpdateStatus UpdateStatusContent);
+        UpdateStatus Add(UpdateStatus updateStatusContent);
+        UpdateStatus Update(UpdateStatus updateStatusContent);
+        UpdateStatus AddOrUpdate(UpdateStatus updateStatusContent);
 
 
-        IEnumerable<UpdateStatus> getLastMinute(string name);
+        IEnumerable<UpdateStatus> GetLastMinute(string name);
 
 
         UpdateStatus Get(int id);
         UpdateStatus GetLatestByName(string name);
-        IEnumerable<UpdateStatus> getAll();
-        IEnumerable<UpdateStatus> getAllByName(string name);
-        IEnumerable<UpdateStatus> getRecentByName(string name);
+        IEnumerable<UpdateStatus> GetAll();
+        IEnumerable<UpdateStatus> GetAllByName(string name);
+        IEnumerable<UpdateStatus> GetRecentByName(string name);
+        GetStatus IsFree(string name);
 
     }
 }

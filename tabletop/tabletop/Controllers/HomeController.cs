@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using tabletop.Interfaces;
-//using tabletop.Services;
 using tabletop.Models;
-//using tabletop.ViewModels;
 
 namespace tabletop.Controllers
 {
     public class HomeController : Controller
     {
-        private IUpdateStatus _updateStatusContent;
+        private readonly IUpdateStatus _updateStatusContent;
 
         public HomeController(IUpdateStatus updateStatusContent)
         {
@@ -19,7 +16,7 @@ namespace tabletop.Controllers
         public IActionResult List()
         {
             var model = new RecentStatusClass();
-            model.RecentStatus = _updateStatusContent.getAll();
+            model.RecentStatus = _updateStatusContent.GetAll();
 
             return View(model);
         }

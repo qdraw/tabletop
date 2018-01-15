@@ -11,9 +11,9 @@ namespace tabletop.Controllers
 {
     public class ApiController : Controller
     {
-        private IUpdateStatus _updateStatusContent;
+        private readonly IUpdateStatus _updateStatusContent;
 
-        IConfiguration _iconfiguration;
+        readonly IConfiguration _iconfiguration;
 
         public ApiController(IUpdateStatus updateStatusContent, IConfiguration iconfiguration)
         {
@@ -58,7 +58,7 @@ namespace tabletop.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        public IActionResult getUnixTime()
+        public IActionResult GetUnixTime()
         {
             Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             return Json(unixTimestamp);
@@ -67,69 +67,51 @@ namespace tabletop.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        public IActionResult getAll(string name)
+        public IActionResult GetAll(string name)
         {
-
-            System.Diagnostics.Debug.WriteLine("name");
-            System.Diagnostics.Debug.WriteLine(name);
 
             if (string.IsNullOrEmpty(name))
             {
-                //System.Diagnostics.Debug.WriteLine(name.Length);
                 var model = new RecentStatusClass();
-                model.RecentStatus = _updateStatusContent.getAll();
-                List<UpdateStatus> ListOf = model.RecentStatus.ToList();
-                return Json(ListOf);
+                model.RecentStatus = _updateStatusContent.GetAll();
+                List<UpdateStatus> listOf = model.RecentStatus.ToList();
+                return Json(listOf);
             }
 
             else {
                 var model = new RecentStatusClass();
-                model.RecentStatus = _updateStatusContent.getAllByName(name);
-                List<UpdateStatus> ListOf = model.RecentStatus.ToList();
-                return Json(ListOf);
+                model.RecentStatus = _updateStatusContent.GetAllByName(name);
+                List<UpdateStatus> listOf = model.RecentStatus.ToList();
+                return Json(listOf);
             }
 
         }
 
         [HttpGet]
         [Produces("application/json")]
-        public IActionResult getRecentByName(string name)
+        public IActionResult GetRecentByName(string name)
         {
             var model = new RecentStatusClass();
-            model.RecentStatus = _updateStatusContent.getRecentByName(name);
-            List<UpdateStatus> ListOf = model.RecentStatus.ToList();
+            model.RecentStatus = _updateStatusContent.GetRecentByName(name);
+            List<UpdateStatus> listOf = model.RecentStatus.ToList();
 
-            return Json(ListOf);
+            return Json(listOf);
 
         }
 
 
         [HttpGet]
         [Produces("application/json")]
-        public IActionResult getLastMinute(string name)
+        public IActionResult GetLastMinute(string name)
         {
             var model = new RecentStatusClass();
-            model.RecentStatus = _updateStatusContent.getLastMinute(name);
-            List<UpdateStatus> ListOf = model.RecentStatus.ToList();
-            return Json(ListOf);
+            model.RecentStatus = _updateStatusContent.GetLastMinute(name);
+            List<UpdateStatus> listOf = model.RecentStatus.ToList();
+            return Json(listOf);
 
         }
 
         
-
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public IActionResult DistinctNames()
-        //{
-        //    var model = new RecentStatusClass();
-        //    model.RecentStatus = _updateStatusContent.getRecentByName(name);
-        //    List<UpdateStatus> ListOf = model.RecentStatus.ToList();
-
-        //    return Json(ListOf);
-
-        //}
-
-
         public IActionResult Index()
         {
             //var model = new HomeIndexViewModel();
@@ -140,36 +122,35 @@ namespace tabletop.Controllers
             return View();
         }
 
+
+        [HttpGet]
+        [Produces("application/json")]
+        public IActionResult IsFree(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                var newStatusContent = _updateStatusContent.IsFree(name);
+                return Json(newStatusContent);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+
+
         [HttpPost]
+        [Produces("application/json")]
         public IActionResult Update(UpdateStatus model)
         {
-            var BearerValid = IsBearerValid(Request);
+            var bearerValid = IsBearerValid(Request);
 
-            if (ModelState.IsValid && BearerValid)
+            if (ModelState.IsValid && bearerValid)
             {
-
-                var getLastMinuteContent = _updateStatusContent.getLastMinute(model.Name);
-
-                var lenght1 = getLastMinuteContent.ToArray().Length;
-
-                //getLastMinuteContent.Any();
-
-                if (lenght1 == 0) {
-                    var newStatusContent = new UpdateStatus();
-                    newStatusContent.Name = model.Name;
-                    newStatusContent.Status = model.Status;
-                    newStatusContent.DateTime = DateTime.UtcNow;
-                    newStatusContent.Weight = getLastMinuteContent.Count();
-                    newStatusContent = _updateStatusContent.Add(newStatusContent);
-                    return View(nameof(Details), newStatusContent);
-
-                }
-                else
-                {
-                    getLastMinuteContent.FirstOrDefault().Weight++;
-                    var newStatusContent = _updateStatusContent.Update(getLastMinuteContent.FirstOrDefault());
-                    return View(nameof(Details), newStatusContent);
-                }
+                var newStatusContent = _updateStatusContent.AddOrUpdate(model);
+                return Json(newStatusContent);
             }
             else
             {
@@ -178,48 +159,55 @@ namespace tabletop.Controllers
         }
 
 
-        //public List<string> ListBearer()
+
+        //[HttpPost]
+        //public IActionResult LegacyUpdate(UpdateStatus model)
         //{
-        //    var BearerList = _iconfiguration.GetSection("bearer").Get<List<string>>();
-        //    return BearerList;
+        //    var bearerValid = IsBearerValid(Request);
+
+        //    if (ModelState.IsValid && bearerValid)
+        //    {
+
+        //        var getLastMinuteContent = _updateStatusContent.GetLastMinute(model.Name);
+        //        var lastMinuteContent = getLastMinuteContent as UpdateStatus[] ?? getLastMinuteContent.ToArray();
+
+        //        if (lastMinuteContent.Any() == false) {
+        //            var newStatusContent = new UpdateStatus();
+        //            newStatusContent.Name = model.Name;
+        //            newStatusContent.Status = model.Status;
+        //            newStatusContent.DateTime = DateTime.UtcNow;
+        //            newStatusContent.Weight = lastMinuteContent.Count();
+        //            newStatusContent = _updateStatusContent.Add(newStatusContent);
+        //            return View(nameof(Details), newStatusContent);
+
+        //        }
+        //        else
+        //        {
+        //            lastMinuteContent.FirstOrDefault().Weight++;
+        //            var newStatusContent = _updateStatusContent.Update(lastMinuteContent.FirstOrDefault());
+        //            return View(nameof(Details), newStatusContent);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
         //}
+
 
         public bool IsBearerValid(Microsoft.AspNetCore.Http.HttpRequest request)
         {
             if ((Request.Headers["Authorization"].ToString() ?? "").Trim().Length > 0)
             {
-                var _bearer = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                var BearerList = _iconfiguration.GetSection("bearer").Get<List<string>>();
-                return BearerList.Exists(element => element == _bearer);
+                var bearer = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var bearerList = _iconfiguration.GetSection("bearer").Get<List<string>>();
+                return bearerList.Exists(element => element == bearer);
             }
             else
             {
                 return false;
             }
-
-
         }
 
-
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Create(RestaurantEditModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var newRestaurant = new Restaurant();
-        //        newRestaurant.Name = model.Name;
-        //        newRestaurant.Cuisine = model.Cuisine;
-        //        newRestaurant = _restaurantData.Add(newRestaurant);
-
-        //        // return View("Details",newRestaurant);
-        //        return RedirectToAction(nameof(Details), new { id = newRestaurant.Id });
-        //    }
-        //    else
-        //    {
-        //        return View();
-        //    }
-        //}
     }
 }

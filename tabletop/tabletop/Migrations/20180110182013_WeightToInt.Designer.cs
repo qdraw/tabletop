@@ -10,7 +10,7 @@ using tabletop.Data;
 
 namespace tabletop.Migrations
 {
-    [DbContext(typeof(appDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20180110182013_WeightToInt")]
     partial class WeightToInt
     {

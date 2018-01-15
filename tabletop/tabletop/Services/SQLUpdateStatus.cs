@@ -2,75 +2,64 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using tabletop.Data;
 using tabletop.Interfaces;
 using tabletop.Models;
 
 namespace tabletop.Services
 {
-    public class SQLUpdateStatus : IUpdateStatus
+    public class SqlUpdateStatus : IUpdateStatus
     {
-        private appDbContext _context;
+        private readonly AppDbContext _context;
 
-        public SQLUpdateStatus(appDbContext context)
+        public SqlUpdateStatus(AppDbContext context)
         {
             _context = context;
         }
 
-
-
-        public UpdateStatus Add(UpdateStatus UpdateStatusContent)
+        public UpdateStatus Add(UpdateStatus updateStatusContent)
         {
-            _context.UpdateStatus.Add(UpdateStatusContent);
+            _context.UpdateStatus.Add(updateStatusContent);
             _context.SaveChanges();
-            return UpdateStatusContent;
+            return updateStatusContent;
 
         }
 
-        //if (lastMinuteCount >= 1)
-        //{
-        //    //foreach (var r in lastMinuteRequests)
-        //    //{
-        //    //    r.Weight = lastMinuteCount;
-        //    //}
+        public UpdateStatus Update(UpdateStatus updateStatusContent)
+        {
+            _context.Attach(updateStatusContent).State = EntityState.Modified;
+            _context.SaveChanges();
+            return updateStatusContent;
+        }
 
-        //    UpdateStatusContent.Weight = UpdateStatusContent.Weight++;
-        //    UpdateStatusContent.Id = lastMinuteRequests.FirstOrDefault().Id;
-        //    UpdateStatusContent.Name = lastMinuteRequests.FirstOrDefault().Name;
-        //    UpdateStatusContent.Status = 2;
+        public UpdateStatus AddOrUpdate(UpdateStatus updateStatusContent)
+        {
+            var getLastMinuteContent = GetLastMinute(updateStatusContent.Name);
 
-        //    //_context.Attach(UpdateStatusContent).State = EntityState.Modified;
-        //    //_context.SaveChanges();
-
-
-
-        //    //var newUpdateStatus = new UpdateStatus();
-        //    //newUpdateStatus.Weight++;
-        //    //newUpdateStatus.Id = lastMinuteRequests.FirstOrDefault().Id;
-        //    //newUpdateStatus.Name = lastMinuteRequests.FirstOrDefault().Name;
-        //    //newUpdateStatus.Status = 1;
-        //    //newUpdateStatus.DateTime = lastMinuteRequests.FirstOrDefault().DateTime;
-        //    //var db = new appDbContext();
-        //    //_context.Update(newUpdateStatus);
-        //    //_context.SaveChanges();
-
-        //    //_context.UpdateStatus.Update(newUpdateStatus);
-
-        //    return UpdateStatusContent;
-
-        //}
-
-        //else
-        //{
-
-        //    UpdateStatusContent.Weight = lastMinuteCount;
+            if (getLastMinuteContent.ToArray().Length == 0)
+            {
+                var newStatusContent = new UpdateStatus();
+                newStatusContent.Name = updateStatusContent.Name;
+                newStatusContent.Status = updateStatusContent.Status;
+                newStatusContent.DateTime = DateTime.UtcNow;
+                newStatusContent.Weight = 1;
+                _context.UpdateStatus.Add(newStatusContent);
+                _context.SaveChanges();
+                return newStatusContent;
+            }
+            else
+            {
+                getLastMinuteContent.FirstOrDefault().Weight++;
+                getLastMinuteContent.FirstOrDefault().DateTime = DateTime.UtcNow;
+                _context.Attach(getLastMinuteContent.FirstOrDefault()).State = EntityState.Modified;
+                _context.SaveChanges();
+                return getLastMinuteContent.FirstOrDefault();
+            }
+        }
 
 
-        //}
 
-
-        public IEnumerable<UpdateStatus> getLastMinute(string name)
+        public IEnumerable<UpdateStatus> GetLastMinute(string name)
         {
             // round minute to 18:48 for example
             var now = DateTime.UtcNow;
@@ -93,41 +82,61 @@ namespace tabletop.Services
             return _context.UpdateStatus.FirstOrDefault(r => r.Id == id);
         }
 
-        public IEnumerable<UpdateStatus> getAll()
+        public IEnumerable<UpdateStatus> GetAll()
         {
             return _context.UpdateStatus.OrderBy(r => r.Id);
         }
 
-        public IEnumerable<UpdateStatus> getAllByName(string name)
+        public IEnumerable<UpdateStatus> GetAllByName(string name)
         {
             return _context.UpdateStatus.Where(b => b.Name == name);
         }
 
+        public GetStatus IsFree(string name)
+        {
+            var IsFreeStatus = new GetStatus();
+            IsFreeStatus.Name = name;
+
+            var isFree = _context.UpdateStatus
+                .Where(p => p.DateTime > DateTime.UtcNow.Subtract(new TimeSpan(0, 0, 2, 0)))
+                .Where(b => b.Name == name).ToArray();
+           
+            IsFreeStatus.IsFree = !isFree.Any();
+
+            var lastByName = GetLatestDateTimeByName(name);
+            IsFreeStatus.DateTime = lastByName;
+
+            return IsFreeStatus;
+        }
+
+
         public UpdateStatus GetLatestByName(string name)
         {
-            return _context.UpdateStatus.Where(b => b.Name == name)
-                    .LastOrDefault();
+            return _context.UpdateStatus
+                    .LastOrDefault(b => b.Name == name);
         }
 
-        public IEnumerable<UpdateStatus> getRecentByName(string name)
+        public DateTime GetLatestDateTimeByName(string name)
+        {
+
+            var getLatestDateTimeByName = _context.UpdateStatus.LastOrDefault(b => b.Name == name);
+            if (getLatestDateTimeByName != null)
+            {
+                return _context.UpdateStatus
+                    .LastOrDefault(b => b.Name == name).DateTime;
+            }
+            else
+            {
+                return new DateTime();
+
+            }
+        }
+        public IEnumerable<UpdateStatus> GetRecentByName(string name)
         {
             return _context.UpdateStatus
-                .Where(p => p.DateTime > DateTime.Now.Subtract(new TimeSpan(0, 8, 0, 0)))
+                .Where(p => p.DateTime > DateTime.UtcNow.Subtract(new TimeSpan(0, 8, 0, 0)))
                 .Where(b => b.Name == name);
         }
-
-        public UpdateStatus Update(UpdateStatus UpdateStatusContent)
-        {
-            _context.Attach(UpdateStatusContent).State = EntityState.Modified;
-            _context.SaveChanges();
-            return UpdateStatusContent;
-        }
-
-        //public IEnumerable<RecentStatusList> GetRecentStatusList()
-        //{
-        //    return _context.UpdateStatus..OrderBy(r => r.Name);
-        //}
-
 
     }
 }

@@ -7,13 +7,13 @@
 
 <h1></h1>
 <table>
-    @foreach (var RecentStatusList in Model.RecentStatus)
+    @foreach (var recentStatusList in Model.RecentStatus)
     {
         <tr>
-            <td>@RecentStatusList.Id</td>
-            <td>@RecentStatusList.Name</td>
-            <td>@RecentStatusList.DateTime</td>
-            <td>@RecentStatusList.Status</td>
+            <td>@recentStatusList.Id</td>
+            <td>@recentStatusList.Name</td>
+            <td>@recentStatusList.DateTime</td>
+            <td>@recentStatusList.Status</td>
 
             @*<td><a asp-action="Details" asp-route-id="@restaurant.Id">More..</a></td>*@
 
