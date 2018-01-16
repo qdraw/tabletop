@@ -52,7 +52,7 @@ namespace tabletop
 
             app.UseMvc(ConfigureRoutes);
 
-            app.UseDefaultFiles();
+            //app.UseDefaultFiles();
             app.UseStaticFiles();
 
 

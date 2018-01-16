@@ -16,6 +16,7 @@ namespace tabletop.Interfaces
         UpdateStatus Get(int id);
         UpdateStatus GetLatestByName(string name);
         IEnumerable<UpdateStatus> GetAll();
+        IEnumerable<string> GetUniqueNames();
         IEnumerable<UpdateStatus> GetAllByName(string name);
         IEnumerable<UpdateStatus> GetRecentByName(string name);
         GetStatus IsFree(string name);

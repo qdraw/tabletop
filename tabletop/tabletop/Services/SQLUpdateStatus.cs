@@ -17,6 +17,21 @@ namespace tabletop.Services
             _context = context;
         }
 
+        public IEnumerable<string> GetUniqueNames()
+        {
+            var allEvents = _context.UpdateStatus.OrderBy(r => r.Name).AsEnumerable();
+            var uniquelist = new List<string>();
+            foreach (UpdateStatus item in allEvents)
+            {
+                if (uniquelist.Contains(item.Name) == false && item.Name != "test")
+                {
+                    uniquelist.Add(item.Name);
+                }
+            }
+            return uniquelist.AsEnumerable();
+        }
+
+
         public UpdateStatus Add(UpdateStatus updateStatusContent)
         {
             _context.UpdateStatus.Add(updateStatusContent);

@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
 using tabletop.Models;
+using tabletop.ViewModels;
 
 namespace tabletop.Controllers
 {
@@ -11,6 +14,20 @@ namespace tabletop.Controllers
         public HomeController(IUpdateStatus updateStatusContent)
         {
             _updateStatusContent = updateStatusContent;
+        }
+
+        public IActionResult Index(string name)
+        {
+            var model = new UniqueNamesViewModel();
+            model.List = _updateStatusContent.GetUniqueNames();
+            model.Name = name;
+
+            if (string.IsNullOrEmpty(name))
+            {
+                model.Name = "tafelvoetbal";
+            }
+
+            return View(model);
         }
 
         public IActionResult List()

@@ -67,6 +67,13 @@ namespace tabletop.Controllers
 
         [HttpGet]
         [Produces("application/json")]
+        public IActionResult GetUniqueNames()
+        {
+            return Json(_updateStatusContent.GetUniqueNames());
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
         public IActionResult GetAll(string name)
         {
 
