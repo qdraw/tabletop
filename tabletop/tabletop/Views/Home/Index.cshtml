@@ -41,7 +41,8 @@
     @foreach (var item in Model.List)
     {
         <tr>
-            <td>@Html.ActionLink(@item, "Index", new { name = @item })</td>
+            <td><a href="?name=@item">@item</a></td>
+            @*<td>@Html.ActionLink(@item, "Index", new { name = @item })</td>*@
         </tr>
     }
 
