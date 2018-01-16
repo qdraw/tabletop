@@ -3,4 +3,11 @@
   <PropertyGroup>
     <WebStackScaffolding_ViewDialogWidth>600</WebStackScaffolding_ViewDialogWidth>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Production' ">
+    <StartAction>Project</StartAction>
+    <EnvironmentVariables>
+      <Variable name="ASPNETCORE_ENVIRONMENT" value="Production" xmlns="" />
+    </EnvironmentVariables>
+    <ApplicationURL>http://localhost:50843/</ApplicationURL>
+  </PropertyGroup>
 </Project>
