@@ -1,6 +1,6 @@
 
 if (window.envName === undefined) {
-    window.envName = "tafelvoetbal"
+    window.envName = "tafelvoetbal";
 }
 
 function loadJSON(path, success, error) {
