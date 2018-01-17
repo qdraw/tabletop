@@ -12,6 +12,6 @@ namespace tabletop.Models
         public DateTime DateTime { get; set; }
 
         [Required]
-        public Boolean IsFree { get; set; }
+        public bool IsFree { get; set; }
     }
 }

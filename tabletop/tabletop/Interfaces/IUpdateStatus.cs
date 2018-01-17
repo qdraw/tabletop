@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using tabletop.Models;
 
 namespace tabletop.Interfaces
@@ -19,6 +20,8 @@ namespace tabletop.Interfaces
         IEnumerable<string> GetUniqueNames();
         IEnumerable<UpdateStatus> GetAllByName(string name);
         IEnumerable<UpdateStatus> GetRecentByName(string name);
+        IEnumerable<UpdateStatus> ListOfWorkDayByName(string name, DateTime dateTime);
+
         GetStatus IsFree(string name);
 
     }

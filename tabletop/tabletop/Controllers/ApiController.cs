@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using tabletop.Interfaces;
 using tabletop.Models;
@@ -60,7 +61,7 @@ namespace tabletop.Controllers
         [Produces("application/json")]
         public IActionResult GetUnixTime()
         {
-            Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            var unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             return Json(unixTimestamp);
 
         }
@@ -81,14 +82,14 @@ namespace tabletop.Controllers
             {
                 var model = new RecentStatusClass();
                 model.RecentStatus = _updateStatusContent.GetAll();
-                List<UpdateStatus> listOf = model.RecentStatus.ToList();
+                var listOf = model.RecentStatus.ToList();
                 return Json(listOf);
             }
 
             else {
                 var model = new RecentStatusClass();
                 model.RecentStatus = _updateStatusContent.GetAllByName(name);
-                List<UpdateStatus> listOf = model.RecentStatus.ToList();
+                var listOf = model.RecentStatus.ToList();
                 return Json(listOf);
             }
 
@@ -98,9 +99,8 @@ namespace tabletop.Controllers
         [Produces("application/json")]
         public IActionResult GetRecentByName(string name)
         {
-            var model = new RecentStatusClass();
-            model.RecentStatus = _updateStatusContent.GetRecentByName(name);
-            List<UpdateStatus> listOf = model.RecentStatus.ToList();
+            var model = new RecentStatusClass {RecentStatus = _updateStatusContent.GetRecentByName(name)};
+            var listOf = model.RecentStatus.ToList();
 
             return Json(listOf);
 
@@ -109,11 +109,33 @@ namespace tabletop.Controllers
 
         [HttpGet]
         [Produces("application/json")]
+        public IActionResult ListOfWorkDayByName(string name, string date)
+        {
+            if (!string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(name))
+            {
+                var dateTime = new DateTime();
+                DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
+
+                if (dateTime.Year <= 2000) return BadRequest("date fails");
+                var model = new RecentStatusClass
+                {
+                    RecentStatus = _updateStatusContent.ListOfWorkDayByName(name, dateTime)
+                };
+                var listOf = model.RecentStatus.ToList();
+
+                return Json(listOf);
+
+            }
+            return BadRequest("date or name fails");
+        }
+
+
+        [HttpGet]
+        [Produces("application/json")]
         public IActionResult GetLastMinute(string name)
         {
-            var model = new RecentStatusClass();
-            model.RecentStatus = _updateStatusContent.GetLastMinute(name);
-            List<UpdateStatus> listOf = model.RecentStatus.ToList();
+            var model = new RecentStatusClass {RecentStatus = _updateStatusContent.GetLastMinute(name)};
+            var listOf = model.RecentStatus.ToList();
             return Json(listOf);
 
         }
@@ -124,7 +146,6 @@ namespace tabletop.Controllers
             //var model = new HomeIndexViewModel();
             //model.Restaurants = _restaurantData.getAll();
             //model.CurrentMessage = _greeter.GetTheMessageOfTheDay();
-
             //return View(model);
             return View();
         }
@@ -141,7 +162,7 @@ namespace tabletop.Controllers
             }
             else
             {
-                return NotFound();
+                return BadRequest("name is missing");
             }
 
         }
@@ -154,52 +175,18 @@ namespace tabletop.Controllers
         {
             var bearerValid = IsBearerValid(Request);
 
-            if (ModelState.IsValid && bearerValid)
+            if (!ModelState.IsValid) return BadRequest("Model is incomplete");
+            if (!bearerValid) return BadRequest("Authorisation Error");
+
+            var newStatusContent = _updateStatusContent.AddOrUpdate(model);
+            if (newStatusContent.Status == -400)
             {
-                var newStatusContent = _updateStatusContent.AddOrUpdate(model);
-                return Json(newStatusContent);
+                return BadRequest("Database Error: -400");
+
             }
-            else
-            {
-                return NotFound();
-            }
+            return Json(newStatusContent);
+
         }
-
-
-
-        //[HttpPost]
-        //public IActionResult LegacyUpdate(UpdateStatus model)
-        //{
-        //    var bearerValid = IsBearerValid(Request);
-
-        //    if (ModelState.IsValid && bearerValid)
-        //    {
-
-        //        var getLastMinuteContent = _updateStatusContent.GetLastMinute(model.Name);
-        //        var lastMinuteContent = getLastMinuteContent as UpdateStatus[] ?? getLastMinuteContent.ToArray();
-
-        //        if (lastMinuteContent.Any() == false) {
-        //            var newStatusContent = new UpdateStatus();
-        //            newStatusContent.Name = model.Name;
-        //            newStatusContent.Status = model.Status;
-        //            newStatusContent.DateTime = DateTime.UtcNow;
-        //            newStatusContent.Weight = lastMinuteContent.Count();
-        //            newStatusContent = _updateStatusContent.Add(newStatusContent);
-        //            return View(nameof(Details), newStatusContent);
-
-        //        }
-        //        else
-        //        {
-        //            lastMinuteContent.FirstOrDefault().Weight++;
-        //            var newStatusContent = _updateStatusContent.Update(lastMinuteContent.FirstOrDefault());
-        //            return View(nameof(Details), newStatusContent);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-        //}
 
 
         public bool IsBearerValid(Microsoft.AspNetCore.Http.HttpRequest request)

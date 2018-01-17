@@ -50,26 +50,39 @@ namespace tabletop.Services
         public UpdateStatus AddOrUpdate(UpdateStatus updateStatusContent)
         {
             var getLastMinuteContent = GetLastMinute(updateStatusContent.Name);
+            var lastMinuteContent = getLastMinuteContent.ToList();
+            var firstLastMinuteContent = lastMinuteContent.FirstOrDefault();
 
-            if (getLastMinuteContent.ToArray().Length == 0)
+            if (!lastMinuteContent.Any())
             {
-                var newStatusContent = new UpdateStatus();
-                newStatusContent.Name = updateStatusContent.Name;
-                newStatusContent.Status = updateStatusContent.Status;
-                newStatusContent.DateTime = DateTime.UtcNow;
-                newStatusContent.Weight = 1;
+                var newStatusContent = new UpdateStatus
+                {
+                    Name = updateStatusContent.Name,
+                    Status = updateStatusContent.Status,
+                    DateTime = DateTime.UtcNow,
+                    Weight = 1
+                };
                 _context.UpdateStatus.Add(newStatusContent);
                 _context.SaveChanges();
                 return newStatusContent;
             }
-            else
+
+            if (firstLastMinuteContent != null)
             {
-                getLastMinuteContent.FirstOrDefault().Weight++;
-                getLastMinuteContent.FirstOrDefault().DateTime = DateTime.UtcNow;
-                _context.Attach(getLastMinuteContent.FirstOrDefault()).State = EntityState.Modified;
+                firstLastMinuteContent.Weight++;
+                firstLastMinuteContent.DateTime = DateTime.UtcNow;
+                _context.Attach(firstLastMinuteContent).State = EntityState.Modified;
                 _context.SaveChanges();
-                return getLastMinuteContent.FirstOrDefault();
+                return firstLastMinuteContent;
             }
+
+            var errorResult = new UpdateStatus
+            {
+                Name = "request from database went wrong",
+                Status = -400,
+            };
+            return errorResult;
+
         }
 
 
@@ -83,7 +96,6 @@ namespace tabletop.Services
             var lastMinute = new DateTime(nowTicks - (nowTicks % (1000 * 1000 * 10 * 60))); // 60
             //var lastMinute = DateTime.UtcNow.Subtract(new TimeSpan(0, 0, 30, 0));
 
-            // UpdateStatusContent.Name.ToString()
             var lastMinuteRequests = _context.UpdateStatus
                 .Where(p => p.DateTime > lastMinute)
                 .Where(b => b.Name == name);
@@ -109,19 +121,18 @@ namespace tabletop.Services
 
         public GetStatus IsFree(string name)
         {
-            var IsFreeStatus = new GetStatus();
-            IsFreeStatus.Name = name;
+            var isFreeStatus = new GetStatus {Name = name};
 
             var isFree = _context.UpdateStatus
                 .Where(p => p.DateTime > DateTime.UtcNow.Subtract(new TimeSpan(0, 0, 2, 0)))
                 .Where(b => b.Name == name).ToArray();
            
-            IsFreeStatus.IsFree = !isFree.Any();
+            isFreeStatus.IsFree = !isFree.Any();
 
             var lastByName = GetLatestDateTimeByName(name);
-            IsFreeStatus.DateTime = lastByName;
+            isFreeStatus.DateTime = lastByName;
 
-            return IsFreeStatus;
+            return isFreeStatus;
         }
 
 
@@ -133,24 +144,29 @@ namespace tabletop.Services
 
         public DateTime GetLatestDateTimeByName(string name)
         {
-
             var getLatestDateTimeByName = _context.UpdateStatus.LastOrDefault(b => b.Name == name);
-            if (getLatestDateTimeByName != null)
-            {
-                return _context.UpdateStatus
-                    .LastOrDefault(b => b.Name == name).DateTime;
-            }
-            else
-            {
-                return new DateTime();
+            if (getLatestDateTimeByName == null) return new DateTime();
 
-            }
+            var lastObject = _context.UpdateStatus
+                .LastOrDefault(b => b.Name == name);
+            return lastObject?.DateTime ?? new DateTime();
         }
         public IEnumerable<UpdateStatus> GetRecentByName(string name)
         {
             return _context.UpdateStatus
                 .Where(p => p.DateTime > DateTime.UtcNow.Subtract(new TimeSpan(0, 8, 0, 0)))
                 .Where(b => b.Name == name);
+        }
+
+        public IEnumerable<UpdateStatus> ListOfWorkDayByName(string name, DateTime dateTime)
+        {
+
+            var startDateTime = dateTime.ToUniversalTime().AddHours(11);
+            var endDateTime = dateTime.ToUniversalTime().AddHours(19);
+            var result = _context.UpdateStatus
+                .Where(p => p.DateTime >= startDateTime && p.DateTime <= endDateTime)
+                .Where(b => b.Name == name);
+            return result;
         }
 
     }

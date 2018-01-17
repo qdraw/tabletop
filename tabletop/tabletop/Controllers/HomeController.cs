@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
@@ -16,16 +17,37 @@ namespace tabletop.Controllers
             _updateStatusContent = updateStatusContent;
         }
 
-        public IActionResult Index(string name)
+        public IActionResult Index(string name, string date)
         {
-            var model = new UniqueNamesViewModel();
-            model.List = _updateStatusContent.GetUniqueNames();
-            model.Name = name;
+            var model = new UniqueNamesViewModel
+            {
+                List = _updateStatusContent.GetUniqueNames(),
+                Name = name
+            };
 
             if (string.IsNullOrEmpty(name))
             {
                 model.Name = "tafelvoetbal";
             }
+
+            var matchNameList = model.List.Where(p => p == model.Name);
+
+            if (!matchNameList.Any())
+            {
+                return NotFound("not found");
+            }
+            
+
+            //if (!string.IsNullOrEmpty(date))
+            //{
+            //    var dateTime = new DateTime();
+            //    DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
+
+            //    if (dateTime.Year > 2000)
+            //    {
+            //        var test = "";
+            //    }
+            //}
 
             return View(model);
         }

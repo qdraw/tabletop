@@ -69,6 +69,7 @@ h1 {
     left: 50%;
     width: 58px;
     height: 58px;
+    -ms-background-size: 58px 58px;
     background-size: 58px 58px;
     margin-top: -29px;
     margin-left: -29px;
@@ -119,10 +120,13 @@ h1 {
 @media screen and (min-width: 960px) and (max-width: 1200px) {
 
 	.databox {
-		transform:scaleY(1.4);
+	    -ms-transform:scaleY(1.4);
+	    -webkit-transform:scaleY(1.4);
+	    transform:scaleY(1.4);
 		margin-top: 10%;
 	}
-	#data {
+
+    #data {
 		padding-top: 0.5%;
 		width: 90%;
 		display: block;
@@ -140,10 +144,13 @@ h1 {
 @media screen and (min-width: 670px) and (max-width: 960px) {
 
 	.databox {
-		transform:scaleY(1.4);
+	    -ms-transform:scaleY(1.4);
+	    -webkit-transform:scaleY(1.4);
+	    transform:scaleY(1.4);
 		margin-top: 10%;
 	}
-	#data {
+
+    #data {
 		padding-top: 0.5%;
 		width: 90%;
 		display: block;
@@ -161,12 +168,14 @@ h1 {
 @media screen and (min-width: 460px) and (max-width: 670px) {
 
 	.databox {
-		transform:scaleY(2);
+	    -ms-transform:scaleY(2);
+	    -webkit-transform:scaleY(2);
+	    transform:scaleY(2);
 		margin-top: 20%;
 		/* background-color: yellow; */
-
 	}
-	#data {
+
+    #data {
 		padding-top: 0.5%;
 		width: 90%;
 		display: block;
@@ -184,11 +193,14 @@ h1 {
 @media screen and (max-width: 460px) {
 
 	.databox {
-		background-color: yellow;
-		transform:scaleY(2.4);
+	    background-color: yellow;
+	    -ms-transform:scaleY(2.4);
+	    -webkit-transform:scaleY(2.4);
+	    transform:scaleY(2.4);
 		margin-top: 26%;
 	}
-	#data {
+
+    #data {
 		padding-top: 0.5%;
 		width: 90%;
 		display: block;
@@ -201,4 +213,57 @@ h1 {
 		margin-left: -18%;
 	}
 
+}
+
+.primary_nav_wrap.left {
+    margin-top: -50px;
+    text-align: left;
+} 
+
+.primary_nav_wrap.right {
+    margin-top: 15px;
+    width: 80%;
+    margin-left: 20%;
+    height: 50px;
+    text-align: right;
+}
+
+.primary_nav_wrap ul
+{
+    list-style:none;
+    margin:0;
+    padding: 0;
+    display: inline-block;
+    text-align: right;
+
+}
+
+.primary_nav_wrap ul a
+{
+    display:block;
+    color:#333;
+    text-decoration:none;
+    font-weight:700;
+    font-size:12px;
+    line-height:32px;
+    padding:0 15px;
+    font-family:"HelveticaNeue","Helvetica Neue",Helvetica,Arial,sans-serif
+}
+
+.primary_nav_wrap ul li
+{
+    display: inline-block;
+    text-align: right;
+    margin:0;
+    padding:0
+}
+
+.primary_nav_wrap ul li.current-menu-item
+{
+    background:#ddd
+}
+
+.primary_nav_wrap ul li:hover
+{
+    background:#f6f6f6
 }

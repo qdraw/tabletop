@@ -3,23 +3,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <link rel="shortcut icon" type="image/png" id="dynamic-favicon" href="img/favicon_free.png" sizes="32x32" />
+    <meta charset="utf-8"/>
+    <link rel="shortcut icon" type="image/png" id="dynamic-favicon" href="img/favicon_free.png" sizes="32x32"/>
     <title>@Model.Name - tabletop</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
+<nav class="primary_nav_wrap right">
+    <ul>
+        @*    <li>@Html.ActionLink("Home", $"Index")</li>*@
+        
+        @foreach(var item in Model.List)
+        {
+            if (@item == @Model.Name)
+            {
+                <li class="current-menu-item"><a href = "?name=@item" > @item </a></li>
+            }
+            else
+            {
+                <li><a href="?name=@item"> @item </a></li>
+            
+            }
+        }
+        @*https://codepen.io/philhoyt/pen/ujHzd*@
 
-    <div id="preloader"></div>
+    </ul>
+</nav>
+<nav class="primary_nav_wrap left">
+    <ul>
+        <li><a href="?name=@Model.Name"> Tabletop </a> </li>
+    </ul>
+</nav>
 
-    <h1 id="latestactivity"></h1>
-    <h1 id="isfree"></h1>
+<div id="preloader"></div>
 
-    <div class="databox">
-        <svg id="data"></svg>
-    </div>
+<h1 id="latestactivity"></h1>
+<h1 id="isfree"></h1>
+
+<div class="databox">
+    <svg id="data"></svg>
+</div>
 <div class="notes">
     <span class="u6">-6 uur</span>
     <span class="u5">-5 uur</span>
@@ -31,23 +56,7 @@
 </div>
 
 
-<br/><br/>
-<hr />
-<table>
-    <tr>
-        <td>TOC:</td>
-    </tr>
 
-    @foreach (var item in Model.List)
-    {
-        <tr>
-            <td><a href="?name=@item">@item</a></td>
-            @*<td>@Html.ActionLink(@item, "Index", new { name = @item })</td>*@
-        </tr>
-    }
-
-</table>
-<hr/>
 <script type="text/javascript">
     window.envName = "@Model.Name";
 </script>
@@ -61,7 +70,7 @@
         e=o.createElement(i);r=o.getElementsByTagName(i)[0];
         e.src='https://www.google-analytics.com/analytics.js';
         r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-    ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/' });
+    ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/?name=@Model.Name' });
 </script>
 <!-- end Google Analytics. -->
 
