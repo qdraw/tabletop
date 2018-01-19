@@ -160,7 +160,9 @@ var draw = {
                d3.axisBottom(x)
                 .tickFormat(function(d,i) {
                     if (d.indexOf(":00") >= 0 || d.indexOf(":30") >= 0) {
-                        return d;
+                        var offset = new Date().getTimezoneOffset() / 60 * -1;
+                        var time = Number(d.substr(0, 2)) + offset + ":" + d.substr(3, 2) ;
+                        return time;
                     }
                     // if ((i % 10) == 0) {
                     //     console.log(i);
