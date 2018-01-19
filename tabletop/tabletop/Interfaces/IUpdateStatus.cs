@@ -20,9 +20,10 @@ namespace tabletop.Interfaces
         IEnumerable<string> GetUniqueNames();
         IEnumerable<UpdateStatus> GetAllByName(string name);
         IEnumerable<UpdateStatus> GetRecentByName(string name);
-        IEnumerable<UpdateStatus> ListOfWorkDayByName(string name, DateTime dateTime);
+        IEnumerable<UpdateStatus> GetTimeSpanByName(string name, DateTime startDateTime, DateTime endDateTime);
 
         GetStatus IsFree(string name);
 
+        
     }
 }

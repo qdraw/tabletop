@@ -158,11 +158,8 @@ namespace tabletop.Services
                 .Where(b => b.Name == name);
         }
 
-        public IEnumerable<UpdateStatus> ListOfWorkDayByName(string name, DateTime dateTime)
+        public IEnumerable<UpdateStatus> GetTimeSpanByName(string name, DateTime startDateTime, DateTime endDateTime)
         {
-
-            var startDateTime = dateTime.ToUniversalTime().AddHours(11);
-            var endDateTime = dateTime.ToUniversalTime().AddHours(19);
             var result = _context.UpdateStatus
                 .Where(p => p.DateTime >= startDateTime && p.DateTime <= endDateTime)
                 .Where(b => b.Name == name);

@@ -1,12 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using tabletop.Dtos;
 using tabletop.Interfaces;
 using tabletop.Models;
+using tabletop.ViewModels;
 
+/*
+There is no ApiController class anymore since MVC and WebAPI have been merged in ASP.NET Core.
+However, the Controller class of MVC brings in a bunch of features you probably won't need
+when developing just a Web API, such as a views and model binding.
+For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+https://stackoverflow.com/questions/38667445/is-apicontroller-deprecated-in-net-core/38672681
+*/
 
 namespace tabletop.Controllers
 {
@@ -57,14 +64,14 @@ namespace tabletop.Controllers
             // return View(model);
         }
 
-        [HttpGet]
-        [Produces("application/json")]
-        public IActionResult GetUnixTime()
-        {
-            var unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            return Json(unixTimestamp);
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public IActionResult GetUnixTime()
+        //{
+        //    var unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+        //    return Json(unixTimestamp);
 
-        }
+        //}
 
         [HttpGet]
         [Produces("application/json")]
@@ -106,28 +113,139 @@ namespace tabletop.Controllers
 
         }
 
+        
 
         [HttpGet]
         [Produces("application/json")]
-        public IActionResult ListOfWorkDayByName(string name, string date)
+        public IActionResult EventsOfficeHours(DateDto dto)
         {
-            if (!string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(name))
+            var dateTime = dto.GetDateTime();
+            const int interval = 60 * 5; // 5 minutes
+            if (!string.IsNullOrEmpty(dto.Name) && dateTime.Year > 2015 )
             {
-                var dateTime = new DateTime();
-                DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
+                var startDateTime = dateTime.ToUniversalTime().AddHours(9);
+                var endDateTime = dateTime.ToUniversalTime().AddHours(18);
+                var statusContent = _updateStatusContent.GetTimeSpanByName(
+                        dto.Name, 
+                        startDateTime, 
+                        endDateTime
+                    ).ToList().OrderBy(p => p.DateTime);
 
-                if (dateTime.Year <= 2000) return BadRequest("date fails");
-                var model = new RecentStatusClass
+                var model = new EventsOfficeHoursModel
                 {
-                    RecentStatus = _updateStatusContent.ListOfWorkDayByName(name, dateTime)
+                    Day = dateTime.DayOfWeek,
+                    StartDateTime = startDateTime,
+                    EndDateTime = endDateTime,
+                    AmountOfMotions =  new List<WeightViewModel>()
                 };
-                var listOf = model.RecentStatus.ToList();
 
-                return Json(listOf);
+                var i = dto.GetUnixTime(startDateTime);
+                while (i <= dto.GetUnixTime(endDateTime))
+                {
 
+                    var startIntervalDateTime = dto.UnixTimeToDateTime(i);
+                    var endIntervalDateTime = dto.UnixTimeToDateTime(i+interval);
+
+                    var contentUpdateStatuses = statusContent.Where(p => p.DateTime > startIntervalDateTime && p.DateTime < endIntervalDateTime).ToList(); 
+                    // Sum Weight Select-Statement >> Advies Joost!
+                    //var contentUpdateStatusesExtended = statusContent
+                    //    .Where(p => p.DateTime > startIntervalDateTime && p.DateTime < endIntervalDateTime)
+                    //    .GroupBy(p => p.Weight)
+                    //    .Select(p => new { WeightSum = p.Sum(c => c.Weight) }); // Sum Weight Select-Statement
+
+                    var eventItem = new WeightViewModel();
+                    eventItem.StartDateTime = startIntervalDateTime;
+                    eventItem.EndDateTime = endIntervalDateTime;
+
+                    //if (contentUpdateStatusesExtended != null && contentUpdateStatusesExtended.Any() && contentUpdateStatusesExtended.FirstOrDefault() != null)
+                    //{
+                    //    eventItem.Weight = contentUpdateStatusesExtended.FirstOrDefault().WeightSum;
+
+                    //}
+
+                    eventItem.Weight = 0;
+                    eventItem.Label = startIntervalDateTime.ToString("HH:mm");
+
+                    if (contentUpdateStatuses.Any())
+                    {
+                        foreach (var item in contentUpdateStatuses)
+                        {
+                            eventItem.Weight += item.Weight;
+                        }
+                    }
+
+                    model.AmountOfMotions.Add(eventItem);
+
+                    i += interval; 
+                }
+
+                model.Length = model.AmountOfMotions.Count();
+
+
+                //foreach (var item in statusContent)
+                //{
+
+                //    var eventItem = new WeightViewModel();
+                //    eventItem.DateTime = item.DateTime;
+                //    eventItem.Weight = item.Weight;
+                //    model.AmountOfMotions.Add(eventItem);
+                //}
+
+                return Json(model);
             }
             return BadRequest("date or name fails");
         }
+
+
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public IActionResult LegacyEventsOfficeHours(string name, string date)
+        //{
+        //    if (!string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(name))
+        //    {
+        //        // Accepts relative dates '1' and absolute or '2018-01-19'
+
+        //        var dateTime = new DateTime();
+
+        //        var parsedBool = Int32.TryParse(date, out var relativeDate);
+        //        if (parsedBool)
+        //        {
+        //            dateTime = DateTime.UtcNow.Subtract(new TimeSpan(relativeDate, 0, 0, 0));
+        //            dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
+
+        //            //switch (dateTime.DayOfWeek)
+        //            //{
+        //            //    case DayOfWeek.Saturday:
+        //            //        return Json("Saturday");
+        //            //        break;
+        //            //    case DayOfWeek.Sunday:
+        //            //        return Json("Sunday");
+        //            //        break;
+        //            //}
+        //        }
+        //        else
+        //        {
+        //            DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
+        //        }
+
+        //        if (dateTime.Year <= 2010) return BadRequest("date fails");
+
+        //        var startDateTime = dateTime.ToUniversalTime().AddHours(11);
+        //        var endDateTime = dateTime.ToUniversalTime().AddHours(19);
+        //        // between 10-18 UTC
+
+        //        var model = new RecentStatusClass
+        //        {
+        //            RecentStatus = _updateStatusContent.GetTimeSpanByName(name, startDateTime, endDateTime)
+        //        };
+
+        //        var listOf = model.RecentStatus.ToList();
+
+        //        return Json(listOf);
+
+        //    }
+        //    return BadRequest("date or name fails");
+        //}
 
 
         [HttpGet]
@@ -202,6 +320,5 @@ namespace tabletop.Controllers
                 return false;
             }
         }
-
     }
 }

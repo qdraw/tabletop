@@ -18,4 +18,5 @@ namespace tabletop.Models
 
         public int Weight { get; set; }
     }
+
 }
