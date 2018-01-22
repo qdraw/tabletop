@@ -40,7 +40,7 @@ namespace tabletop
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, 
+        public void Configure(IApplicationBuilder app,
             IHostingEnvironment env,
             ILogger<Startup> logger)
         {
@@ -49,6 +49,8 @@ namespace tabletop
                 app.UseDeveloperExceptionPage();
             }
 
+            // https://stackoverflow.com/questions/45311393/asp-net-core-reverse-proxy-with-different-root
+            app.UsePathBase("/tabletop");
 
             app.UseMvc(ConfigureRoutes);
 
