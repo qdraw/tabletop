@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
@@ -17,12 +16,20 @@ namespace tabletop.Controllers
             _updateStatusContent = updateStatusContent;
         }
 
-        public IActionResult Index(string name, string date)
+        public IActionResult Index(string name, int date)
         {
-            var model = new UniqueNamesViewModel
+            if (date <= -1)
+            {
+                date = date * -1;
+            }
+
+            var model = new HomeViewModel
             {
                 List = _updateStatusContent.GetUniqueNames(),
-                Name = name
+                Name = name,
+                RelativeDate = date,
+                TomorrowRelativeDate = date-1,
+                YesterdayRelativeDate = date+1
             };
 
             if (string.IsNullOrEmpty(name))
@@ -36,18 +43,9 @@ namespace tabletop.Controllers
             {
                 return NotFound("not found");
             }
-            
 
-            //if (!string.IsNullOrEmpty(date))
-            //{
-            //    var dateTime = new DateTime();
-            //    DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
 
-            //    if (dateTime.Year > 2000)
-            //    {
-            //        var test = "";
-            //    }
-            //}
+
 
             return View(model);
         }

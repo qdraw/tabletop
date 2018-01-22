@@ -39,8 +39,21 @@ namespace tabletop.Dtos
         {
             // Unix timestamp is seconds past epoch
             DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToUniversalTime();
             return dtDateTime;
+        }
+
+        public DateTime RoundUp(DateTime dt, TimeSpan d)
+        {
+            var modTicks = dt.Ticks % d.Ticks;
+            var delta = modTicks != 0 ? d.Ticks - modTicks : 0;
+            return new DateTime(dt.Ticks + delta, dt.Kind);
+        }
+
+        public DateTime RoundDown(DateTime dt, TimeSpan d)
+        {
+            var delta = dt.Ticks % d.Ticks;
+            return new DateTime(dt.Ticks - delta, dt.Kind);
         }
 
 

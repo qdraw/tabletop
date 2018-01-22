@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,40 +81,102 @@ namespace tabletop.Controllers
             return Json(_updateStatusContent.GetUniqueNames());
         }
 
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public IActionResult GetAll(string name)
+        //{
+
+        //    if (string.IsNullOrEmpty(name))
+        //    {
+        //        var model = new RecentStatusClass();
+        //        model.RecentStatus = _updateStatusContent.GetAll();
+        //        var listOf = model.RecentStatus.ToList();
+        //        return Json(listOf);
+        //    }
+
+        //    else {
+        //        var model = new RecentStatusClass();
+        //        model.RecentStatus = _updateStatusContent.GetAllByName(name);
+        //        var listOf = model.RecentStatus.ToList();
+        //        return Json(listOf);
+        //    }
+
+        //}
+
         [HttpGet]
         [Produces("application/json")]
-        public IActionResult GetAll(string name)
+        public IActionResult EventsRecent(DateDto dto)
         {
 
-            if (string.IsNullOrEmpty(name))
+            //var statusContent = _updateStatusContent.GetRecentByName(dto.Name);
+
+
+
+            var startDateTime = dto.RoundDown(DateTime.UtcNow.Subtract(new TimeSpan(0, 8, 0, 0)),new TimeSpan(0,0,5,0));
+            var endDateTime = dto.RoundUp(DateTime.UtcNow, new TimeSpan(0, 0, 5, 0));
+
+
+            var statusContent = _updateStatusContent.GetTimeSpanByName(
+                dto.Name,
+                startDateTime,
+                endDateTime
+            ).ToList().OrderBy(p => p.DateTime);
+
+            var model = new EventsOfficeHoursModel
             {
-                var model = new RecentStatusClass();
-                model.RecentStatus = _updateStatusContent.GetAll();
-                var listOf = model.RecentStatus.ToList();
-                return Json(listOf);
+                Day = startDateTime.DayOfWeek,
+                StartDateTime = startDateTime,
+                EndDateTime = endDateTime,
+                AmountOfMotions = new List<WeightViewModel>()
+            };
+            const int interval = 60 * 5; // 5 minutes
+
+            var i = dto.GetUnixTime(model.StartDateTime);
+            while (i <= dto.GetUnixTime(model.EndDateTime))
+            {
+
+                var startIntervalDateTime = dto.UnixTimeToDateTime(i);
+                var endIntervalDateTime = dto.UnixTimeToDateTime(i + interval);
+
+                var contentUpdateStatuses = statusContent.Where(p => p.DateTime > startIntervalDateTime && p.DateTime < endIntervalDateTime).ToList();
+
+                var eventItem = new WeightViewModel();
+                eventItem.StartDateTime = startIntervalDateTime;
+                eventItem.EndDateTime = endIntervalDateTime;
+
+                eventItem.Weight = 0;
+                eventItem.Label = startIntervalDateTime.ToString("HH:mm");
+
+                if (contentUpdateStatuses.Any())
+                {
+                    foreach (var item in contentUpdateStatuses)
+                    {
+                        eventItem.Weight += item.Weight;
+                    }
+                }
+
+                model.AmountOfMotions.Add(eventItem);
+
+                i += interval;
             }
 
-            else {
-                var model = new RecentStatusClass();
-                model.RecentStatus = _updateStatusContent.GetAllByName(name);
-                var listOf = model.RecentStatus.ToList();
-                return Json(listOf);
-            }
-
+            model.Length = model.AmountOfMotions.Count();
+            
+            return Json(model);
         }
 
-        [HttpGet]
-        [Produces("application/json")]
-        public IActionResult GetRecentByName(string name)
-        {
-            var model = new RecentStatusClass {RecentStatus = _updateStatusContent.GetRecentByName(name)};
-            var listOf = model.RecentStatus.ToList();
 
-            return Json(listOf);
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public IActionResult EventsRecent(DateDto dto)
+        //{
+        //    var model = new RecentStatusClass { RecentStatus = _updateStatusContent.GetRecentByName(dto.Name) };
+        //    var dateTime = dto.GetDateTime();
 
-        }
+        //    return Json(model.RecentStatus);
+        //}
 
-        
+
 
         [HttpGet]
         [Produces("application/json")]
@@ -181,16 +244,6 @@ namespace tabletop.Controllers
 
                 model.Length = model.AmountOfMotions.Count();
 
-
-                //foreach (var item in statusContent)
-                //{
-
-                //    var eventItem = new WeightViewModel();
-                //    eventItem.DateTime = item.DateTime;
-                //    eventItem.Weight = item.Weight;
-                //    model.AmountOfMotions.Add(eventItem);
-                //}
-
                 return Json(model);
             }
             return BadRequest("date or name fails");
@@ -248,23 +301,19 @@ namespace tabletop.Controllers
         //}
 
 
-        [HttpGet]
-        [Produces("application/json")]
-        public IActionResult GetLastMinute(string name)
-        {
-            var model = new RecentStatusClass {RecentStatus = _updateStatusContent.GetLastMinute(name)};
-            var listOf = model.RecentStatus.ToList();
-            return Json(listOf);
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public IActionResult GetLastMinute(string name)
+        //{
+        //    var model = new RecentStatusClass {RecentStatus = _updateStatusContent.GetLastMinute(name)};
+        //    var listOf = model.RecentStatus.ToList();
+        //    return Json(listOf);
 
-        }
+        //}
 
         
         public IActionResult Index()
         {
-            //var model = new HomeIndexViewModel();
-            //model.Restaurants = _restaurantData.getAll();
-            //model.CurrentMessage = _greeter.GetTheMessageOfTheDay();
-            //return View(model);
             return View();
         }
 

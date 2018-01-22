@@ -1,4 +1,4 @@
-﻿@model tabletop.ViewModels.UniqueNamesViewModel
+﻿@model tabletop.ViewModels.HomeViewModel
 
 <!DOCTYPE html>
 <html>
@@ -7,72 +7,105 @@
     <link rel="shortcut icon" type="image/png" id="dynamic-favicon" href="img/favicon_free.png" sizes="32x32"/>
     <title>@Model.Name - tabletop</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles-v2.css">
 </head>
 <body>
 
-<nav class="primary_nav_wrap right">
-    <ul>
-        @*    <li>@Html.ActionLink("Home", $"Index")</li>*@
-        
-        @foreach(var item in Model.List)
-        {
-            if (@item == @Model.Name)
+    <nav class="primary_nav_wrap right">
+        <ul>
+            @*    <li>@Html.ActionLink("Home", $"Index")</li>*@
+
+            @foreach (var item in Model.List)
             {
-                <li class="current-menu-item"><a href = "?name=@item" > @item </a></li>
+                if (@item == @Model.Name)
+                {
+                    <li class="current-menu-item"><a href="?name=@item"> @item </a></li>
+                }
+                else
+                {
+                    <li><a href="?name=@item"> @item </a></li>
+
+                }
             }
-            else
-            {
-                <li><a href="?name=@item"> @item </a></li>
-            
-            }
-        }
-        @*https://codepen.io/philhoyt/pen/ujHzd*@
+            @*https://codepen.io/philhoyt/pen/ujHzd*@
 
-    </ul>
-</nav>
-<nav class="primary_nav_wrap left">
-    <ul>
-        <li><a href="?name=@Model.Name"> Tabletop </a> </li>
-    </ul>
-</nav>
+        </ul>
+    </nav>
+    <nav class="primary_nav_wrap left">
+        <ul>
+            <li><a href="?name=@Model.Name"> Tabletop </a> </li>
+        </ul>
+    </nav>
 
-<div id="preloader"></div>
+    <div id="preloader"></div>
 
-<h1 id="latestactivity"></h1>
-<h1 id="isfree"></h1>
+    <h1 id="latestactivity"></h1>
+    <h1 id="isfree"></h1>
 
-<div class="databox">
-    <svg id="data"></svg>
-</div>
-<div class="notes">
-    <span class="u6">-6 uur</span>
-    <span class="u5">-5 uur</span>
-    <span class="u4">-4 uur</span>
-    <span class="u3">-3 uur</span>
-    <span class="u2">-2 uur</span>
-    <span class="u1">-1 uur</span>
-    <span class="u0">nu</span>
-</div>
+    <div class="databox">
+        <svg id="data">
+            <g class="bars"></g>
+        </svg>
+    </div>
+
+
+    <a asp-controller="Home" asp-action="Index" asp-route-date="@Model.YesterdayRelativeDate">Prev</a>
+
+    @if (Model.RelativeDate != 0)
+    {
+    <a asp-controller="Home" asp-action="Index" asp-route-date="@Model.TomorrowRelativeDate">Next</a>
+
+    }
 
 
 
-<script type="text/javascript">
-    window.envName = "@Model.Name";
-</script>
-<script type="text/javascript" src="js/vendor/d3.v4.min.js"></script>
-<script type="text/javascript" src="js/script.js"></script>
 
-<!-- Google Analytics. -->
-<script type="text/javascript">
+
+    @if (Model.RelativeDate == 0)
+    {
+        <script type="text/javascript">
+    window.updateIsFreeEnv = {
+        "url": "api/isfree?name=@Model.Name",
+        "updateInterval": 5000,
+        "name": "@Model.Name"
+    };
+    window.drawEnv = {
+        "url": "api/EventsRecent?name=@Model.Name",
+        "updateInterval": 10000,
+        "name": "@Model.Name"
+    };
+        </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+        window.updateIsFreeEnv = {
+            "url": null,
+            "updateInterval": null,
+            "name": null
+        };
+        window.drawEnv = {
+            "url": "api/EventsOfficeHours?name=@Model.Name&date=@Model.RelativeDate",
+            "updateInterval": null,
+            "name": "@Model.Name"
+        };
+        </script>
+    }
+
+    <script type="text/javascript" src="js/vendor/d3.v4.min.js"></script>
+    <script type="text/javascript" src="js/draw.js"></script>
+    <script type="text/javascript" src="js/updateIsFree.js"></script>
+
+    <!-- Google Analytics. -->
+    <script type="text/javascript">
     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
         e=o.createElement(i);r=o.getElementsByTagName(i)[0];
         e.src='https://www.google-analytics.com/analytics.js';
         r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-    ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/?name=@Model.Name' });
-</script>
-<!-- end Google Analytics. -->
+    ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/?name=@Model.Name&date=@Model.RelativeDate' });
+    </script>
+    <!-- end Google Analytics. -->
 
 </body>
 </html>
