@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <link rel="shortcut icon" type="image/png" id="dynamic-favicon" href="img/favicon_free.png" sizes="32x32"/>
+    <link rel="shortcut icon" type="image/png" id="dynamic-favicon" href="img/favicon_default.png" sizes="32x32"/>
     <title>@Model.Name - tabletop</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/styles-v2.css">
@@ -63,33 +63,33 @@
     @if (Model.RelativeDate == 0)
     {
         <script type="text/javascript">
-    window.updateIsFreeEnv = {
-        "url": "api/isfree?name=@Model.Name",
-        "updateInterval": 5000,
-        "name": "@Model.Name"
-    };
-    window.drawEnv = {
-        "url": "api/EventsRecent?name=@Model.Name",
-        "updateInterval": 10000,
-        "name": "@Model.Name",
-        "relativeDate": @Model.RelativeDate
-    };
+            window.updateIsFreeEnv = {
+                "url": "api/isfree?name=@Model.Name",
+                "updateInterval": 7000,
+                "name": "@Model.Name"
+            };
+            window.drawEnv = {
+                "url": "api/EventsRecent?name=@Model.Name",
+                "updateInterval": 60000,
+                "name": "@Model.Name",
+                "relativeDate": @Model.RelativeDate
+            };
         </script>
     }
     else
     {
         <script type="text/javascript">
-        window.updateIsFreeEnv = {
-            "url": null,
-            "updateInterval": null,
-            "name": null
-        };
-        window.drawEnv = {
-            "url": "api/EventsOfficeHours?name=@Model.Name&date=@Model.RelativeDate",
-            "updateInterval": null,
-            "name": "@Model.Name",
-            "relativeDate": @Model.RelativeDate
-        };
+            window.updateIsFreeEnv = {
+                "url": null,
+                "updateInterval": null,
+                "name": null
+            };
+            window.drawEnv = {
+                "url": "api/EventsOfficeHours?name=@Model.Name&date=@Model.RelativeDate",
+                "updateInterval": null,
+                "name": "@Model.Name",
+                "relativeDate": @Model.RelativeDate
+            };
         </script>
     }
 
