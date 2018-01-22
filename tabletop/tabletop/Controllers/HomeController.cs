@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
 using tabletop.Models;
@@ -39,16 +38,14 @@ namespace tabletop.Controllers
 
             var matchNameList = model.List.Where(p => p == model.Name);
 
-            if (!matchNameList.Any())
+            if (!matchNameList.Any() && name != "test")
             {
                 return NotFound("not found");
             }
 
-
-
-
             return View(model);
         }
+
 
         public IActionResult List()
         {

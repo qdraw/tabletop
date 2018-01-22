@@ -52,16 +52,18 @@ namespace tabletop
             // https://stackoverflow.com/questions/45311393/asp-net-core-reverse-proxy-with-different-root
             app.UsePathBase("/tabletop");
 
+            app.UseStatusCodePages("text/html", "Status code page, status code: {0}");
+
             app.UseMvc(ConfigureRoutes);
 
             //app.UseDefaultFiles();
             app.UseStaticFiles();
 
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            // app.Run(async (context) =>
+            // {
+            //     await context.Response.WriteAsync("Hello World!");
+            // });
         }
 
         private void ConfigureRoutes(IRouteBuilder routeBuilder)

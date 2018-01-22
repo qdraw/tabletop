@@ -78,19 +78,42 @@ h1 {
 }
 
 .databox {
-	width: 100%;
 	display: block;
-	height: 70%;
 	background-color: #ccc;
-	margin-bottom: 2px;
-	border-bottom: 1px solid #000;
 	display: none;
+	width: 100%;
+	overflow-x: auto;
 }
 
 #data {
 	padding-top: 0.5%;
-	width: 80%;
 	display: block;
-	margin-right: 2px;
-	border-right: 5px solid red;
+	margin-right: 0px;
+	width: 93%;
+	padding: 3%;
+	padding-right: 0px;
+	margin-right: 3%;
+}
+
+.redborder {
+	border-right: 6px solid red;
+}
+
+@media screen and (min-width: 960px) and (max-width: 1200px) {
+}
+
+@media screen and (min-width: 670px) and (max-width: 960px) {
+	#data {
+		width: 130vw;
+	}
+}
+@media screen and (min-width: 460px) and (max-width: 670px) {
+	#data {
+		width: 140vw;
+	}
+}
+@media screen and (max-width: 460px) {
+	#data {
+		width: 170vw;
+	}
 }

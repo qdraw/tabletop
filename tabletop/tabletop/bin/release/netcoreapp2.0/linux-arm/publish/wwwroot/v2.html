@@ -1,55 +1,57 @@
-﻿<!DOCTYPE html>
+
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <link rel="shortcut icon" type="image/png" id="dynamic-favicon" href="img/favicon_free.png" sizes="32x32" />
-    <title>- tabletop</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="css/styles-v2.css">
+    <meta charset="utf-8"/>
+    <link rel="shortcut icon" type="image/png" id="dynamic-favicon" href="img/favicon_free.png" sizes="32x32"/>
+    <title>tafelvoetbal - tabletop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles-v2.css">
 </head>
 <body>
 
+    <nav class="primary_nav_wrap right">
+        <ul>
+
+                    <li class="current-menu-item"><a href="?name=tafelvoetbal"> tafelvoetbal </a></li>
+
+
+        </ul>
+    </nav>
+    <nav class="primary_nav_wrap left">
+        <ul>
+            <li><a href="?name=tafelvoetbal"> Tabletop </a> </li>
+        </ul>
+    </nav>
+
     <div id="preloader"></div>
 
+    <h1 id="latestactivity"></h1>
     <h1 id="isfree"></h1>
-    <h2 id="latestactivity"></h2>
-
 
     <div class="databox">
-        <a class="prev" href="#"><=</a>
-        <a class="next" href="#">>=</a>
-
         <svg id="data">
             <g class="bars"></g>
         </svg>
     </div>
 
-<script type="text/javascript">
-    window.updateIsFreeEnv = {
-        "url": "isfree_name_tafelvoetbal.json?" + Date.now(),
-        "updateInterval": null,
-        "name": "tafelvoetbal"
-    };
-    window.drawEnv = {
-        "url": "EventsOfficehours_name_tafelvoetbal_date_0.json?" + Date.now(),
-        "updateInterval": null,
-        "name": "tafelvoetbal"
-    };
-</script>
-<script type="text/javascript" src="js/vendor/d3.v4.min.js"></script>
-<script type="text/javascript" src="js/draw.js"></script>
-<script type="text/javascript" src="js/updateIsFree.js"></script>
 
-<!-- Google Analytics. -->
-<script type="text/javascript">
-	(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-	function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-	e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-	e.src='https://www.google-analytics.com/analytics.js';
-	r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-	ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/' });
-</script>
-<!-- end Google Analytics. -->
+    <a href="/?name=tafelvoetbal&amp;date=1">Prev</a>
+
+    <script type="text/javascript" src="js/vendor/d3.v4.min.js"></script>
+    <script type="text/javascript" src="js/draw.js"></script>
+    <script type="text/javascript" src="js/updateisfree.js"></script>
+
+    <!-- Google Analytics. -->
+    <!-- <script type="text/javascript">
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        e.src='https://www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/?name=tafelvoetbal&date=0' });
+    </script> -->
+    <!-- end Google Analytics. -->
 
 </body>
 </html>

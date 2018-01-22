@@ -3,7 +3,8 @@ if (window.drawEnv === undefined) {
     window.drawEnv = {
         "url": "EventsOfficehours_name_tafelvoetbal_date_0.json?" + Date.now(),
         "updateInterval": null,
-        "name": "tafelvoetbal"
+        "name": "tafelvoetbal",
+        "relativeDate": 0
     };
 }
 
@@ -11,6 +12,8 @@ if (window.drawEnv === undefined) {
 var draw = {
 
     data : {},
+
+    pageLoaded: false,
 
     index : function () {
         draw.start();
@@ -31,7 +34,7 @@ var draw = {
     	draw.loadJSON(url,
     			 function(data) {
                      data = draw.checkData(data);
-                     draw.unHideElements(data);
+                     draw.unHideUpdateElements(data);
                      // data = draw.compareData(data);
                      draw.drawD3(data);
                  },
@@ -55,13 +58,19 @@ var draw = {
 
         return drawData;
     },
-    unHideElements : function(data){
+    unHideUpdateElements : function(data){
         if (data === null) {
             alert("data fails");
             return;
         }
         document.querySelector('.databox').style.display = "block";
         document.querySelector('#preloader').style.display = "none";
+
+        console.log(window.drawEnv.relativeDate);
+        if (window.drawEnv.relativeDate == 0) {
+            document.querySelector('#data').classList.add("redborder");
+            console.log("hi");
+        }
 
     },
 
@@ -191,6 +200,16 @@ var draw = {
        // exit selection
        bars
            .exit().remove();
+
+       if (!draw.pageLoaded ) {
+           if (document.querySelectorAll(".databox").length >= 1) {
+               document.querySelector(".databox").scrollLeft = 99000;
+           }
+       }
+
+       draw.pageLoaded = true;
+
+
     }
 };
 
