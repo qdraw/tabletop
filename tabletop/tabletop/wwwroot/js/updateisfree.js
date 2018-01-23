@@ -31,13 +31,14 @@ var updateIsFree = {
     					if (data.isFree) {
                             document.querySelector(".databox").style.backgroundColor = "#0DFFD5";
                             document.querySelector("link[rel*='icon']").href = "img/favicon_free.png";
-    					    document.title = "is Free now - tabletop";
+                            document.title = document.title.replace(/^(is in use)|(is free)|(Loading)/, "is free");
+                            console.log()
 
     					}
                         if (!data.isFree) {
                             document.querySelector(".databox").style.backgroundColor = "#FF807F";
                             document.querySelector("link[rel*='icon']").href = "img/favicon_inuse.png";
-                            document.title = "is in use - tabletop";
+                            document.title = document.title.replace(/^(is in use)|(is free)|(Loading)/, "is in use");
                         }
 
                     }

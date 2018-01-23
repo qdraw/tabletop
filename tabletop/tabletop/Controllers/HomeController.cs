@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
 using tabletop.Models;
 using tabletop.ViewModels;
+using tabletop.Dtos;
+
 
 namespace tabletop.Controllers
 {
@@ -15,12 +17,10 @@ namespace tabletop.Controllers
             _updateStatusContent = updateStatusContent;
         }
 
-        public IActionResult Index(string name, int date)
+        public IActionResult Index(DateDto dto)
         {
-            if (date <= -1)
-            {
-                date = date * -1;
-            }
+            var date = dto.GetRelativeDate(dto.Date);
+            var name = dto.Name;
 
             var model = new HomeViewModel
             {
@@ -28,8 +28,11 @@ namespace tabletop.Controllers
                 Name = name,
                 RelativeDate = date,
                 TomorrowRelativeDate = date-1,
-                YesterdayRelativeDate = date+1
+                YesterdayRelativeDate = date+1,
+                Day = dto.GetDateTime()
             };
+
+
 
             if (string.IsNullOrEmpty(name))
             {
@@ -43,7 +46,15 @@ namespace tabletop.Controllers
                 return NotFound("not found");
             }
 
-            return View(model);
+            if (model.RelativeDate == 0)
+            {
+                model.IsFree = _updateStatusContent.IsFree(name).IsFree;
+                model.IsFreeDateTime = _updateStatusContent.IsFree(name).DateTime;
+                return View("Live", model);
+            }
+
+            return View("Archive", model);
+
         }
 
 

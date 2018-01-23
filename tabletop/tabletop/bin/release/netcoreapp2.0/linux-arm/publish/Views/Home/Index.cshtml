@@ -39,8 +39,13 @@
 
     <div id="preloader"></div>
 
-    <h1 id="latestactivity"></h1>
+    if(@model.RelativeDate == 0) {
+    <h1 id="latestactivity">@model.IsFreeDateTime</h1>
     <h1 id="isfree"></h1>
+    }
+    else {
+    <h1 id="latestactivity">Hello</h1>
+    }
 
     <div class="databox">
         <svg id="data">

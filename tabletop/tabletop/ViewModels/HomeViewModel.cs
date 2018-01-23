@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using tabletop.Models;
 
 namespace tabletop.ViewModels
 {
@@ -14,5 +15,8 @@ namespace tabletop.ViewModels
         public int RelativeDate { get; set; }
         public int TomorrowRelativeDate { get; set; }
         public int YesterdayRelativeDate { get; set; }
+        public bool IsFree { get; set; }
+        public DateTime IsFreeDateTime { get; set; }
+        public DateTime Day { get; set; }
     }
 }

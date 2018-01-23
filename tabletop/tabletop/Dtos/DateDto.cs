@@ -11,7 +11,26 @@ namespace tabletop.Dtos
         public string Date { get; set; }
         public string Name { get; set; }
 
-        public DateTime GetDateTime()
+        public int GetRelativeDate(string dateString)
+        {
+
+            if (int.TryParse(dateString, out var date))
+            {
+                if (date <= -1)
+                {
+                    date = date * -1;
+                }
+            }
+            else
+            {
+                date = 0;
+            }
+            return date;
+        }
+
+        
+
+    public DateTime GetDateTime()
         {
             DateTime dateTime;
 

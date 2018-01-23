@@ -1,0 +1,72 @@
+﻿@model tabletop.ViewModels.HomeViewModel
+
+@{
+    ViewBag.Title = "Archive - " + @Model.Name + " (Archive) - tabletop";
+}
+
+<nav class="primary_nav_wrap right">
+    <ul>
+        @foreach (var item in Model.List)
+        {
+            if (@item == @Model.Name)
+            {
+                <li class="current-menu-item"><a href="?name=@item"> @item </a></li>
+            }
+            else
+            {
+                <li><a href="?name=@item"> @item </a></li>
+
+            }
+        }
+        @*https://codepen.io/philhoyt/pen/ujHzd*@
+
+    </ul>
+</nav>
+
+<h1 id="latestactivity">@Model.Day</h1>
+<h1 id="isfree">&nbsp;</h1>
+
+<div id="preloader"></div>
+
+<div class="databox">
+    <svg id="data">
+        <g class="bars"></g>
+    </svg>
+</div>
+
+<a asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.YesterdayRelativeDate">Prev</a>
+
+@if (Model.RelativeDate != 0)
+{
+    <a asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.TomorrowRelativeDate">Next</a>
+}
+
+<script type="text/javascript">
+    window.updateIsFreeEnv = {
+        "url": null,
+        "updateInterval": null,
+        "name": null
+    };
+    window.drawEnv = {
+        "url": "api/EventsOfficeHours?name=@Model.Name&date=@Model.RelativeDate",
+        "updateInterval": null,
+        "name": "@Model.Name",
+        "relativeDate": @Model.RelativeDate
+    };
+</script>
+
+
+<script type="text/javascript" src="js/vendor/d3.v4.min.js"></script>
+<script type="text/javascript" src="js/draw.js"></script>
+<script type="text/javascript" src="js/updateisfree.js"></script>
+
+<!-- Google Analytics. -->
+<script type="text/javascript">
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+        e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+        e.src='https://www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/?name=@Model.Name&date=@Model.RelativeDate' });
+</script>
+<!-- end Google Analytics. -->
