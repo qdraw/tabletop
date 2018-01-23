@@ -1,37 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using tabletop.Data;
 using tabletop.Interfaces;
 using tabletop.Services;
-using tabletop.Models;
 using Microsoft.Extensions.Logging;
 
 namespace tabletop
 {
     public class Startup
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
+        private string GetConnectionString()
+        {
+            var connectionString = Environment.GetEnvironmentVariable("TABLETOP_SQL");
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                connectionString = _configuration.GetConnectionString("DefaultConnection");
+            }
+            return connectionString;
+        }
+
 
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(GetConnectionString()));
             services.AddScoped<IUpdateStatus, SqlUpdateStatus>();
             services.AddMvc(options =>
             {
