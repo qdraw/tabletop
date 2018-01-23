@@ -5,6 +5,11 @@ namespace tabletop.Data
 {
     public class AppDbContext : DbContext
     {
+        // Contructor for testing
+        public AppDbContext()
+        {
+        }
+
         public AppDbContext(DbContextOptions options) : base(options)
         {
 

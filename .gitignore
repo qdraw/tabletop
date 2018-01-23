@@ -21,3 +21,5 @@
 **/obj/*
 **/.vs/*
 **/.vs*
+
+tabletop/tabletop.tests/bin/Debug/netcoreapp2.0/

@@ -62,6 +62,7 @@ namespace tabletop.Services
                     DateTime = DateTime.UtcNow,
                     Weight = 1
                 };
+
                 _context.UpdateStatus.Add(newStatusContent);
                 _context.SaveChanges();
                 return newStatusContent;
