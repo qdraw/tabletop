@@ -99,6 +99,18 @@ h1 {
 	border-right: 6px solid red;
 }
 
+.tooltip {
+  position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #6F257F;
+  padding: 10px;
+  text-align: center;
+}
+
+
 @media screen and (min-width: 960px) and (max-width: 1200px) {
 }
 
