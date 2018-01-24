@@ -186,6 +186,7 @@ body {
 @media screen and (max-width: 670px) {
 	.primary_nav_wrap ul::before {
 		content: "";
+		margin: 0px;
 	}
 }
 .primary_nav_wrap ul {

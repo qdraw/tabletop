@@ -1,7 +1,7 @@
 ﻿@model tabletop.ViewModels.HomeViewModel
 
 @{
-    ViewBag.Title = "Archive - " + @Model.Name + " ( "+ @Model.Day.Day +"-"+  @Model.Day.Month + "-" + @Model.Day.Year  + ") - tabletop";
+    ViewBag.Title = "Archive - " + @Model.Name + " ("+ @Model.Day.Day +"-"+  @Model.Day.Month + "-" + @Model.Day.Year  + ") - tabletop";
     ViewBag.Canonical = @Url.Action("Index", "Home", new {name = @Model.Name, date = @Model.Today});
 }
 
