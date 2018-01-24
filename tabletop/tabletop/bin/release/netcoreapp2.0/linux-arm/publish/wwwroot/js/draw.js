@@ -115,7 +115,6 @@ var draw = {
        return utc_timestamp_unix;
    },
 
-
     drawD3: function(data) {
         if (data === null) {
             console.log("no update");
@@ -205,11 +204,9 @@ var draw = {
          .on("mousemove", function(d){
              // console.log("sdf");
              d3.select(this).attr("fill", "#00E062");
-
              var offset = new Date().getTimezoneOffset() / 60 * -1;
              var startTime = Number(d.label.substr(0, 2)) + offset + ":" + d.label.substr(3, 2);
              var endTime = Number(d.label.substr(0, 2)) + offset + ":" + draw.leadingZero(Number(d.label.substr(3, 2))+5);
-
             tooltip
               .style("left", d3.event.pageX - 50 + "px")
               .style("top", d3.event.pageY - 60 + "px")
@@ -220,7 +217,6 @@ var draw = {
               d3.select(this).attr("fill", function() {
                  return "";
               });
-
               tooltip.style("display", "none");
           });
          // .on("click", clicked);

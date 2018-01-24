@@ -168,6 +168,10 @@ body {
 	fill: #fff;
 }
 
+.bars rect {
+	cursor: pointer;
+}
+
 .primary_nav_wrap {
 	width: calc( 100% - 30px );
 	display: inline-block;
@@ -185,7 +189,7 @@ body {
 }
 @media screen and (max-width: 670px) {
 	.primary_nav_wrap ul::before {
-		content: "";
+		content: none;
 		margin: 0px;
 	}
 }
@@ -336,6 +340,8 @@ body {
 	color: white;
 	padding: 14px;
 	text-decoration: none;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
 
 #prevnext a:hover {
@@ -344,5 +350,18 @@ body {
 #prevnext .prev {
 	margin-left: 15px;
 }
-#prevnext .next {
+
+
+
+.databox::-webkit-scrollbar {
+    width: 1em;
+}
+
+.databox::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+.databox::-webkit-scrollbar-thumb {
+  background-color: #B0BEC5;
+  border-radius: 5px;
 }
