@@ -354,6 +354,7 @@ body {
 
 
 .databox::-webkit-scrollbar {
+	-webkit-appearance: none;
     width: 1em;
 }
 
