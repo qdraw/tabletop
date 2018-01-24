@@ -25,20 +25,38 @@ var updateIsFree = {
                 function(data) {
                     if (data.dateTime !== undefined && data.isFree !== undefined) {
                         var d = new Date(data.dateTime + "+00:00");
-                        document.querySelector('#latestactivity').innerHTML = "Laatste activiteit was op: "  + d.toLocaleDateString("NL-nl") + " " + d.toLocaleTimeString("NL-nl");
-    					document.querySelector('#isfree').innerHTML = "Is Free?: "  + data.isFree;
+                        document.querySelector('#latestactivity').innerHTML = "Tabletop - Latest Activity: "  + d.toLocaleDateString("NL-nl") + " " + d.toLocaleTimeString("NL-nl");
+    					// document.querySelector('#isfree').innerHTML = "Is Free?: "  + data.isFree;
 
     					if (data.isFree) {
-                            document.querySelector(".databox").style.backgroundColor = "#0DFFD5";
+                            document.querySelector(".databox").style.backgroundColor = "#607D8B";
                             document.querySelector("link[rel*='icon']").href = "img/favicon_free.png";
                             document.title = document.title.replace(/^(is in use)|(is free)|(Loading)/, "is free");
-                            console.log()
+
+                            document.querySelector('#online-indicator').className = "circle circle-big circle-green";
+                            document.querySelector('#offline-indicator').className = "circle circle-big circle-blank";
+                            document.querySelector('#status').innerHTML = "free";
+
+                            if (document.querySelectorAll("#data.border").length >= 1) {
+                                document.querySelector('#data').classList.remove("border-red");
+                                document.querySelector('#data').classList.add("border-green");
+                            }
 
     					}
                         if (!data.isFree) {
-                            document.querySelector(".databox").style.backgroundColor = "#FF807F";
+                            document.querySelector(".databox").style.backgroundColor = "#FF8A65";
                             document.querySelector("link[rel*='icon']").href = "img/favicon_inuse.png";
                             document.title = document.title.replace(/^(is in use)|(is free)|(Loading)/, "is in use");
+
+                            document.querySelector('#online-indicator').className = "circle circle-big circle-blank";
+                            document.querySelector('#offline-indicator').className = "circle circle-big circle-red";
+                            document.querySelector('#status').innerHTML = "in use";
+
+                            if (document.querySelectorAll("#data.border").length >= 1) {
+                                document.querySelector('#data').classList.remove("border-green");
+                                document.querySelector('#data').classList.add("border-red");
+                            }
+
                         }
 
                     }

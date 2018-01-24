@@ -4,7 +4,7 @@
     ViewBag.Title = "Loading - " + @Model.Name + " (Live) - tabletop";
 }
 
-<nav class="primary_nav_wrap right">
+<nav class="primary_nav_wrap">
     <ul>
         @foreach (var item in Model.List)
         {
@@ -23,9 +23,19 @@
     </ul>
 </nav>
 
-<h1 id="latestactivity">@Model.IsFreeDateTime</h1>
-<h1 id="isfree">@Model.IsFree</h1>
+<div class="header">
 
+    <div class="panel panel-ai-indicator">
+        <div id="online-indicator" class="circle circle-big circle-blank"></div>
+        <div id="offline-indicator" class="circle circle-big circle-blank"></div>
+        <div id="status" class="indicator-text">.....</div>
+    </div>
+    <div>
+        <h1 id="latestactivity">@Model.IsFreeDateTime</h1>
+        <div class="ai-line"></div>
+        <!-- <h1 id="isfree">@Model.IsFree</h1> -->
+    </div>
+</div>
 <div id="preloader"></div>
 
 <div class="tooltip"></div>

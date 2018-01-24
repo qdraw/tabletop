@@ -69,7 +69,8 @@ var draw = {
 
         console.log(window.drawEnv.relativeDate);
         if (window.drawEnv.relativeDate == 0) {
-            document.querySelector('#data').classList.add("redborder");
+
+            document.querySelector('#data').classList.add("border");
             console.log("hi");
         }
 
@@ -129,7 +130,7 @@ var draw = {
 
        var bars = d3.select("#data .bars")
            // .attr("height", height + margin.top + margin.bottom)
-           .attr("fill", "#000")
+           .attr("fill", "#fff")
            .attr("transform","translate(" + (margin.left+20) + "," + 0 + ")")
            .selectAll("rect")
            .data(data);
@@ -171,6 +172,7 @@ var draw = {
             )
             .selectAll("text")
             .style("text-anchor", "end")
+            // .attr("fill", "#fff")
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
             .attr("transform", "rotate(-90)");
@@ -199,7 +201,7 @@ var draw = {
          .attr("height", function(d) { return height - y(d.weight); })
          .on("mousemove", function(d){
              console.log("sdf");
-             d3.select(this).attr("fill", "#588C73");
+             d3.select(this).attr("fill", "#00E062");
 
              var offset = new Date().getTimezoneOffset() / 60 * -1;
              var startTime = Number(d.label.substr(0, 2)) + offset + ":" + d.label.substr(3, 2);

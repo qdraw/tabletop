@@ -4,7 +4,7 @@
     ViewBag.Title = "Archive - " + @Model.Name + " (Archive) - tabletop";
 }
 
-<nav class="primary_nav_wrap right">
+<nav class="primary_nav_wrap">
     <ul>
         @foreach (var item in Model.List)
         {
@@ -23,8 +23,12 @@
     </ul>
 </nav>
 
-<h1 id="latestactivity">@Model.Day</h1>
-<h1 id="isfree">&nbsp;</h1>
+<div class="header">
+    <div>
+        <h1 id="latestactivity">@Model.IsFreeDateTime</h1>
+        <div class="ai-line"></div>
+    </div>
+</div>
 
 <div id="preloader"></div>
 
