@@ -1,12 +1,20 @@
 ﻿@model tabletop.ViewModels.HomeViewModel
 
 @{
-    ViewBag.Title = "Loading - " + @Model.Name + " (Live) - tabletop";
+    ViewBag.Title = "Loading - " + @Model.Name + " (live) - tabletop";
     ViewBag.Canonical = @Url.Action("Index", "Home", new {name = @Model.Name});
 
 }
 
 <nav class="primary_nav_wrap">
+    <div class="logo"><a href="@Url.Action("Index","Home")"> <span>tabletop</span> home </a></div>
+    <div id="prevnext">
+        <a class="prev" asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Yesterday">&lt;</a>
+        @if (Model.RelativeDate != 0)
+        {
+            <a class="next" asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Tomorrow">&gt;</a>
+        }
+    </div>
     <ul>
         @foreach (var item in Model.List)
         {
@@ -33,10 +41,9 @@
         <div id="status" class="indicator-text">.....</div>
     </div>
     <div>
-        <h1 id="name">Live - @Model.Name</h1>
-        <h2 id="latestactivity"> @Model.Day.Day-@Model.Day.Month-@Model.Day.Year -- @Model.IsFreeDateTime</h2>
+        <h1 id="name">live - @Model.Name</h1>
+        <h2 id="latestactivity"> @Model.Today</h2>
         <div class="ai-line"></div>
-        <!-- <h1 id="isfree">@Model.IsFree</h1> -->
     </div>
 </div>
 <div id="preloader"></div>
@@ -48,17 +55,12 @@
     </svg>
 </div>
 
-<a asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Yesterday">Prev</a>
 
-@if (Model.RelativeDate != 0)
-{
-    <a asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Tomorrow">Next</a>
-}
 
 <script type="text/javascript">
     window.updateIsFreeEnv = {
         "url": "@Url.Action("IsFree", "Api", new { name = @Model.Name })",
-        "updateInterval": 7000,
+        "updateInterval": 10000,
         "name": "@Model.Name"
     };
     window.drawEnv = {

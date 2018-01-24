@@ -1,11 +1,20 @@
 ﻿@model tabletop.ViewModels.HomeViewModel
 
 @{
-    ViewBag.Title = "Archive - " + @Model.Name + " (Archive "+ @Model.Day.Day +"-"+  @Model.Day.Month + "-" + @Model.Day.Year  + ") - tabletop";
+    ViewBag.Title = "Archive - " + @Model.Name + " ( "+ @Model.Day.Day +"-"+  @Model.Day.Month + "-" + @Model.Day.Year  + ") - tabletop";
     ViewBag.Canonical = @Url.Action("Index", "Home", new {name = @Model.Name, date = @Model.Today});
 }
 
 <nav class="primary_nav_wrap">
+<div class="logo"><a href="@Url.Action("Index","Home")"> <span>tabletop</span> home </a></div>
+
+    <div id="prevnext">
+        <a class="prev" asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Yesterday">&lt;</a>
+        @if (Model.RelativeDate != 0)
+        {
+            <a class="next" asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Tomorrow">&gt;</a>
+        }
+    </div>
     <ul>
         @foreach (var item in Model.List)
         {
@@ -22,12 +31,13 @@
         @*https://codepen.io/philhoyt/pen/ujHzd*@
 
     </ul>
+
 </nav>
 
 <div class="header">
     <div>
-        <h1 id="name">Archive - @Model.Name</h1>
-        <h2 id="latestactivity">Activities for @Model.Day.Day-@Model.Day.Month-@Model.Day.Year</h2>
+        <h1 id="name">archive - @Model.Name</h1>
+        <h2 id="latestactivity">activities for @Model.Day.Day-@Model.Day.Month-@Model.Day.Year</h2>
 
         <div class="ai-line"></div>
     </div>
@@ -42,12 +52,7 @@
     </svg>
 </div>
 
-<a asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Yesterday">Prev</a>
 
-@if (Model.RelativeDate != 0)
-{
-    <a asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Tomorrow">Next</a>
-}
 
     <script type="text/javascript">
     window.updateIsFreeEnv = {
@@ -77,6 +82,6 @@
         e=o.createElement(i);r=o.getElementsByTagName(i)[0];
         e.src='https://www.google-analytics.com/analytics.js';
         r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-    ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/?name=@Model.Name&date=@Model.RelativeDate' });
+    ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/?name=@Model.Name&date=@Model.Today' });
 </script>
 <!-- end Google Analytics. -->

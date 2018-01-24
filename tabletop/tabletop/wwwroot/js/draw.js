@@ -20,10 +20,10 @@ var draw = {
         draw.start();
 
         var updateInterval = window.drawEnv.updateInterval;
-        if (!isNaN(updateInterval) && updateInterval !== null && updateInterval !== undefined ) {
+        if (!isNaN(updateInterval) && updateInterval !== null && updateInterval !== undefined && updateInterval !== false ) {
 
             setInterval(function(){
-                if (window.drawEnv.updateInterval !== null) {
+                if (window.drawEnv.updateInterval !== false) {
                     draw.start();
                 }
             }, updateInterval);
@@ -214,7 +214,7 @@ var draw = {
               .style("left", d3.event.pageX - 50 + "px")
               .style("top", d3.event.pageY - 60 + "px")
               .style("display", "inline-block")
-              .html((startTime) + "-" + endTime + "<br>" + "Events: " + (d.weight) + "x");
+              .html((startTime) + "-" + endTime + "<br>" + "events: " + (d.weight) + "x");
           })
     	  .on("mouseout", function(d){
               d3.select(this).attr("fill", function() {
@@ -242,3 +242,5 @@ var draw = {
 };
 
 draw.index();
+
+window.draw = draw;

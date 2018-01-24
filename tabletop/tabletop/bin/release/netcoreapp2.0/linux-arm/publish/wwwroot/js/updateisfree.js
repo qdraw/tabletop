@@ -25,13 +25,13 @@ var updateIsFree = {
                 function(data) {
                     if (data.dateTime !== undefined && data.isFree !== undefined) {
                         var d = new Date(data.dateTime + "+00:00");
-                        document.querySelector('#latestactivity').innerHTML = "Latest Activity: "  + d.toLocaleDateString("NL-nl") + " " + d.toLocaleTimeString("NL-nl");
+                        document.querySelector('#latestactivity').innerHTML = "latest activity on location: "  + d.toLocaleDateString("NL-nl") + " " + d.toLocaleTimeString("NL-nl");
     					// document.querySelector('#isfree').innerHTML = "Is Free?: "  + data.isFree;
 
     					if (data.isFree) {
                             document.querySelector(".databox").style.backgroundColor = "#607D8B";
                             document.querySelector("link[rel*='icon']").href = "img/favicon_free.png";
-                            document.title = document.title.replace(/^(is in use)|(is free)|(Loading)/, "is free");
+                            document.title = document.title.replace(/^(is in use)|(free)|(Loading)/, "free");
 
                             document.querySelector('#online-indicator').className = "circle circle-big circle-green";
                             document.querySelector('#offline-indicator').className = "circle circle-big circle-blank";
@@ -46,7 +46,7 @@ var updateIsFree = {
                         if (!data.isFree) {
                             document.querySelector(".databox").style.backgroundColor = "#FF8A65";
                             document.querySelector("link[rel*='icon']").href = "img/favicon_inuse.png";
-                            document.title = document.title.replace(/^(is in use)|(is free)|(Loading)/, "is in use");
+                            document.title = document.title.replace(/^(is in use)|(free)|(Loading)/, "is in use");
 
                             document.querySelector('#online-indicator').className = "circle circle-big circle-blank";
                             document.querySelector('#offline-indicator').className = "circle circle-big circle-red";

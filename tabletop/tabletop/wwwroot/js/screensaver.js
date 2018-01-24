@@ -15,16 +15,17 @@ function idle() {
 
 	function idleHelper() {
 		isUserActive = false;
-		// console.log("Not active on screen");
-		window.drawEnv.updateInterval = null;
+		console.log("Not active on screen");
+		window.drawEnv.updateInterval = false;
 	}
 
 	function resetTimer() {
 		clearTimeout(t);
-		t = setTimeout(idleHelper, 60000);  // time is in milliseconds 188400 == 3,14 minute
+		t = setTimeout(idleHelper, 90000);  // 90000 - time is in milliseconds 188400 == 3,14 minute
 
 		if (!isUserActive) {
-			// console.log("User is back again");
+			console.log("User is back again");
+			window.draw.index();
 			window.drawEnv.updateInterval = 1;
 		}
 
