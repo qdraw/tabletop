@@ -180,8 +180,11 @@ body {
 .primary_nav_wrap .logo {
 	text-align: left;
 }
-.primary_nav_wrap li {
+.primary_nav_wrap ul {
 	text-align: right;
+}
+.primary_nav_wrap li {
+	width: 100px;
 }
 
 
@@ -220,12 +223,12 @@ body {
 }
 
 
-@media screen and (min-width: 960px) and (max-width: 1200px) {
+@media screen and (min-width: 960px) and (max-width: 1400px) {
 	.header > div {
-		width: 70%;
+		width: 75%;
 	}
 	.header > .panel-ai-indicator {
-		width: 30%;
+		width: 25%;
 	}
 }
 

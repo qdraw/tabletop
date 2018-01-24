@@ -21,8 +21,11 @@ var draw = {
 
         var updateInterval = window.drawEnv.updateInterval;
         if (!isNaN(updateInterval) && updateInterval !== null && updateInterval !== undefined ) {
+
             setInterval(function(){
-                draw.start();
+                if (window.drawEnv.updateInterval !== null) {
+                    draw.start();
+                }
             }, updateInterval);
         }
 
@@ -45,7 +48,7 @@ var draw = {
 
     checkData : function(data){
         draw.data = data;
-        console.log(draw.data);
+        // console.log(draw.data);
 
         var drawData = null;
         if (data.amountOfMotions !== undefined) {
@@ -67,11 +70,11 @@ var draw = {
         document.querySelector('.databox').style.display = "block";
         document.querySelector('#preloader').style.display = "none";
 
-        console.log(window.drawEnv.relativeDate);
+        // console.log(window.drawEnv.relativeDate);
         if (window.drawEnv.relativeDate == 0) {
 
             document.querySelector('#data').classList.add("border");
-            console.log("hi");
+            // console.log("hi");
         }
 
     },
@@ -118,7 +121,7 @@ var draw = {
             console.log("no update");
             return;
         }
-        console.log(data);
+        // console.log(data);
 
        var margin = {top: 25, right: 0, bottom: 30, left: 30},
        width = 800 + (margin.right - margin.left),
@@ -200,7 +203,7 @@ var draw = {
          .attr("y", function(d) { return y(d.weight)+5; })
          .attr("height", function(d) { return height - y(d.weight); })
          .on("mousemove", function(d){
-             console.log("sdf");
+             // console.log("sdf");
              d3.select(this).attr("fill", "#00E062");
 
              var offset = new Date().getTimezoneOffset() / 60 * -1;
@@ -234,13 +237,8 @@ var draw = {
        }
 
        draw.pageLoaded = true;
-       console.log();
 
     }
 };
-
-function clicked(d) {
-    console.log(d);
-}
 
 draw.index();
