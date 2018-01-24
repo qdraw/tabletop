@@ -8,35 +8,49 @@ namespace tabletop.Dtos
 {
     public class DateDto
     {
+
+        public DateDto()
+        {
+            Date = "0";
+        }
+
         public string Date { get; set; }
         public string Name { get; set; }
 
-        public int GetRelativeDate(string dateString)
-        {
 
-            if (int.TryParse(dateString, out var date))
+        public string LeadingZero(int number)
+        {
+            if (number <= 9)
             {
-                if (date <= -1)
-                {
-                    date = date * -1;
-                }
+                return "0" + number;
             }
-            else
-            {
-                date = 0;
-            }
-            return date;
+
+            return number.ToString();
         }
 
-        
+        public int GetRelativeDays(DateTime date)
+        {
 
-    public DateTime GetDateTime()
+            var today = RoundDown(DateTime.UtcNow, new TimeSpan(1, 0,0,0));
+
+            var differenceDateTime = today - date;
+
+            return date.Year >= 2015 ? differenceDateTime.Days : 0;
+        }
+
+        public DateTime GetDateTime()
         {
             DateTime dateTime;
 
             var parsedBool = Int32.TryParse(Date, out var relativeDate);
             if (parsedBool)
             {
+
+                if (relativeDate <= -1)
+                {
+                    relativeDate = relativeDate * -1;
+                }
+
                 dateTime = DateTime.UtcNow.Subtract(new TimeSpan(relativeDate, 0, 0, 0));
                 dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
             }

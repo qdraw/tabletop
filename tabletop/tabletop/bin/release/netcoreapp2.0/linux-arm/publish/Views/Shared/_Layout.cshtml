@@ -3,12 +3,13 @@
 <html>
 <head>
     <title>@ViewBag.Title</title>
-    <meta charset="utf-8"/>
-    <link rel="shortcut icon" type="image/png" id="dynamic-favicon" href="img/favicon_default.png" sizes="32x32"/>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/png" id="dynamic-favicon" href="@Url.Content("~/")img/favicon_default.png" sizes="32x32" />
     <meta name="viewport" content="width=device-width" />
+    <link rel="canonical" href="@ViewBag.Canonical" />
 
     @RenderSection("head", required: false)
-    <link rel="stylesheet" href="css/styles-v2.css">
+    <link rel="stylesheet" href="@Url.Content("~/")css/styles-v2.css">
 
 </head>
 

@@ -18,5 +18,9 @@ namespace tabletop.ViewModels
         public bool IsFree { get; set; }
         public DateTime IsFreeDateTime { get; set; }
         public DateTime Day { get; set; }
+        public string Yesterday { get; set; }
+        public string Tomorrow { get; set; }
+        public string Today { get; set; }
+
     }
 }

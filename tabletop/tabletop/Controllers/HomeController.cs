@@ -19,16 +19,22 @@ namespace tabletop.Controllers
 
         public IActionResult Index(DateDto dto)
         {
-            var date = dto.GetRelativeDate(dto.Date);
+            var date = dto.GetDateTime();
             var name = dto.Name;
+            var relativeDays = dto.GetRelativeDays(date);
+
+            var tommorow = date.AddDays(1);
+            var yesterday = date.AddDays(-1);
+
 
             var model = new HomeViewModel
             {
                 List = _updateStatusContent.GetUniqueNames(),
                 Name = name,
-                RelativeDate = date,
-                TomorrowRelativeDate = date-1,
-                YesterdayRelativeDate = date+1,
+                RelativeDate = relativeDays,
+                Today = date.Year + "-" + dto.LeadingZero(date.Month) + "-" + dto.LeadingZero(date.Day),
+                Tomorrow = tommorow.Year + "-"+ dto.LeadingZero(tommorow.Month) + "-" + dto.LeadingZero(tommorow.Day),
+                Yesterday = yesterday.Year + "-" + dto.LeadingZero(yesterday.Month) + "-" + dto.LeadingZero(yesterday.Day),
                 Day = dto.GetDateTime()
             };
 

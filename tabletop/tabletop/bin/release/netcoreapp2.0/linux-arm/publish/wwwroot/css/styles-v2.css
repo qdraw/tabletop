@@ -63,9 +63,11 @@ h1 {
 	font-size: 30px;
 }
 
+#name,
 #latestactivity {
 	margin-bottom: 10px;
 	color: white;
+	line-height: 1.3;
 }
 
 body {
@@ -116,6 +118,7 @@ body {
 	width: 15%;
 	position: relative;
 	font-size: 30px;
+	border-radius: 5px;
 }
 
 .indicator-text {
@@ -218,19 +221,45 @@ body {
 
 
 @media screen and (min-width: 960px) and (max-width: 1200px) {
+	.header > div {
+		width: 70%;
+	}
+	.header > .panel-ai-indicator {
+		width: 30%;
+	}
 }
 
 @media screen and (min-width: 670px) and (max-width: 960px) {
+	.header > div {
+		width: 70%;
+	}
+	.header > .panel-ai-indicator {
+		width: 30%;
+	}
 	#data {
 		width: 130vw;
 	}
 }
 @media screen and (min-width: 460px) and (max-width: 670px) {
+	.header > div {
+		width: 50%;
+	}
+	.header > .panel-ai-indicator {
+		width: 50%;
+	}
 	#data {
 		width: 140vw;
 	}
 }
 @media screen and (max-width: 460px) {
+	.header > div {
+		width: 100%;
+	}
+	.header > .panel-ai-indicator {
+		width: 100%;
+		margin-bottom: 15px;
+	}
+
 	#data {
 		width: 170vw;
 	}

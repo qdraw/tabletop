@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Loading - " + @Model.Name + " (Live) - tabletop";
+    ViewBag.Canonical = @Url.Action("Index", "Home", new {name = @Model.Name});
+
 }
 
 <nav class="primary_nav_wrap">
@@ -10,11 +12,11 @@
         {
             if (@item == @Model.Name)
             {
-                <li class="current-menu-item"><a href="?name=@item"> @item </a></li>
+                <li class="current-menu-item"><a href="@Url.Action("Index","Home", new { name = @item, date = @Model.Today } )"> @item </a></li>
             }
             else
             {
-                <li><a href="?name=@item"> @item </a></li>
+                <li><a href="@Url.Action("Index","Home", new { name = @item, date = @Model.Today } )"> @item </a></li>
 
             }
         }
@@ -31,7 +33,8 @@
         <div id="status" class="indicator-text">.....</div>
     </div>
     <div>
-        <h1 id="latestactivity">@Model.IsFreeDateTime</h1>
+        <h1 id="name">Live - @Model.Name</h1>
+        <h2 id="latestactivity"> @Model.Day.Day-@Model.Day.Month-@Model.Day.Year -- @Model.IsFreeDateTime</h2>
         <div class="ai-line"></div>
         <!-- <h1 id="isfree">@Model.IsFree</h1> -->
     </div>
@@ -45,31 +48,31 @@
     </svg>
 </div>
 
-<a asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.YesterdayRelativeDate">Prev</a>
+<a asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Yesterday">Prev</a>
 
 @if (Model.RelativeDate != 0)
 {
-    <a asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.TomorrowRelativeDate">Next</a>
+    <a asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Tomorrow">Next</a>
 }
 
 <script type="text/javascript">
     window.updateIsFreeEnv = {
-        "url": "api/isfree?name=@Model.Name",
+        "url": "@Url.Action("IsFree", "Api", new { name = @Model.Name })",
         "updateInterval": 7000,
         "name": "@Model.Name"
     };
     window.drawEnv = {
-        "url": "api/EventsRecent?name=@Model.Name",
-        "updateInterval": 60000,
+        "url": "@Url.Action("EventsRecent", "Api", new { name = @Model.Name })",
+        "updateInterval": 90000,
         "name": "@Model.Name",
         "relativeDate": @Model.RelativeDate
     };
 </script>
 
 
-<script type="text/javascript" src="js/vendor/d3.v4.min.js"></script>
-<script type="text/javascript" src="js/draw.js"></script>
-<script type="text/javascript" src="js/updateisfree.js"></script>
+<script type="text/javascript" src="@Url.Content("~/")js/vendor/d3.v4.min.js"></script>
+<script type="text/javascript" src="@Url.Content("~/")js/draw.js"></script>
+<script type="text/javascript" src="@Url.Content("~/")js/updateisfree.js"></script>
 
 <!-- Google Analytics. -->
 <script type="text/javascript">

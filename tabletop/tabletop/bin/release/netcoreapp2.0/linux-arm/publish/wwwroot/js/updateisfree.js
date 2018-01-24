@@ -25,7 +25,7 @@ var updateIsFree = {
                 function(data) {
                     if (data.dateTime !== undefined && data.isFree !== undefined) {
                         var d = new Date(data.dateTime + "+00:00");
-                        document.querySelector('#latestactivity').innerHTML = "Tabletop - Latest Activity: "  + d.toLocaleDateString("NL-nl") + " " + d.toLocaleTimeString("NL-nl");
+                        document.querySelector('#latestactivity').innerHTML = "Latest Activity: "  + d.toLocaleDateString("NL-nl") + " " + d.toLocaleTimeString("NL-nl");
     					// document.querySelector('#isfree').innerHTML = "Is Free?: "  + data.isFree;
 
     					if (data.isFree) {
