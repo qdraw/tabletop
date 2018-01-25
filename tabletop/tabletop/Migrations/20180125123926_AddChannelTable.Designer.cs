@@ -11,9 +11,10 @@ using tabletop.Data;
 namespace tabletop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class appDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180125123926_AddChannelTable")]
+    partial class AddChannelTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

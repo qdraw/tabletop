@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using tabletop.Dtos;
 using tabletop.Interfaces;
 using tabletop.Models;
@@ -22,7 +23,7 @@ namespace tabletop.Controllers
     {
         private readonly IUpdateStatus _updateStatusContent;
 
-        readonly IConfiguration _iconfiguration;
+        private readonly IConfiguration _iconfiguration;
 
         public ApiController(IUpdateStatus updateStatusContent, IConfiguration iconfiguration)
         {
@@ -40,30 +41,30 @@ namespace tabletop.Controllers
         //}
 
 
-        public IActionResult Details(int id)
-        {
-            var model = _updateStatusContent.Get(id);
-            if (model == null)
-            {
-                return NotFound();
-            }
-            return View(model);
-        }
+        //public IActionResult Details(int id)
+        //{
+        //    var model = _updateStatusContent.Get(id);
+        //    if (model == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(model);
+        //}
 
-        [HttpGet]
-        [Produces("application/json")]
-        public IActionResult GetLatestByName(string name)
-        {
-            var model = _updateStatusContent.GetLatestByName(name);
-            if (model == null)
-            {
-                return NotFound();
-            }
-            return Json(model.DateTime.ToString("yyyy-MM-ddTHH\\:mm\\:ss+00:00"));
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public IActionResult GetLatestByName(string name)
+        //{
+        //    var model = _updateStatusContent.GetLatestByName(name);
+        //    if (model == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return Json(model.DateTime.ToString("yyyy-MM-ddTHH\\:mm\\:ss+00:00"));
 
-            // return Content(model.DateTime.ToString());
-            // return View(model);
-        }
+        //    // return Content(model.DateTime.ToString());
+        //    // return View(model);
+        //}
 
         //[HttpGet]
         //[Produces("application/json")]
@@ -74,12 +75,12 @@ namespace tabletop.Controllers
 
         //}
 
-        [HttpGet]
-        [Produces("application/json")]
-        public IActionResult GetUniqueNames()
-        {
-            return Json(_updateStatusContent.GetUniqueNames());
-        }
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public IActionResult GetUniqueNames()
+        //{
+        //    return Json(_updateStatusContent.GetUniqueNames());
+        //}
 
         //[HttpGet]
         //[Produces("application/json")]
@@ -250,56 +251,7 @@ namespace tabletop.Controllers
         }
 
 
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public IActionResult LegacyEventsOfficeHours(string name, string date)
-        //{
-        //    if (!string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(name))
-        //    {
-        //        // Accepts relative dates '1' and absolute or '2018-01-19'
-
-        //        var dateTime = new DateTime();
-
-        //        var parsedBool = Int32.TryParse(date, out var relativeDate);
-        //        if (parsedBool)
-        //        {
-        //            dateTime = DateTime.UtcNow.Subtract(new TimeSpan(relativeDate, 0, 0, 0));
-        //            dateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
-
-        //            //switch (dateTime.DayOfWeek)
-        //            //{
-        //            //    case DayOfWeek.Saturday:
-        //            //        return Json("Saturday");
-        //            //        break;
-        //            //    case DayOfWeek.Sunday:
-        //            //        return Json("Sunday");
-        //            //        break;
-        //            //}
-        //        }
-        //        else
-        //        {
-        //            DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime);
-        //        }
-
-        //        if (dateTime.Year <= 2010) return BadRequest("date fails");
-
-        //        var startDateTime = dateTime.ToUniversalTime().AddHours(11);
-        //        var endDateTime = dateTime.ToUniversalTime().AddHours(19);
-        //        // between 10-18 UTC
-
-        //        var model = new RecentStatusClass
-        //        {
-        //            RecentStatus = _updateStatusContent.GetTimeSpanByName(name, startDateTime, endDateTime)
-        //        };
-
-        //        var listOf = model.RecentStatus.ToList();
-
-        //        return Json(listOf);
-
-        //    }
-        //    return BadRequest("date or name fails");
-        //}
-
+ 
 
         //[HttpGet]
         //[Produces("application/json")]
@@ -345,13 +297,17 @@ namespace tabletop.Controllers
             if (!ModelState.IsValid) return BadRequest("Model is incomplete");
             if (!bearerValid) return BadRequest("Authorisation Error");
 
-            var newStatusContent = _updateStatusContent.AddOrUpdate(model);
-            if (newStatusContent.Status == -400)
+            try
             {
-                return BadRequest("Database Error: -400");
-
+                var newStatusContent = _updateStatusContent.AddOrUpdate(model);
+                return Json(newStatusContent);
             }
-            return Json(newStatusContent);
+            catch (DbUpdateException)
+            {
+                return new StatusCodeResult(500);
+            }
+
+            
 
         }
 

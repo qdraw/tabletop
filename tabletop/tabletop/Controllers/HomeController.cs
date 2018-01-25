@@ -64,13 +64,13 @@ namespace tabletop.Controllers
         }
 
 
-        public IActionResult List()
-        {
-            var model = new RecentStatusClass();
-            model.RecentStatus = _updateStatusContent.GetAll();
+        //public IActionResult List()
+        //{
+        //    var model = new RecentStatusClass();
+        //    model.RecentStatus = _updateStatusContent.GetAll();
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
 
         //[HttpGet]
