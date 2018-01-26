@@ -172,6 +172,10 @@ body {
 	cursor: pointer;
 }
 
+
+
+
+
 .primary_nav_wrap {
 	width: calc( 100% - 30px );
 	display: inline-block;
@@ -179,45 +183,82 @@ body {
 	margin-right: 15px;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
-
 	background-color: #263141;
 }
 
-.primary_nav_wrap ul::before {
-	content: "channel: ";
-	margin-right: 20px;
-}
-@media screen and (max-width: 670px) {
-	.primary_nav_wrap ul::before {
-		content: none;
-		margin: 0px;
-	}
-}
-.primary_nav_wrap ul {
+.primary_nav_wrap ul
+{
 	height: 42px;
-	display: inline-block;
 	float: right;
-}
-.primary_nav_wrap li {
 	display: inline-block;
+
+	list-style:none;
+	position:relative;
 }
+
 .primary_nav_wrap .logo a,
-.primary_nav_wrap li a{
-	padding-top: 14px;
-	height: 40px;
-	padding-left: 20px;
-	padding-right: 20px;
+.primary_nav_wrap ul a
+{
+	vertical-align: middle;
+	line-height: 42px;
+	/* padding-top: 14px; */
+	height: 42px;
 	display: inline-block;
 	text-align: center;
 	color: white;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
+	/* border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px; */
 	text-decoration: none;
+	width: 130px;
+	background-color: #263141;
+
+}
+
+.primary_nav_wrap ul li
+{
+	position:relative;
+	display: inline-block;
+	float:left;
+	z-index: 5;
+	margin:0;
+	padding:0
+}
+
+.primary_nav_wrap ul li .current-menu-item a
+{
+	background-color: #37474F;
+}
+
+.primary_nav_wrap ul li:hover
+{
+	/* background:#f6f6f6 */
+}
+
+.primary_nav_wrap ul ul
+{
+	display:none;
+	position:absolute;
+	top:100%;
+	left:0;
+	background:#fff;
+	padding:0
+}
+
+.primary_nav_wrap ul ul li
+{
+	float:none;
+}
+
+.primary_nav_wrap ul ul a
+{
+	line-height:120%;
+	padding:10px 15px
 }
 
 
-.primary_nav_wrap li.current-menu-item a {
-	background-color: #37474F;
+.primary_nav_wrap ul li:hover > ul
+{
+	display:block;
 }
 
 .primary_nav_wrap .logo a:hover,
@@ -225,11 +266,12 @@ body {
 	background-color: #455A64;
 }
 .primary_nav_wrap .logo a{
-	width: 145px;
+	width: 150px;
 	height: 42px;
 	display: inline-block;
 	position: absolute;
 	top: 0px;
+	padding-left: 15px;
 	left: 15px;
 	text-align: left;
 }
@@ -239,9 +281,30 @@ body {
 		display: none;
 	}
 	.primary_nav_wrap .logo a{
-		width: 80px;
+		width: 70px;
 	}
 }
+
+/*
+
+.primary_nav_wrap ul {
+	list-style:none;
+	position:relative;
+	float:left;
+	margin:0;
+	padding:0
+}
+
+.primary_nav_wrap li {
+	display: inline-block;
+}
+
+
+
+
+ */
+
+
 
 #data {
 	padding-top: 0.5%;
@@ -348,7 +411,7 @@ body {
 	background-color: #455A64;
 }
 #prevnext .prev {
-	margin-left: 15px;
+	margin-left: 10px;
 }
 
 

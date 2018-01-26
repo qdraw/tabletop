@@ -6,6 +6,41 @@
 }
 
 <nav class="primary_nav_wrap">
+    <div class="logo"><a href="@Url.Action("Index","Home")"> <span>Tabletop</span> Home </a></div>
+
+    <div id="prevnext">
+        <a class="prev" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Yesterday">&lt;</a>
+        @if (Model.RelativeDate != 0)
+        {
+            <a class="next" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Tomorrow">&gt;</a>
+        }
+    </div>
+    <ul>
+        <li>
+            <a href="#">Channels Menu</a>
+            <ul>
+                @foreach (var item in Model.List)
+                {
+                    if (@item.NameUrlSafe == @Model.NameUrlSafe && @item.IsVisible)
+                    {
+                        <li class="current-menu-item"><a href="@Url.Action("Index", "Home", new {name = @item.NameUrlSafe, date = @Model.Today})"> @item.Name </a></li>
+                    }
+
+                    if (@item.NameUrlSafe != @Model.NameUrlSafe && @item.IsVisible)
+                    {
+                        <li><a href="@Url.Action("Index", "Home", new {name = @item.NameUrlSafe, date = @Model.Today})"> @item.Name </a></li>
+                    }
+                }
+                
+                @*https://codepen.io/philhoyt/pen/ujHzd*@
+
+            </ul>
+        </li>
+
+    </ul>
+</nav>
+
+@*<nav class="primary_nav_wrap">
     <div class="logo"><a href="@Url.Action("Index","Home")"> <span>tabletop</span> home </a></div>
 
     <div id="prevnext">
@@ -29,14 +64,13 @@
 
             }
         }
-        @*https://codepen.io/philhoyt/pen/ujHzd*@
     </ul>
-</nav>
+</nav>*@
 
 <div class="header">
     <div>
-        <h1 id="name">archive - @Model.Name</h1>
-        <h2 id="latestactivity">activities for @Model.Day.Day-@Model.Day.Month-@Model.Day.Year</h2>
+        <h1 id="name">Archive - @Model.Name</h1>
+        <h2 id="latestactivity">Activities for @Model.Day.Day-@Model.Day.Month-@Model.Day.Year</h2>
 
         <div class="ai-line"></div>
     </div>
@@ -60,9 +94,7 @@
         "name": null
     };
     window.drawEnv = {
-        @*gives problems rendering*@
-        @*"url": "@Url.Action("EventsOfficeHours", "Api", new { name = @Model.Name, date = @Model.RelativeDate })",*@
-        "url": "@Url.Action("EventsOfficeHours", "Api", new { name = @Model.NameUrlSafe })&date=@Model.RelativeDate",
+        "url": "@Url.Action("EventsOfficeHours", "Api", new { name = @Model.NameUrlSafe, date = @Model.RelativeDate })",
         "updateInterval": null,
         "name": "@Model.Name",
         "relativeDate": @Model.RelativeDate

@@ -34,7 +34,8 @@ var draw = {
     start : function () {
         // var url = "api/getRecentByName?name=" + window.envName;
         // var url = "EventsOfficehours_name_tafelvoetbal_date_0.json?" + Date.now();
-        var url = window.drawEnv.url;
+        var url = window.drawEnv.url.replace(/&amp;/ig,"&");
+        console.log(url);
     	draw.loadJSON(url,
     			 function(data) {
                      data = draw.checkData(data);
