@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
 using tabletop.Models;
@@ -19,20 +20,31 @@ namespace tabletop.Controllers
 
         public IActionResult Index(DateDto dto)
         {
-            return BadRequest("tabletop fails");
 
             var date = dto.GetDateTime();
-            var name = dto.Name;
+            var urlSafeName = dto.Name;
             var relativeDays = dto.GetRelativeDays(date);
 
             var tommorow = date.AddDays(1);
             var yesterday = date.AddDays(-1);
 
+            if (string.IsNullOrEmpty(urlSafeName))
+            {
+                urlSafeName = "test";
+            }
+
+            var channelUserObject = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName);
+
+            if (channelUserObject == null)
+            {
+                return NotFound("not found");
+            }
 
             var model = new HomeViewModel
             {
-                List = _updateStatusContent.GetUniqueNames(),
-                Name = name,
+                List = _updateStatusContent.GetAllChannelUsers(),
+                Name = channelUserObject.Name,
+                NameUrlSafe = channelUserObject.NameUrlSafe,
                 RelativeDate = relativeDays,
                 Today = date.Year + "-" + dto.LeadingZero(date.Month) + "-" + dto.LeadingZero(date.Day),
                 Tomorrow = tommorow.Year + "-"+ dto.LeadingZero(tommorow.Month) + "-" + dto.LeadingZero(tommorow.Day),
@@ -41,23 +53,10 @@ namespace tabletop.Controllers
             };
 
 
-
-            if (string.IsNullOrEmpty(name))
-            {
-                model.Name = "tafelvoetbal";
-            }
-
-            var matchNameList = model.List.Where(p => p == model.Name);
-
-            if (!matchNameList.Any() && name != "test")
-            {
-                return NotFound("not found");
-            }
-
             if (model.RelativeDate == 0)
             {
-                model.IsFree = _updateStatusContent.IsFree(name).IsFree;
-                model.IsFreeDateTime = _updateStatusContent.IsFree(name).DateTime;
+                model.IsFree = _updateStatusContent.IsFree(channelUserObject.NameUrlSafe).IsFree;
+                model.IsFreeDateTime = _updateStatusContent.IsFree(channelUserObject.NameUrlSafe).DateTime;
                 return View("Live", model);
             }
 

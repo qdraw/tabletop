@@ -10,7 +10,7 @@ namespace tabletop.ViewModels
         [MaxLength(80)]
         public string Name { get; set; }
 
-        public IEnumerable<string> List { get; set; }
+        public IEnumerable<ChannelUser> List { get; set; }
 
         public int RelativeDate { get; set; }
         public int TomorrowRelativeDate { get; set; }
@@ -21,6 +21,6 @@ namespace tabletop.ViewModels
         public string Yesterday { get; set; }
         public string Tomorrow { get; set; }
         public string Today { get; set; }
-
+        public string NameUrlSafe { get; set; }
     }
 }

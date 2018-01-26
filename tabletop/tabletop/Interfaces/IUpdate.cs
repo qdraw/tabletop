@@ -17,10 +17,13 @@ namespace tabletop.Interfaces
         //UpdateStatus Get(int id);
         //UpdateStatus GetLatestByName(string name);
         //IEnumerable<UpdateStatus> GetAll();
-        IEnumerable<string> GetUniqueNames();
+
         //IEnumerable<UpdateStatus> GetAllByName(string name);
         //IEnumerable<UpdateStatus> GetRecentByName(string name);
         IEnumerable<ChannelEvent> GetTimeSpanByName(string name, DateTime startDateTime, DateTime endDateTime);
+
+        ChannelUser GetChannelUserIdByUrlSafeName(string nameUrlSafe);
+        IEnumerable<ChannelUser> GetAllChannelUsers();
 
         GetStatus IsFree(string name);
 

@@ -22,22 +22,17 @@ namespace tabletop.Services
         }
 
 
-        public IEnumerable<string> GetUniqueNames()
-        {
-            //var allEvents = _context.UpdateStatus.OrderBy(r => r.Name).AsEnumerable();
-            var uniquelist = new List<string>();
-            //foreach (UpdateStatus item in allEvents)
-            //{
-            //    if (uniquelist.Contains(item.Name) == false && item.Name != "test")
-            //    {
-            //        uniquelist.Add(item.Name);
-            //    }
-            //}
+        //public IEnumerable<ChannelUser> GetVisibleAccessibleChannelUsers()
+        //{
+        //    return _context.ChannelUser.Where(b => b.IsVisible && b.IsAccessible).AsEnumerable();
+        //}
 
-            uniquelist.Add("tafelvoetbal");
+        //public IEnumerable<ChannelUser> GetAccessibleChannelUsers()
+        //{
+        //    return _context.ChannelUser.Where(b => b.IsAccessible).AsEnumerable().AsEnumerable();
+        //}
 
-            return uniquelist.AsEnumerable();
-        }
+        
 
 
 
@@ -121,11 +116,25 @@ namespace tabletop.Services
             }
         }
 
+
+        // Todo: merge those two objects
         public string GetUserIdByUrlSafeName(string nameUrlSafe)
         {
             var userIdObject = _context.ChannelUser.LastOrDefault(p => p.NameUrlSafe == nameUrlSafe);
             return userIdObject?.NameId;
             // return null if not there
+        }
+
+        public ChannelUser GetChannelUserIdByUrlSafeName(string nameUrlSafe)
+        {
+            var userIdObject = _context.ChannelUser.LastOrDefault(p => p.NameUrlSafe == nameUrlSafe);
+            return userIdObject; // return null if not there
+        }
+
+
+        public IEnumerable<ChannelUser> GetAllChannelUsers()
+        {
+            return _context.ChannelUser; // return null if not there
         }
 
         public ChannelUser AddUser()
