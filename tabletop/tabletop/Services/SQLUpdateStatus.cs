@@ -20,23 +20,8 @@ namespace tabletop.Services
         {
             _context = context;
         }
-
-
-        //public IEnumerable<ChannelUser> GetVisibleAccessibleChannelUsers()
-        //{
-        //    return _context.ChannelUser.Where(b => b.IsVisible && b.IsAccessible).AsEnumerable();
-        //}
-
-        //public IEnumerable<ChannelUser> GetAccessibleChannelUsers()
-        //{
-        //    return _context.ChannelUser.Where(b => b.IsAccessible).AsEnumerable().AsEnumerable();
-        //}
-
-        
-
-
-
-        IEnumerable<ChannelEvent> IUpdate.GetTimeSpanByName(string urlsafename, DateTime startDateTime, DateTime endDateTime)
+       
+        public IEnumerable<ChannelEvent> GetTimeSpanByName(string urlsafename, DateTime startDateTime, DateTime endDateTime)
         {
             var result = _context.ChannelEvent
                     .Where(p => p.DateTime >= startDateTime && p.DateTime <= endDateTime)
@@ -101,11 +86,6 @@ namespace tabletop.Services
                 throw new NotImplementedException("",new Exception("fail"));
             }
         }
-
-        //public IEnumerable<ChannelUser> GetUserListByName(string name)
-        //{
-        //    return _context.ChannelUser.Where(b => b.Name == name);
-        //}
 
         public bool IsUserInDatabase(string nameUrlSafe)
         {
@@ -181,7 +161,10 @@ namespace tabletop.Services
 
             if (latestEvent == null)
             {
-                throw new FileNotFoundException();
+                return new GetStatus
+                {
+                    IsFree = true
+                };
             }
 
             var difference = DateTime.UtcNow - latestEvent.DateTime;
@@ -202,13 +185,6 @@ namespace tabletop.Services
         }
 
 
-
-        public IEnumerable<ChannelEventsModel> GetTimeSpanByName(string nameid, DateTime startDateTime, DateTime endDateTime)
-        {
-            var test = new List<ChannelEventsModel>();
-
-            return test;
-        }
 
         public string G()
         {

@@ -6,32 +6,31 @@
 }
 
 <nav class="primary_nav_wrap">
-<div class="logo"><a href="@Url.Action("Index","Home")"> <span>tabletop</span> home </a></div>
+    <div class="logo"><a href="@Url.Action("Index","Home")"> <span>tabletop</span> home </a></div>
 
     <div id="prevnext">
-        <a class="prev" asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Yesterday">&lt;</a>
+        <a class="prev" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Yesterday">&lt;</a>
         @if (Model.RelativeDate != 0)
         {
-            <a class="next" asp-controller="Home" asp-action="Index" asp-route-name="@Model.Name" asp-route-date="@Model.Tomorrow">&gt;</a>
+            <a class="next" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Tomorrow">&gt;</a>
         }
     </div>
     <ul>
         @foreach (var item in Model.List)
-        {
-            if (@item == @Model.Name)
             {
-                <li class="current-menu-item"><a href="@Url.Action("Index", "Home", new {name = @item, date = @Model.Today})"> @item </a></li>
+                if (@item.NameUrlSafe == @Model.NameUrlSafe && @item.IsVisible)
+                {
+                    <li class="current-menu-item"><a href="@Url.Action("Index","Home", new { name = @item.NameUrlSafe, date = @Model.Today } )"> @item.Name </a></li>
             }
-            else
+
+            if (@item.NameUrlSafe != @Model.NameUrlSafe && @item.IsVisible)
             {
-                <li><a href="@Url.Action("Index", "Home", new {name = @item, date = @Model.Today})"> @item </a></li>
+                <li><a href="@Url.Action("Index","Home", new { name = @item.NameUrlSafe, date = @Model.Today } )"> @item.Name </a></li>
 
             }
         }
         @*https://codepen.io/philhoyt/pen/ujHzd*@
-
     </ul>
-
 </nav>
 
 <div class="header">
@@ -63,7 +62,7 @@
     window.drawEnv = {
         @*gives problems rendering*@
         @*"url": "@Url.Action("EventsOfficeHours", "Api", new { name = @Model.Name, date = @Model.RelativeDate })",*@
-        "url": "@Url.Action("EventsOfficeHours", "Api", new { name = @Model.Name })&date=@Model.RelativeDate",
+        "url": "@Url.Action("EventsOfficeHours", "Api", new { name = @Model.NameUrlSafe })&date=@Model.RelativeDate",
         "updateInterval": null,
         "name": "@Model.Name",
         "relativeDate": @Model.RelativeDate

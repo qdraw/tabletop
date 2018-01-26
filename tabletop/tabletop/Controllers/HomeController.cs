@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
@@ -52,11 +54,14 @@ namespace tabletop.Controllers
                 Day = dto.GetDateTime()
             };
 
+            
 
             if (model.RelativeDate == 0)
             {
-                model.IsFree = _updateStatusContent.IsFree(channelUserObject.NameUrlSafe).IsFree;
-                model.IsFreeDateTime = _updateStatusContent.IsFree(channelUserObject.NameUrlSafe).DateTime;
+                var isFreeStatus = _updateStatusContent.IsFree(channelUserObject.NameUrlSafe);
+                model.IsFree = isFreeStatus.IsFree;
+                model.IsFreeDateTime = isFreeStatus.DateTime;
+
                 return View("Live", model);
             }
 

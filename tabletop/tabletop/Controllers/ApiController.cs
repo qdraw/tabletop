@@ -186,15 +186,8 @@ namespace tabletop.Controllers
 
             if (!string.IsNullOrEmpty(nameUrlSafe))
             {
-                try
-                {
-                    var newStatusContent = _updateStatusContent.IsFree(nameUrlSafe);
-                    return Json(newStatusContent);
-                }
-                catch (FileNotFoundException)
-                {
-                    return BadRequest("name is invalid");
-                }
+                var newStatusContent = _updateStatusContent.IsFree(nameUrlSafe);
+                return Json(newStatusContent);
             }
             else
             {
