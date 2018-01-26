@@ -5,7 +5,6 @@ namespace tabletop.Models
 {
     public class GetStatus
     {
-        [Required]
         public string Name { get; set; }
 
         [Required]
@@ -13,5 +12,7 @@ namespace tabletop.Models
 
         [Required]
         public bool IsFree { get; set; }
+
+        public TimeSpan Difference { get; set; }
     }
 }

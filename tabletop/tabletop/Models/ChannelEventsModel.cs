@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace tabletop.Models
 {
-    public class RecentStatusClass
+    public class ChannelEventsModel
     {
         [Required, MaxLength(80)]
         public string Name { get; set; }
 
         [Required]
-        public IEnumerable<UpdateStatus> RecentStatus { get; set; }
+        public IEnumerable<ChannelEvent> Events { get; set; }
 
     }
 }

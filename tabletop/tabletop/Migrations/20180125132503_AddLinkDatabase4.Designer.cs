@@ -11,9 +11,10 @@ using tabletop.Data;
 namespace tabletop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class appDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180125132503_AddLinkDatabase4")]
+    partial class AddLinkDatabase4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,10 +26,10 @@ namespace tabletop.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ChannelUserId")
-                        .IsRequired();
-
                     b.Property<DateTime>("DateTime");
+
+                    b.Property<string>("NameId")
+                        .IsRequired();
 
                     b.Property<int>("Status");
 
@@ -36,7 +37,7 @@ namespace tabletop.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChannelUserId");
+                    b.HasIndex("NameId");
 
                     b.ToTable("ChannelEvent");
                 });
@@ -47,15 +48,10 @@ namespace tabletop.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(80);
 
-                    b.Property<bool>("IsAccessible");
-
                     b.Property<bool>("IsVisible");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(80);
-
-                    b.Property<string>("NameUrlSafe")
                         .HasMaxLength(80);
 
                     b.HasKey("NameId");
@@ -65,9 +61,9 @@ namespace tabletop.Migrations
 
             modelBuilder.Entity("tabletop.Models.ChannelEvent", b =>
                 {
-                    b.HasOne("tabletop.Models.ChannelUser", "ChannelUser")
+                    b.HasOne("tabletop.Models.ChannelUser", "Name")
                         .WithMany("ChannelEvents")
-                        .HasForeignKey("ChannelUserId")
+                        .HasForeignKey("NameId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

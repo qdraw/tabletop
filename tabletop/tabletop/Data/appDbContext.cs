@@ -14,19 +14,17 @@ namespace tabletop.Data
         {
 
         }
-        public DbSet<UpdateStatus> UpdateStatus { get; set; }
-        public DbSet<Channel> Channel { get; set; }
+        public DbSet<ChannelEvent> ChannelEvent { get; set; }
+        public DbSet<ChannelUser> ChannelUser { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ChannelEvent>()
+                .HasOne(p => p.ChannelUser)
+                .WithMany(b => b.ChannelEvents);
 
-            //modelBuilder.Entity<UpdateStatus>()
-            //    .HasMany<Channel>(g => g.Channels)
-            //    .WithOne(s => s.UpdateStatus)
-            //    .HasForeignKey(s => s.NameId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-
+            //modelBuilder.Entity<ChannelEvent>().ToTable("ChannelEvent");
+            //modelBuilder.Entity<ChannelUser>().ToTable("ChannelUser");
         }
     }
 

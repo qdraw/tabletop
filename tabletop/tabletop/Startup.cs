@@ -35,7 +35,7 @@ namespace tabletop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(GetConnectionString()));
-            services.AddScoped<IUpdateStatus, SqlUpdateStatus>();
+            services.AddScoped<IUpdate, SqlUpdateStatus>();
             services.AddMvc(options =>
             {
                 options.RespectBrowserAcceptHeader = true; // false by default

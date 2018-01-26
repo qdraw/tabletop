@@ -116,7 +116,7 @@ void httpRequest(int onOrOff) {
     client.println("POST /tabletop/api/update?status="+ String(onOrOff) + "&name=" + clientName  +" HTTP/1.1");
     client.println("Host: "+ String(server) );
     client.println("Cache-Control: no-cache");
-    client.println("User-Agent: arduino-ethernet");
+    client.println("User-Agent: nagios");
     client.println("Content-Type: application/x-www-form-urlencoded;");
     client.println("Content-Length: 0");
     client.println("Accept: */*");

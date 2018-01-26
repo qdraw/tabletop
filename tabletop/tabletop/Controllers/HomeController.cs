@@ -10,15 +10,17 @@ namespace tabletop.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IUpdateStatus _updateStatusContent;
+        private readonly IUpdate _updateStatusContent;
 
-        public HomeController(IUpdateStatus updateStatusContent)
+        public HomeController(IUpdate updateStatusContent)
         {
             _updateStatusContent = updateStatusContent;
         }
 
         public IActionResult Index(DateDto dto)
         {
+            return BadRequest("tabletop fails");
+
             var date = dto.GetDateTime();
             var name = dto.Name;
             var relativeDays = dto.GetRelativeDays(date);

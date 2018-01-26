@@ -11,9 +11,10 @@ using tabletop.Data;
 namespace tabletop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class appDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180126083359_newRelationalDatabaseLink")]
+    partial class newRelationalDatabaseLink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,15 +48,10 @@ namespace tabletop.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(80);
 
-                    b.Property<bool>("IsAccessible");
-
                     b.Property<bool>("IsVisible");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(80);
-
-                    b.Property<string>("NameUrlSafe")
                         .HasMaxLength(80);
 
                     b.HasKey("NameId");

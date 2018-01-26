@@ -2,118 +2,47 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Rest.Azure;
 using tabletop.Dtos;
 using tabletop.Interfaces;
 using tabletop.Models;
 using tabletop.ViewModels;
 
-/*
-There is no ApiController class anymore since MVC and WebAPI have been merged in ASP.NET Core.
-However, the Controller class of MVC brings in a bunch of features you probably won't need
-when developing just a Web API, such as a views and model binding.
-For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-https://stackoverflow.com/questions/38667445/is-apicontroller-deprecated-in-net-core/38672681
-*/
+///*
+//There is no ApiController class anymore since MVC and WebAPI have been merged in ASP.NET Core.
+//However, the Controller class of MVC brings in a bunch of features you probably won't need
+//when developing just a Web API, such as a views and model binding.
+//For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+//https://stackoverflow.com/questions/38667445/is-apicontroller-deprecated-in-net-core/38672681
+//*/
 
 namespace tabletop.Controllers
 {
     public class ApiController : Controller
     {
-        private readonly IUpdateStatus _updateStatusContent;
+        private readonly IUpdate _updateStatusContent;
 
         private readonly IConfiguration _iconfiguration;
 
-        public ApiController(IUpdateStatus updateStatusContent, IConfiguration iconfiguration)
+        public ApiController(IUpdate updateStatusContent, IConfiguration iconfiguration)
         {
             _updateStatusContent = updateStatusContent;
             _iconfiguration = iconfiguration;
 
         }
-        //private IRestaurantData _restaurantData;
-        //private IGreeter _greeter;
 
-        //public HomeController(IRestaurantData restaurantData, IGreeter greeter)
-        //{
-        //    _restaurantData = restaurantData;
-        //    _greeter = greeter;
-        //}
-
-
-        //public IActionResult Details(int id)
-        //{
-        //    var model = _updateStatusContent.Get(id);
-        //    if (model == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(model);
-        //}
-
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public IActionResult GetLatestByName(string name)
-        //{
-        //    var model = _updateStatusContent.GetLatestByName(name);
-        //    if (model == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Json(model.DateTime.ToString("yyyy-MM-ddTHH\\:mm\\:ss+00:00"));
-
-        //    // return Content(model.DateTime.ToString());
-        //    // return View(model);
-        //}
-
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public IActionResult GetUnixTime()
-        //{
-        //    var unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-        //    return Json(unixTimestamp);
-
-        //}
-
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public IActionResult GetUniqueNames()
-        //{
-        //    return Json(_updateStatusContent.GetUniqueNames());
-        //}
-
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public IActionResult GetAll(string name)
-        //{
-
-        //    if (string.IsNullOrEmpty(name))
-        //    {
-        //        var model = new RecentStatusClass();
-        //        model.RecentStatus = _updateStatusContent.GetAll();
-        //        var listOf = model.RecentStatus.ToList();
-        //        return Json(listOf);
-        //    }
-
-        //    else {
-        //        var model = new RecentStatusClass();
-        //        model.RecentStatus = _updateStatusContent.GetAllByName(name);
-        //        var listOf = model.RecentStatus.ToList();
-        //        return Json(listOf);
-        //    }
-
-        //}
 
         [HttpGet]
         [Produces("application/json")]
         public IActionResult EventsRecent(DateDto dto)
         {
-
-            //var statusContent = _updateStatusContent.GetRecentByName(dto.Name);
-
+            return BadRequest("tabletop fails");
 
 
-            var startDateTime = dto.RoundDown(DateTime.UtcNow.Subtract(new TimeSpan(0, 8, 0, 0)),new TimeSpan(0,0,5,0));
+            var startDateTime = dto.RoundDown(DateTime.UtcNow.Subtract(new TimeSpan(0, 8, 0, 0)), new TimeSpan(0, 0, 5, 0));
             var endDateTime = dto.RoundUp(DateTime.UtcNow, new TimeSpan(0, 0, 5, 0));
 
 
@@ -162,20 +91,9 @@ namespace tabletop.Controllers
             }
 
             model.Length = model.AmountOfMotions.Count();
-            
+
             return Json(model);
         }
-
-
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public IActionResult EventsRecent(DateDto dto)
-        //{
-        //    var model = new RecentStatusClass { RecentStatus = _updateStatusContent.GetRecentByName(dto.Name) };
-        //    var dateTime = dto.GetDateTime();
-
-        //    return Json(model.RecentStatus);
-        //}
 
 
 
@@ -183,15 +101,17 @@ namespace tabletop.Controllers
         [Produces("application/json")]
         public IActionResult EventsOfficeHours(DateDto dto)
         {
+            return BadRequest("tabletop fails");
+
             var dateTime = dto.GetDateTime();
             const int interval = 60 * 5; // 5 minutes
-            if (!string.IsNullOrEmpty(dto.Name) && dateTime.Year > 2015 )
+            if (!string.IsNullOrEmpty(dto.Name) && dateTime.Year > 2015)
             {
                 var startDateTime = dateTime.ToUniversalTime().AddHours(9);
                 var endDateTime = dateTime.ToUniversalTime().AddHours(18);
                 var statusContent = _updateStatusContent.GetTimeSpanByName(
-                        dto.Name, 
-                        startDateTime, 
+                        dto.Name,
+                        startDateTime,
                         endDateTime
                     ).ToList().OrderBy(p => p.DateTime);
 
@@ -200,7 +120,7 @@ namespace tabletop.Controllers
                     Day = dateTime.DayOfWeek,
                     StartDateTime = startDateTime,
                     EndDateTime = endDateTime,
-                    AmountOfMotions =  new List<WeightViewModel>()
+                    AmountOfMotions = new List<WeightViewModel>()
                 };
 
                 var i = dto.GetUnixTime(startDateTime);
@@ -208,9 +128,9 @@ namespace tabletop.Controllers
                 {
 
                     var startIntervalDateTime = dto.UnixTimeToDateTime(i);
-                    var endIntervalDateTime = dto.UnixTimeToDateTime(i+interval);
+                    var endIntervalDateTime = dto.UnixTimeToDateTime(i + interval);
 
-                    var contentUpdateStatuses = statusContent.Where(p => p.DateTime > startIntervalDateTime && p.DateTime < endIntervalDateTime).ToList(); 
+                    var contentUpdateStatuses = statusContent.Where(p => p.DateTime > startIntervalDateTime && p.DateTime < endIntervalDateTime).ToList();
                     // Sum Weight Select-Statement >> Advies Joost!
                     //var contentUpdateStatusesExtended = statusContent
                     //    .Where(p => p.DateTime > startIntervalDateTime && p.DateTime < endIntervalDateTime)
@@ -240,7 +160,7 @@ namespace tabletop.Controllers
 
                     model.AmountOfMotions.Add(eventItem);
 
-                    i += interval; 
+                    i += interval;
                 }
 
                 model.Length = model.AmountOfMotions.Count();
@@ -251,19 +171,8 @@ namespace tabletop.Controllers
         }
 
 
- 
 
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public IActionResult GetLastMinute(string name)
-        //{
-        //    var model = new RecentStatusClass {RecentStatus = _updateStatusContent.GetLastMinute(name)};
-        //    var listOf = model.RecentStatus.ToList();
-        //    return Json(listOf);
 
-        //}
-
-        
         public IActionResult Index()
         {
             return View();
@@ -274,14 +183,23 @@ namespace tabletop.Controllers
         [Produces("application/json")]
         public IActionResult IsFree(string name)
         {
-            if (!string.IsNullOrEmpty(name))
+            var nameUrlSafe = name;
+
+            if (!string.IsNullOrEmpty(nameUrlSafe))
             {
-                var newStatusContent = _updateStatusContent.IsFree(name);
-                return Json(newStatusContent);
+                try
+                {
+                    var newStatusContent = _updateStatusContent.IsFree(nameUrlSafe);
+                    return Json(newStatusContent);
+                }
+                catch (FileNotFoundException)
+                {
+                    return BadRequest("name is invalid");
+                }
             }
             else
             {
-                return BadRequest("name is missing");
+                return BadRequest("name is invalid");
             }
 
         }
@@ -290,7 +208,7 @@ namespace tabletop.Controllers
 
         [HttpPost]
         [Produces("application/json")]
-        public IActionResult Update(UpdateStatus model)
+        public IActionResult Update(InputChannelEvent model)
         {
             var bearerValid = IsBearerValid(Request);
 
@@ -300,15 +218,16 @@ namespace tabletop.Controllers
             try
             {
                 var newStatusContent = _updateStatusContent.AddOrUpdate(model);
-                return Json(newStatusContent);
+                return Ok(newStatusContent.Weight);
             }
-            catch (DbUpdateException)
+            catch (CloudException)
             {
                 return new StatusCodeResult(500);
             }
-
-            
-
+            catch (NotImplementedException)
+            {
+                return BadRequest("Name does not exist");
+            }
         }
 
 
@@ -325,5 +244,6 @@ namespace tabletop.Controllers
                 return false;
             }
         }
+
     }
 }

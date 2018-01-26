@@ -4,11 +4,11 @@ using tabletop.Models;
 
 namespace tabletop.Interfaces
 {
-    public interface IUpdateStatus
+    public interface IUpdate
     {
         //UpdateStatus Add(UpdateStatus updateStatusContent);
         //UpdateStatus Update(UpdateStatus updateStatusContent);
-        UpdateStatus AddOrUpdate(UpdateStatus updateStatusContent);
+        ChannelEvent AddOrUpdate(InputChannelEvent updateStatusContent);
 
 
         //IEnumerable<UpdateStatus> GetLastMinute(string name);
@@ -20,7 +20,7 @@ namespace tabletop.Interfaces
         IEnumerable<string> GetUniqueNames();
         //IEnumerable<UpdateStatus> GetAllByName(string name);
         //IEnumerable<UpdateStatus> GetRecentByName(string name);
-        IEnumerable<UpdateStatus> GetTimeSpanByName(string name, DateTime startDateTime, DateTime endDateTime);
+        IEnumerable<ChannelEvent> GetTimeSpanByName(string name, DateTime startDateTime, DateTime endDateTime);
 
         GetStatus IsFree(string name);
 

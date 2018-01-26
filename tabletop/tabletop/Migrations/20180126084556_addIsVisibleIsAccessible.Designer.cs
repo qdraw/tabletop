@@ -11,9 +11,10 @@ using tabletop.Data;
 namespace tabletop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class appDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180126084556_addIsVisibleIsAccessible")]
+    partial class addIsVisibleIsAccessible
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -5,27 +5,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace tabletop.Models
 {
-    public class UpdateStatus
+    public class ChannelEvent
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
         public int Status { get; set; }
 
         [Required, MaxLength(80)]
-        public string Name { get; set; }
+        public ChannelUser ChannelUser { get; set; }
 
-        //[Key]
-        //[Column(Order = 1)]
-        //public int NameId { get; set; }
+        public string ChannelUserId { get; set; }
 
-        //[Key]
+
         [Column(Order = 1)]
         public DateTime DateTime { get; set; }
 
         public int Weight { get; set; }
-
-        //public IEnumerable<Channel> Channels { get; set; }
 
     }
 
