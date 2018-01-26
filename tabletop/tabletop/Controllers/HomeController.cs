@@ -32,7 +32,7 @@ namespace tabletop.Controllers
 
             if (string.IsNullOrEmpty(urlSafeName))
             {
-                urlSafeName = "test";
+                urlSafeName = "tafelvoetbal";
             }
 
             var channelUserObject = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName);
