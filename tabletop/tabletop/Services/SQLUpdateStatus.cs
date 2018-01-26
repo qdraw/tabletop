@@ -36,9 +36,12 @@ namespace tabletop.Services
 
 
 
-        IEnumerable<ChannelEvent> IUpdate.GetTimeSpanByName(string name, DateTime startDateTime, DateTime endDateTime)
+        IEnumerable<ChannelEvent> IUpdate.GetTimeSpanByName(string urlsafename, DateTime startDateTime, DateTime endDateTime)
         {
-            throw new NotImplementedException();
+            var result = _context.ChannelEvent
+                    .Where(p => p.DateTime >= startDateTime && p.DateTime <= endDateTime)
+                    .Where(b => b.ChannelUser.NameUrlSafe == urlsafename);
+            return result;
         }
 
 

@@ -34,12 +34,12 @@ namespace tabletop.Controllers
 
         }
 
-
+        // todo: duplicate code and loop
         [HttpGet]
         [Produces("application/json")]
         public IActionResult EventsRecent(DateDto dto)
         {
-            return BadRequest("tabletop fails");
+            //return BadRequest("tabletop fails");
 
 
             var startDateTime = dto.RoundDown(DateTime.UtcNow.Subtract(new TimeSpan(0, 8, 0, 0)), new TimeSpan(0, 0, 5, 0));
@@ -96,12 +96,11 @@ namespace tabletop.Controllers
         }
 
 
-
+        // todo: duplicate code and loop
         [HttpGet]
         [Produces("application/json")]
         public IActionResult EventsOfficeHours(DateDto dto)
         {
-            return BadRequest("tabletop fails");
 
             var dateTime = dto.GetDateTime();
             const int interval = 60 * 5; // 5 minutes

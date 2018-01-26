@@ -62,7 +62,7 @@
     window.drawEnv = {
         @*gives problems rendering*@
         @*"url": "@Url.Action("EventsOfficeHours", "Api", new { name = @Model.Name, date = @Model.RelativeDate })",*@
-        "url": "@Url.Action("EventsOfficeHours", "Api", new { name = @Model.Name })&date=@Model.RelativeDate",
+        "url": "@Url.Action("EventsOfficeHours", "Api", new { name = @Model.NameUrlSafe })&date=@Model.RelativeDate",
         "updateInterval": null,
         "name": "@Model.Name",
         "relativeDate": @Model.RelativeDate

@@ -27,7 +27,6 @@
             if (@item.NameUrlSafe != @Model.NameUrlSafe && @item.IsVisible)
             {
                 <li><a href="@Url.Action("Index","Home", new { name = @item.NameUrlSafe, date = @Model.Today } )"> @item.Name </a></li>
-
             }
         }
         @*https://codepen.io/philhoyt/pen/ujHzd*@
@@ -60,12 +59,12 @@
 
 <script type="text/javascript">
     window.updateIsFreeEnv = {
-        "url": "@Url.Action("IsFree", "Api", new { name = @Model.Name })",
+        "url": "@Url.Action("IsFree", "Api", new { name = @Model.NameUrlSafe })",
         "updateInterval": 10000,
         "name": "@Model.Name"
     };
     window.drawEnv = {
-        "url": "@Url.Action("EventsRecent", "Api", new { name = @Model.Name })",
+        "url": "@Url.Action("EventsRecent", "Api", new { name = @Model.NameUrlSafe })",
         "updateInterval": 90000,
         "name": "@Model.Name",
         "relativeDate": @Model.RelativeDate
