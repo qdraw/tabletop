@@ -2,7 +2,18 @@ var SerialPort = require('serialport');
 const querystring = require('querystring');
 const request = require('request');
 
-var serialPort = new SerialPort("/dev/cu.usbmodem1421", {
+require('dotenv').load();
+
+if (process.env.BEARER === undefined) {
+    throw "missing bearer";
+}
+
+if (process.env.SERIALPORT === undefined) {
+    throw "missing SERIALPORT";
+    process.exit();
+}
+
+var serialPort = new SerialPort(process.env.SERIALPORT, {
   baudRate: 9600
 });
 
@@ -30,7 +41,7 @@ function httpUpdate() {
 					headers: {
 						'Content-Length': querystring.stringify(formquery).length,
 						'Content-Type': 'application/x-www-form-urlencoded',
-                        'Authorization': 'Bearer kHZ6ody2nQ9dmcMSCk5m'
+                        'Authorization': 'Bearer ' + process.env.BEARER
 					},
 					uri: 'http://demo.colours.ai/tabletop/api/update',
 					body: querystring.stringify(formquery),
