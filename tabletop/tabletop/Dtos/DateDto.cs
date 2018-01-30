@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace tabletop.Dtos
@@ -40,7 +41,9 @@ namespace tabletop.Dtos
 
         public DateTime UtcDateTimeToAmsterdamDateTime(DateTime inputUtcDateTime)
         {
-            return TimeZoneInfo.ConvertTime(inputUtcDateTime, TimeZoneInfo.Utc, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+            var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            // https://github.com/joeaudette/cloudscribe.SimpleContent/issues/1
+            return TimeZoneInfo.ConvertTime(inputUtcDateTime, TimeZoneInfo.Utc, TimeZoneInfo.FindSystemTimeZoneById(isWindows ? "W. Europe Standard Time" : "Europe/Berlin"));
         }
 
         public DateTime GetDateTime()
