@@ -230,6 +230,12 @@ namespace tabletop.Services
                          p.DateTime < model.EndDateTime
                 );
 
+            var channelEvents = _context.ChannelEvent
+                .Where(
+                    p => p.ChannelUserId == channelUserId &&
+                         p.DateTime > model.StartDateTime &&
+                         p.DateTime < model.EndDateTime
+                ).ToList();
 
             const int interval = 60 * 5; // 5 minutes
             var i = dto.GetUnixTime(startDateTime);
@@ -241,12 +247,11 @@ namespace tabletop.Services
                 eventItem.EndDateTime = dto.UnixTimeToDateTime(i + interval);
                 eventItem.Label = eventItem.StartDateTime.ToString("HH:mm");
 
-                var weightSum = _context.ChannelEvent
-                    .Where(
-                        p => p.ChannelUserId == channelUserId &&
-                             p.DateTime > eventItem.StartDateTime &&
-                             p.DateTime < eventItem.EndDateTime
-                    ).Select(p => p.Weight).Sum();
+                var weightSum = channelEvents
+                    .Where(p => 
+                        p.DateTime > eventItem.StartDateTime &&
+                        p.DateTime < eventItem.EndDateTime)
+                    .Select(p => p.Weight).Sum();
 
                 eventItem.Weight = weightSum;
                 model.AmountOfMotions.Add(eventItem);
