@@ -28,6 +28,8 @@ namespace tabletop.Models
         public bool IsVisible { get; set; }
         public bool IsAccessible { get; set; }
 
+        [MaxLength(100)]
+        public string Bearer { get; set; }
 
         public IEnumerable<ChannelEvent> ChannelEvents { get; set; }
 

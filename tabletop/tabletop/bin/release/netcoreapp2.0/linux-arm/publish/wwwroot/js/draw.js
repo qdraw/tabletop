@@ -158,7 +158,7 @@ var draw = {
        svg = d3.select("#data");
        svg.append("g")
            .attr("class", "x_time")
-           .attr("transform", "translate("+ (margin.left+5) + "," + (height+5) + ")")
+           .attr("transform", "translate("+ (margin.left+3) + "," + (height+5) + ")")
            .call(
                d3.axisBottom(x)
                 .tickFormat(function(d,i) {
@@ -198,7 +198,7 @@ var draw = {
        bars
          .enter().append("rect")
          .merge(bars)
-         .attr("x", function(d) { return x(d.label); })
+         .attr("x", function(d) { return x(d.label)-5; })
          .attr("width", x.bandwidth())
          .attr("y", function(d) { return y(d.weight)+5; })
          .attr("height", function(d) { return height - y(d.weight); })

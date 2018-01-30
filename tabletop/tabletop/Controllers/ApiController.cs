@@ -202,9 +202,10 @@ namespace tabletop.Controllers
         [Produces("application/json")]
         public IActionResult Update(InputChannelEvent model)
         {
-            var bearerValid = IsBearerValid(Request);
 
             if (!ModelState.IsValid) return BadRequest("Model is incomplete");
+
+            var bearerValid = IsBearerValid(Request,model.Name);
             if (!bearerValid) return BadRequest("Authorisation Error");
 
             try
@@ -223,13 +224,15 @@ namespace tabletop.Controllers
         }
 
 
-        public bool IsBearerValid(Microsoft.AspNetCore.Http.HttpRequest request)
+        public bool IsBearerValid(Microsoft.AspNetCore.Http.HttpRequest request, string urlSafeName)
         {
             if ((Request.Headers["Authorization"].ToString() ?? "").Trim().Length > 0)
             {
                 var bearer = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                var bearerList = _iconfiguration.GetSection("bearer").Get<List<string>>();
-                return bearerList.Exists(element => element == bearer);
+
+                var channelUser = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName,true);
+
+                return channelUser.Bearer == bearer;
             }
             else
             {

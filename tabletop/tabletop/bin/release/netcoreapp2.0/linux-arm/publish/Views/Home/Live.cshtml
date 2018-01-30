@@ -1,9 +1,13 @@
 ﻿@model tabletop.ViewModels.HomeViewModel
 
 @{
-    ViewBag.Title = "Loading - " + @Model.Name + " (live) - tabletop";
-    ViewBag.Canonical = @Url.Action("Index", "Home", new {name = @Model.Name});
-
+    ViewBag.Canonical = @Url.Action("Index", "Home", new { name = @Model.Name });
+    ViewBag.GreenOrRed = (Model.IsFree) ? "green" : "red";
+    ViewBag.GreenOrBlank = (Model.IsFree) ? "green" : "blank";
+    ViewBag.RedOrBlank = (Model.IsFree) ? "blank" : "red";
+    ViewBag.FreeOrInUse = (Model.IsFree) ? "free" : "in use";
+    ViewBag.Title = @ViewBag.FreeOrInUse + " - " + @Model.Name + " (live) - tabletop";
+    ViewBag.Favicon = (Model.IsFree) ? "favicon_free.png" : "favicon_inuse.png";
 }
 
 <nav class="primary_nav_wrap">
@@ -22,12 +26,12 @@
             <ul>
                 @foreach (var item in Model.List)
                 {
-                    if (@item.NameUrlSafe == @Model.NameUrlSafe && @item.IsVisible)
+                    if (@item.NameUrlSafe == @Model.NameUrlSafe && @item.IsVisible && @item.IsAccessible)
                     {
                         <li class="current-menu-item"><a href="@Url.Action("Index", "Home", new {name = @item.NameUrlSafe, date = @Model.Today})"> @item.Name </a></li>
                     }
 
-                    if (@item.NameUrlSafe != @Model.NameUrlSafe && @item.IsVisible)
+                    if (@item.NameUrlSafe != @Model.NameUrlSafe && @item.IsVisible && @item.IsAccessible)
                     {
                         <li><a href="@Url.Action("Index", "Home", new {name = @item.NameUrlSafe, date = @Model.Today})"> @item.Name </a></li>
                     }
@@ -44,30 +48,31 @@
 <div class="header">
 
     <div class="panel panel-ai-indicator">
-        <div id="online-indicator" class="circle circle-big circle-blank"></div>
-        <div id="offline-indicator" class="circle circle-big circle-blank"></div>
-        <div id="status" class="indicator-text">.....</div>
+        <div id="online-indicator" class="circle circle-big circle-@ViewBag.GreenOrBlank"></div>
+        <div id="offline-indicator" class="circle circle-big circle-@ViewBag.RedOrBlank"></div>
+        <div id="status" class="indicator-text"> @ViewBag.FreeOrInUse</div>
     </div>
     <div>
         <h1 id="name">Live - @Model.Name</h1>
-        <h2 id="latestactivity"> @Model.Today</h2>
+        <h2 id="latestactivity"> Latest activity on location @Model.IsFreeLatestAmsterdamDateTime </h2>
         <div class="ai-line"></div>
     </div>
 </div>
 <div id="preloader"></div>
 
 <div class="tooltip"></div>
-<div class="databox">
-    <svg id="data">
-        <g class="bars"></g>
-    </svg>
+
+<div class="databox @ViewBag.GreenOrRed">
+<svg id="data" class="border-@ViewBag.GreenOrRed">
+    <g class="bars"></g>
+</svg>
 </div>
 
 
 
 <script type="text/javascript">
     window.updateIsFreeEnv = {
-        "url": "@Url.Action("IsFree", "Api", new { name = @Model.NameUrlSafe })",
+        "url": "@Url.Action("IsFree", "Api", new { name = @Model.NameId })",
         "updateInterval": 10000,
         "name": "@Model.Name"
     };
