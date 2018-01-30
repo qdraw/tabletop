@@ -1,0 +1,18 @@
+{
+  "name": "serialclient",
+  "version": "1.0.0",
+  "description": "",
+  "main": "serialclient.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "querystring": "^0.2.0",
+    "remove": "^0.1.5",
+    "request": "^2.83.0",
+    "requests": "^0.2.2",
+    "serialport": "^6.0.4"
+  }
+}

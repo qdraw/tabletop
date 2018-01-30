@@ -1,8 +1,9 @@
 ﻿@model tabletop.ViewModels.HomeViewModel
 
 @{
-    ViewBag.Title = "Archive - " + @Model.Name + " ("+ @Model.Day.Day +"-"+  @Model.Day.Month + "-" + @Model.Day.Year  + ") - tabletop";
-    ViewBag.Canonical = @Url.Action("Index", "Home", new {name = @Model.Name, date = @Model.Today});
+    ViewBag.Title = "Archive - " + @Model.Name + " (" + @Model.Day.Day + "-" + @Model.Day.Month + "-" + @Model.Day.Year + ") - tabletop";
+    ViewBag.Canonical = @Url.Action("Index", "Home", new { name = @Model.Name, date = @Model.Today });
+    ViewBag.Favicon = "favicon_default.png";
 }
 
 <nav class="primary_nav_wrap">
@@ -21,17 +22,17 @@
             <ul>
                 @foreach (var item in Model.List)
                 {
-                    if (@item.NameUrlSafe == @Model.NameUrlSafe && @item.IsVisible)
+                    if (@item.NameUrlSafe == @Model.NameUrlSafe && @item.IsVisible && @item.IsAccessible)
                     {
                         <li class="current-menu-item"><a href="@Url.Action("Index", "Home", new {name = @item.NameUrlSafe, date = @Model.Today})"> @item.Name </a></li>
                     }
 
-                    if (@item.NameUrlSafe != @Model.NameUrlSafe && @item.IsVisible)
+                    if (@item.NameUrlSafe != @Model.NameUrlSafe && @item.IsVisible && @item.IsAccessible)
                     {
                         <li><a href="@Url.Action("Index", "Home", new {name = @item.NameUrlSafe, date = @Model.Today})"> @item.Name </a></li>
                     }
                 }
-                
+
                 @*https://codepen.io/philhoyt/pen/ujHzd*@
 
             </ul>
@@ -41,31 +42,31 @@
 </nav>
 
 @*<nav class="primary_nav_wrap">
-    <div class="logo"><a href="@Url.Action("Index","Home")"> <span>tabletop</span> home </a></div>
+        <div class="logo"><a href="@Url.Action("Index","Home")"> <span>tabletop</span> home </a></div>
 
-    <div id="prevnext">
-        <a class="prev" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Yesterday">&lt;</a>
-        @if (Model.RelativeDate != 0)
-        {
-            <a class="next" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Tomorrow">&gt;</a>
-        }
-    </div>
-    <ul>
-        @foreach (var item in Model.List)
+        <div id="prevnext">
+            <a class="prev" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Yesterday">&lt;</a>
+            @if (Model.RelativeDate != 0)
             {
-                if (@item.NameUrlSafe == @Model.NameUrlSafe && @item.IsVisible)
+                <a class="next" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Tomorrow">&gt;</a>
+            }
+        </div>
+        <ul>
+            @foreach (var item in Model.List)
                 {
-                    <li class="current-menu-item"><a href="@Url.Action("Index","Home", new { name = @item.NameUrlSafe, date = @Model.Today } )"> @item.Name </a></li>
-            }
+                    if (@item.NameUrlSafe == @Model.NameUrlSafe && @item.IsVisible)
+                    {
+                        <li class="current-menu-item"><a href="@Url.Action("Index","Home", new { name = @item.NameUrlSafe, date = @Model.Today } )"> @item.Name </a></li>
+                }
 
-            if (@item.NameUrlSafe != @Model.NameUrlSafe && @item.IsVisible)
-            {
-                <li><a href="@Url.Action("Index","Home", new { name = @item.NameUrlSafe, date = @Model.Today } )"> @item.Name </a></li>
+                if (@item.NameUrlSafe != @Model.NameUrlSafe && @item.IsVisible)
+                {
+                    <li><a href="@Url.Action("Index","Home", new { name = @item.NameUrlSafe, date = @Model.Today } )"> @item.Name </a></li>
 
+                }
             }
-        }
-    </ul>
-</nav>*@
+        </ul>
+    </nav>*@
 
 <div class="header">
     <div>
@@ -87,7 +88,7 @@
 
 
 
-    <script type="text/javascript">
+<script type="text/javascript">
     window.updateIsFreeEnv = {
         "url": null,
         "updateInterval": null,
@@ -99,7 +100,7 @@
         "name": "@Model.Name",
         "relativeDate": @Model.RelativeDate
     };
-    </script>
+</script>
 
 
 <script type="text/javascript" src="@Url.Content("~/")js/vendor/d3.v4.min.js"></script>

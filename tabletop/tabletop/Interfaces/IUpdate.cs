@@ -22,10 +22,10 @@ namespace tabletop.Interfaces
         //IEnumerable<UpdateStatus> GetRecentByName(string name);
         IEnumerable<ChannelEvent> GetTimeSpanByName(string name, DateTime startDateTime, DateTime endDateTime);
 
-        ChannelUser GetChannelUserIdByUrlSafeName(string nameUrlSafe);
+        ChannelUser GetChannelUserIdByUrlSafeName(string nameUrlSafe, bool internalRequest);
         IEnumerable<ChannelUser> GetAllChannelUsers();
 
-        GetStatus IsFree(string name);
+        GetStatus IsFree(string channelUserId);
 
         
     }

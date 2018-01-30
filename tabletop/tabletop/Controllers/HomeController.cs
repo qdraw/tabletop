@@ -35,7 +35,7 @@ namespace tabletop.Controllers
                 urlSafeName = "tafelvoetbal";
             }
 
-            var channelUserObject = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName);
+            var channelUserObject = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName,false);
 
             if (channelUserObject == null)
             {
@@ -46,6 +46,7 @@ namespace tabletop.Controllers
             {
                 List = _updateStatusContent.GetAllChannelUsers(),
                 Name = channelUserObject.Name,
+                NameId = channelUserObject.NameId,
                 NameUrlSafe = channelUserObject.NameUrlSafe,
                 RelativeDate = relativeDays,
                 Today = date.Year + "-" + dto.LeadingZero(date.Month) + "-" + dto.LeadingZero(date.Day),
@@ -58,10 +59,9 @@ namespace tabletop.Controllers
 
             if (model.RelativeDate == 0)
             {
-                var isFreeStatus = _updateStatusContent.IsFree(channelUserObject.NameUrlSafe);
+                var isFreeStatus = _updateStatusContent.IsFree(channelUserObject.NameId);
                 model.IsFree = isFreeStatus.IsFree;
-                model.IsFreeDateTime = isFreeStatus.DateTime;
-
+                model.IsFreeLatestAmsterdamDateTime = dto.UtcDateTimeToAmsterdamDateTime(isFreeStatus.DateTime);
                 return View("Live", model);
             }
 

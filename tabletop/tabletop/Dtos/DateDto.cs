@@ -38,6 +38,11 @@ namespace tabletop.Dtos
             return date.Year >= 2015 ? differenceDateTime.Days : 0;
         }
 
+        public DateTime UtcDateTimeToAmsterdamDateTime(DateTime inputUtcDateTime)
+        {
+            return TimeZoneInfo.ConvertTime(inputUtcDateTime, TimeZoneInfo.Utc, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+        }
+
         public DateTime GetDateTime()
         {
             DateTime dateTime;

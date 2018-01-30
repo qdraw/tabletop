@@ -16,11 +16,12 @@ namespace tabletop.ViewModels
         public int TomorrowRelativeDate { get; set; }
         public int YesterdayRelativeDate { get; set; }
         public bool IsFree { get; set; }
-        public DateTime IsFreeDateTime { get; set; }
+        public DateTime IsFreeLatestAmsterdamDateTime { get; set; }
         public DateTime Day { get; set; }
         public string Yesterday { get; set; }
         public string Tomorrow { get; set; }
         public string Today { get; set; }
         public string NameUrlSafe { get; set; }
+        public string NameId { get; set; }
     }
 }

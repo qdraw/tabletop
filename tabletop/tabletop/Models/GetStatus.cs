@@ -5,8 +5,6 @@ namespace tabletop.Models
 {
     public class GetStatus
     {
-        public string Name { get; set; }
-
         [Required]
         public DateTime DateTime { get; set; }
 

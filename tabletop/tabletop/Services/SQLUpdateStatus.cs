@@ -1,14 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Rest.Azure;
 using tabletop.Data;
 using tabletop.Interfaces;
 using tabletop.Models;
-using tabletop.ViewModels;
 
 namespace tabletop.Services
 {
@@ -37,13 +35,21 @@ namespace tabletop.Services
             return updateStatusContent;
         }
 
-        public ChannelUser Update(ChannelUser updateStatusContent)
+        // used for unit tests
+        public ChannelUser Update(ChannelUser updateUser)
         {
-            _context.Attach(updateStatusContent).State = EntityState.Modified;
+            _context.Attach(updateUser).State = EntityState.Modified;
             _context.SaveChanges();
-            return updateStatusContent;
+            return updateUser;
         }
 
+        // used for unit tests
+        public ChannelEvent Update(ChannelEvent updateEvent)
+        {
+            _context.Attach(updateEvent).State = EntityState.Modified;
+            _context.SaveChanges();
+            return updateEvent;
+        }
 
 
         public ChannelEvent AddOrUpdate(InputChannelEvent inputChannelEventContent)
@@ -52,7 +58,8 @@ namespace tabletop.Services
             if (IsUserInDatabase(inputChannelEventContent.Name))
             {
 
-                var userid = GetUserIdByUrlSafeName(inputChannelEventContent.Name);
+                var channelUserId = GetChannelUserIdByUrlSafeName(inputChannelEventContent.Name, true);
+                var userid = channelUserId.NameId;
                 var getLastMinuteContent = GetLastMinute(userid);
                 var lastMinuteContent = getLastMinuteContent.ToList();
                 var firstLastMinuteContent = lastMinuteContent.FirstOrDefault();
@@ -100,18 +107,25 @@ namespace tabletop.Services
         }
 
 
-        // Todo: merge those two objects
-        public string GetUserIdByUrlSafeName(string nameUrlSafe)
+        public ChannelUser GetChannelUserIdByUrlSafeName(string nameUrlSafe, bool internalRequest)
         {
-            var userIdObject = _context.ChannelUser.LastOrDefault(p => p.NameUrlSafe == nameUrlSafe);
-            return userIdObject?.NameId;
-            // return null if not there
-        }
+            var userIdObjectIsAccessible = _context.ChannelUser.LastOrDefault(p => p.NameUrlSafe == nameUrlSafe);
 
-        public ChannelUser GetChannelUserIdByUrlSafeName(string nameUrlSafe)
-        {
-            var userIdObject = _context.ChannelUser.LastOrDefault(p => p.NameUrlSafe == nameUrlSafe);
-            return userIdObject; // return null if not there
+            if (userIdObjectIsAccessible == null) return null;
+
+            if (!internalRequest)
+            {
+                if (userIdObjectIsAccessible.IsAccessible)
+                {
+                    return userIdObjectIsAccessible; // return null if not there
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            return userIdObjectIsAccessible;
         }
 
 
@@ -120,15 +134,18 @@ namespace tabletop.Services
             return _context.ChannelUser; // return null if not there
         }
 
-        public ChannelUser AddUser()
+        public ChannelUser AddUser(string name)
         {
+            if (string.IsNullOrWhiteSpace(name)) return null;
 
+            var nameUrlSafe = name.ToLower();
+            nameUrlSafe = Regex.Replace(nameUrlSafe, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
             var newChannelUser = new ChannelUser
             {
-                Name = "Human Name",
+                Name = name,
                 IsVisible = true,
                 IsAccessible = true,
-                NameUrlSafe = "urlname"
+                NameUrlSafe = nameUrlSafe
             };
 
             _context.ChannelUser.Add(newChannelUser);
@@ -152,12 +169,11 @@ namespace tabletop.Services
             return lastMinuteRequests;
         }
 
-        public GetStatus IsFree(string nameUrlSafe)
+
+        public GetStatus IsFree(string channelUserId)
         {
             var latestEvent = _context.ChannelEvent
-                .Where(b => b.ChannelUser.NameUrlSafe == nameUrlSafe)
-                .Include(b => b.ChannelUser)
-                .LastOrDefault();
+                .LastOrDefault(b => b.ChannelUserId == channelUserId);
 
             if (latestEvent == null)
             {
@@ -171,7 +187,6 @@ namespace tabletop.Services
 
             var isFreeStatus = new GetStatus
             {
-                Name = latestEvent.ChannelUser.Name,
                 DateTime = latestEvent.DateTime,
                 Difference = difference
             };
@@ -183,6 +198,37 @@ namespace tabletop.Services
 
             return isFreeStatus;
         }
+        //public GetStatus IsFree(string nameUrlSafe)
+        //{
+        //    var latestEvent = _context.ChannelEvent
+        //        .Where(b => b.ChannelUser.NameUrlSafe == nameUrlSafe)
+        //        .Include(b => b.ChannelUser)
+        //        .LastOrDefault();
+
+        //    if (latestEvent == null)
+        //    {
+        //        return new GetStatus
+        //        {
+        //            IsFree = true
+        //        };
+        //    }
+
+        //    var difference = DateTime.UtcNow - latestEvent.DateTime;
+
+        //    var isFreeStatus = new GetStatus
+        //    {
+        //        Name = latestEvent.ChannelUser.Name,
+        //        DateTime = latestEvent.DateTime,
+        //        Difference = difference
+        //    };
+
+        //    if (difference.Minutes > 2)
+        //    {
+        //        isFreeStatus.IsFree = true;
+        //    }
+
+        //    return isFreeStatus;
+        //}
 
 
 
@@ -265,44 +311,6 @@ namespace tabletop.Services
         //    return _context.UpdateStatus.Where(b => b.Name == name);
         //}
 
-
-
-
-        //public ChannelEvent GetLatestByName(string nameid)
-        //{
-        //    var getLatestDateTimeByName = _context.ChannelEvent.LastOrDefault(b => b.NameId == nameid);
-        //    if (getLatestDateTimeByName == null) return new ChannelEvent();
-
-        //    var lastObject = _context.ChannelEvent
-        //        .LastOrDefault(b => b.NameId == nameid);
-
-        //    if (lastObject == null) return new ChannelEvent();
-
-        //    return lastObject;
-        //}
-
-
-        //public UpdateStatus GetLatestByName(string name)
-        //{
-        //    return _context.UpdateStatus
-        //            .LastOrDefault(b => b.Name == name);
-        //}
-
-
-        //public IEnumerable<UpdateStatus> GetRecentByName(string name)
-        //{
-        //    return _context.UpdateStatus
-        //        .Where(p => p.DateTime > DateTime.UtcNow.Subtract(new TimeSpan(0, 8, 0, 0)))
-        //        .Where(b => b.Name == name);
-        //}
-
-        //public IEnumerable<UpdateStatus> GetTimeSpanByName(string name, DateTime startDateTime, DateTime endDateTime)
-        //{
-        //    var result = _context.UpdateStatus
-        //        .Where(p => p.DateTime >= startDateTime && p.DateTime <= endDateTime)
-        //        .Where(b => b.Name == name);
-        //    return result;
-        //}
 
 
     }

@@ -156,6 +156,14 @@ body {
 	margin: 15px;
 }
 
+.databox.red {
+    background-color: rgb(255, 138, 101);
+}
+
+.databox.green {
+    background-color: rgb(96, 125, 139);
+}
+
 .y_events line,
 .y_events path,
 .x_time line,

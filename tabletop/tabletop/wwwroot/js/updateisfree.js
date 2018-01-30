@@ -9,7 +9,7 @@ if (window.updateIsFreeEnv === undefined) {
 var updateIsFree = {
     index : function () {
         if (window.updateIsFreeEnv.url !== undefined && window.updateIsFreeEnv.url !== null ) {
-            updateIsFree.start();
+            //updateIsFree.start();
             var updateInterval = window.updateIsFreeEnv.updateInterval;
             if (!isNaN(updateInterval) && updateInterval !== null && updateInterval !== undefined ) {
                 setInterval(function(){
@@ -25,7 +25,7 @@ var updateIsFree = {
                 function(data) {
                     if (data.dateTime !== undefined && data.isFree !== undefined) {
                         var d = new Date(data.dateTime + "+00:00");
-                        document.querySelector('#latestactivity').innerHTML = "latest activity on location: "  + d.toLocaleDateString("NL-nl") + " " + d.toLocaleTimeString("NL-nl");
+                        document.querySelector('#latestactivity').innerHTML = "Latest activity on location: "  + d.toLocaleDateString("NL-nl") + " " + d.toLocaleTimeString("NL-nl");
     					// document.querySelector('#isfree').innerHTML = "Is Free?: "  + data.isFree;
 
     					if (data.isFree) {

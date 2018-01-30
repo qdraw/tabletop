@@ -1,72 +1,107 @@
-//using System;
-//using System.Linq;
-//using Microsoft.Data.Sqlite;
-//using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore.Storage.Internal;
-//using Microsoft.Extensions.Configuration;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using tabletop;
-//using tabletop.Data;
-//using tabletop.Services;
-//using tabletop.Models;
+using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using tabletop.Data;
+using tabletop.Services;
+using tabletop.Models;
 
 
 
-//namespace tabletop.tests
-//{
-//    [TestClass]
-//    public class SqlUpdateTest
-//    {
-//        readonly DbContextOptions<AppDbContext> _options;
+namespace tabletop.tests
+{
+    [TestClass]
+    public class SqlUpdateTest
+    {
 
-//        public SqlUpdateTest()
-//        {
-//            var builder = new DbContextOptionsBuilder<AppDbContext>();
-//            builder.UseInMemoryDatabase();
-//            _options = builder.Options;
+        public SqlUpdateTest()
+        {
+            var builder = new DbContextOptionsBuilder<AppDbContext>();
+            builder.UseInMemoryDatabase();
+            var _options = builder.Options;
 
-//            _context = new AppDbContext(_options);
-//            _sqlStatus = new SqlUpdateStatus(_context);
-//        }
+            _context = new AppDbContext(_options);
+            _sqlStatus = new SqlUpdateStatus(_context);
+        }
 
-//        private AppDbContext _context;
-//        private SqlUpdateStatus _sqlStatus;
+        private readonly AppDbContext _context;
+        private readonly SqlUpdateStatus _sqlStatus;
 
-//        [TestMethod]
-//        public void AddOrUpdate()
-//        {
+        [TestMethod]
+        public void AddTestAccountUser() { 
+            _sqlStatus.AddUser("Test Account");
+            var userIdChannelUser = _sqlStatus.GetChannelUserIdByUrlSafeName("testaccount", true);
+            Assert.AreEqual(userIdChannelUser.Name, "Test Account");
+        }
 
-//            var newUpdateStatus = new UpdateStatus
-//            {
-//                Status = 1,
-//                Name = "test"
-//            };
+        [TestMethod]
+        public void AddTestAccountUserNull()
+        {
+            var addUserObject = _sqlStatus.AddUser(null);
+            Assert.AreEqual(addUserObject, null);
+        }
 
-//            _sqlStatus.AddOrUpdate(newUpdateStatus);
-//            var countItemsInDatabase = _context.UpdateStatus.OrderBy(r => r.Id).Count();
-//            Assert.AreEqual(countItemsInDatabase, 1);
+        public string AddTestAccountUserAndGetId()
+        {
+            _sqlStatus.AddUser("Test Account");
+            var userIdChannelUser = _sqlStatus.GetChannelUserIdByUrlSafeName("testaccount", true);
+            return  userIdChannelUser.NameId;
+        }
 
+        [TestMethod]
+        public void AddOrUpdate()
+        {
+            AddTestAccountUserAndGetId();
 
-//            _sqlStatus.AddOrUpdate(newUpdateStatus);
-//            countItemsInDatabase = _context.UpdateStatus.OrderBy(r => r.Id).Count();
-//            Assert.AreEqual(countItemsInDatabase, 1);
+            var newUpdateStatus = new InputChannelEvent()
+            {
+                Status = 1,
+                Name = "testaccount"
+            };
 
-//        }
+            _sqlStatus.AddOrUpdate(newUpdateStatus);
+            var countItemsInDatabase = _context.ChannelEvent.OrderBy(r => r.Id).Count();
+            Assert.AreEqual(countItemsInDatabase, 1);
 
-//        [TestMethod]
-//        public void IsFree()
-//        {
-//            var newUpdateStatus = new UpdateStatus
-//            {
-//                Status = 1,
-//                Name = "test"
-//            };
+            _sqlStatus.AddOrUpdate(newUpdateStatus);
+            countItemsInDatabase = _context.ChannelEvent.OrderBy(r => r.Id).Count();
+            Assert.AreEqual(countItemsInDatabase, 1);
+        }
 
-//            _sqlStatus.AddOrUpdate(newUpdateStatus);
+        [TestMethod]
+        public void IsFreeFalseRecentCall()
+        {
+            var userid = AddTestAccountUserAndGetId();
 
-//            var isFreeNow = _sqlStatus.IsFree("test");
-//            Assert.AreEqual(isFreeNow.IsFree, false);
-//        }
-//    }
+            var newUpdateStatus = new InputChannelEvent
+            {
+                Status = 1,
+                Name = "testaccount"
+            };
+            _sqlStatus.AddOrUpdate(newUpdateStatus);
 
-//}
+            var isFreeNow = _sqlStatus.IsFree(userid);
+            Assert.AreEqual(isFreeNow.IsFree, false);
+        }
+
+        [TestMethod]
+        public void IsFreeTrueEventLongTimeAgo()
+        {
+            var userid = AddTestAccountUserAndGetId();
+
+            var newUpdateStatus = new InputChannelEvent
+            {
+                Status = 1,
+                Name = "testaccount"
+            };
+            var newAddedObject = _sqlStatus.AddOrUpdate(newUpdateStatus);
+
+            newAddedObject.DateTime = new DateTime(2015,01,01,00,00,00);
+            _sqlStatus.Update(newAddedObject);
+
+            var isFreeNow = _sqlStatus.IsFree(userid);
+            Assert.AreEqual(isFreeNow.IsFree, true);
+        }
+    }
+
+}

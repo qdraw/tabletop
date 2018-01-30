@@ -23,3 +23,5 @@
 **/.vs*
 
 tabletop/tabletop.tests/bin/Debug/netcoreapp2.0/
+
+node_modules*

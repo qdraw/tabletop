@@ -182,16 +182,16 @@ namespace tabletop.Controllers
         [Produces("application/json")]
         public IActionResult IsFree(string name)
         {
-            var nameUrlSafe = name;
+            var channelUserId = name;
 
-            if (!string.IsNullOrEmpty(nameUrlSafe))
+            if (!string.IsNullOrEmpty(channelUserId))
             {
-                var newStatusContent = _updateStatusContent.IsFree(nameUrlSafe);
+                var newStatusContent = _updateStatusContent.IsFree(channelUserId);
                 return Json(newStatusContent);
             }
             else
             {
-                return BadRequest("name is invalid");
+                return BadRequest("channelUserId is invalid");
             }
 
         }
