@@ -1,0 +1,5 @@
+BEARER=token
+CHANNELUSER=username
+SERIALPORT=/dev/
+# use a command like this to find out
+# udevadm info --query=all --name=/dev/ttyACM0

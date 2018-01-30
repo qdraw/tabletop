@@ -7,10 +7,12 @@ require('dotenv').load();
 if (process.env.BEARER === undefined) {
     throw "missing bearer";
 }
+if (process.env.CHANNELUSER === undefined) {
+    throw "missing CHANNELUSER";
+}
 
 if (process.env.SERIALPORT === undefined) {
     throw "missing SERIALPORT";
-    process.exit();
 }
 
 var serialPort = new SerialPort(process.env.SERIALPORT, {
@@ -33,7 +35,7 @@ function httpUpdate() {
 	return new Promise(
 		function(resolve, reject) {
 			var formquery = {
-				"name" : "test",
+				"name" : process.env.CHANNELUSER,
 				"status" : 1
 			}
 
