@@ -13,7 +13,7 @@
         <a class="prev" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Yesterday">&lt;</a>
         @if (Model.RelativeDate != 0)
         {
-            <a class="next" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Tomorrow">&gt;</a>
+            <a asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Tomorrow">&gt;</a>
         }
     </div>
     <ul>
@@ -110,6 +110,7 @@
 
 <!-- Google Analytics. -->
 <script type="text/javascript">
+    @*ReSharper disable UnusedParameter*@
     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
         e=o.createElement(i);r=o.getElementsByTagName(i)[0];

@@ -69,7 +69,7 @@ namespace tabletop
             // });
         }
 
-        private void ConfigureRoutes(IRouteBuilder routeBuilder)
+        private static void ConfigureRoutes(IRouteBuilder routeBuilder)
         {
             // Home/Index/4 > HomeController
             routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");

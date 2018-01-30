@@ -17,7 +17,7 @@
         <a class="prev" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Yesterday">&lt;</a>
         @if (Model.RelativeDate != 0)
         {
-            <a class="next" asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Tomorrow">&gt;</a>
+            <a asp-controller="Home" asp-action="Index" asp-route-name="@Model.NameUrlSafe" asp-route-date="@Model.Tomorrow">&gt;</a>
         }
     </div>
     <ul>
@@ -46,9 +46,11 @@
 </nav>
 
 <div class="header">
-
+    @* ReSharper disable once UnknownCssClass *@
     <div class="panel panel-ai-indicator">
+        @* ReSharper disable once UnknownCssClass *@
         <div id="online-indicator" class="circle circle-big circle-@ViewBag.GreenOrBlank"></div>
+        @* ReSharper disable once UnknownCssClass *@
         <div id="offline-indicator" class="circle circle-big circle-@ViewBag.RedOrBlank"></div>
         <div id="status" class="indicator-text"> @ViewBag.FreeOrInUse</div>
     </div>
@@ -63,6 +65,7 @@
 <div class="tooltip"></div>
 
 <div class="databox @ViewBag.GreenOrRed">
+@* ReSharper disable once UnknownCssClass *@
 <svg id="data" class="border-@ViewBag.GreenOrRed">
     <g class="bars"></g>
 </svg>
@@ -92,6 +95,7 @@
 
 <!-- Google Analytics. -->
 <script type="text/javascript">
+    @*ReSharper disable UnusedParameter*@
     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
         e=o.createElement(i);r=o.getElementsByTagName(i)[0];

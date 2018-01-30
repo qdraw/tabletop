@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using tabletop.Models;
+using tabletop.ViewModels;
 
 namespace tabletop.Interfaces
 {
@@ -26,7 +27,9 @@ namespace tabletop.Interfaces
         IEnumerable<ChannelUser> GetAllChannelUsers();
 
         GetStatus IsFree(string channelUserId);
+        EventsOfficeHoursModel Events(DateTime startDateTime, DateTime endDateTime, string urlSafeName);
 
-        
+
+
     }
 }

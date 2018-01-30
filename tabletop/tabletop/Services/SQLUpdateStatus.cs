@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Rest.Azure;
 using tabletop.Data;
+using tabletop.Dtos;
 using tabletop.Interfaces;
 using tabletop.Models;
+using tabletop.ViewModels;
 
 namespace tabletop.Services
 {
@@ -18,13 +20,14 @@ namespace tabletop.Services
         {
             _context = context;
         }
-       
-        public IEnumerable<ChannelEvent> GetTimeSpanByName(string urlsafename, DateTime startDateTime, DateTime endDateTime)
+
+        public IEnumerable<ChannelEvent> GetTimeSpanByName(string urlsafename, DateTime startDateTime,
+            DateTime endDateTime)
         {
             var result = _context.ChannelEvent
-                    .Where(p => p.DateTime >= startDateTime && p.DateTime <= endDateTime)
-                    .Where(b => b.ChannelUser.NameUrlSafe == urlsafename);
-            return result;
+                .Where(p => p.DateTime >= startDateTime && p.DateTime <= endDateTime)
+                .Where(b => b.ChannelUser.NameUrlSafe == urlsafename);
+            return result.AsEnumerable();
         }
 
 
@@ -63,7 +66,7 @@ namespace tabletop.Services
                 var getLastMinuteContent = GetLastMinute(userid);
                 var lastMinuteContent = getLastMinuteContent.ToList();
                 var firstLastMinuteContent = lastMinuteContent.FirstOrDefault();
-                
+
 
                 if (!lastMinuteContent.Any())
                 {
@@ -90,7 +93,7 @@ namespace tabletop.Services
             }
             else
             {
-                throw new NotImplementedException("",new Exception("fail"));
+                throw new NotImplementedException("", new Exception("fail"));
             }
         }
 
@@ -198,102 +201,68 @@ namespace tabletop.Services
 
             return isFreeStatus;
         }
-        //public GetStatus IsFree(string nameUrlSafe)
-        //{
-        //    var latestEvent = _context.ChannelEvent
-        //        .Where(b => b.ChannelUser.NameUrlSafe == nameUrlSafe)
-        //        .Include(b => b.ChannelUser)
-        //        .LastOrDefault();
 
-        //    if (latestEvent == null)
-        //    {
-        //        return new GetStatus
-        //        {
-        //            IsFree = true
-        //        };
-        //    }
-
-        //    var difference = DateTime.UtcNow - latestEvent.DateTime;
-
-        //    var isFreeStatus = new GetStatus
-        //    {
-        //        Name = latestEvent.ChannelUser.Name,
-        //        DateTime = latestEvent.DateTime,
-        //        Difference = difference
-        //    };
-
-        //    if (difference.Minutes > 2)
-        //    {
-        //        isFreeStatus.IsFree = true;
-        //    }
-
-        //    return isFreeStatus;
-        //}
-
-
-
-        public string G()
+        public EventsOfficeHoursModel Events(DateTime startDateTime, DateTime endDateTime, string urlSafeName)
         {
-            return "";
-            //var startDateTime = dateTime.ToUniversalTime().AddHours(9);
-            //var endDateTime = dateTime.ToUniversalTime().AddHours(18);
-            //var statusContent = _updateStatusContent.GetTimeSpanByName(
-            //        dto.Name,
-            //        startDateTime,
-            //        endDateTime
-            //    ).ToList().OrderBy(p => p.DateTime);
+            var channelUser = GetChannelUserIdByUrlSafeName(urlSafeName, true);
+            if (channelUser == null)
+            {
+                return null;
+            }
 
-            //var model = new EventsOfficeHoursModel
-            //{
-            //    Day = dateTime.DayOfWeek,
-            //    StartDateTime = startDateTime,
-            //    EndDateTime = endDateTime,
-            //    AmountOfMotions = new List<WeightViewModel>()
-            //};
+            var channelUserId = channelUser.NameId;
 
-            //var i = dto.GetUnixTime(startDateTime);
-            //while (i <= dto.GetUnixTime(endDateTime))
-            //{
+            var dto = new DateDto();
 
-            //    var startIntervalDateTime = dto.UnixTimeToDateTime(i);
-            //    var endIntervalDateTime = dto.UnixTimeToDateTime(i + interval);
+            var model = new EventsOfficeHoursModel
+            {
+                Day = startDateTime.DayOfWeek,
+                StartDateTime = startDateTime,
+                EndDateTime = endDateTime,
+                AmountOfMotions = new List<WeightViewModel>(),
+                Length = 0
+            };
 
-            //    var contentUpdateStatuses = statusContent.Where(p => p.DateTime > startIntervalDateTime && p.DateTime < endIntervalDateTime).ToList();
-            //    // Sum Weight Select-Statement >> Advies Joost!
-            //    //var contentUpdateStatusesExtended = statusContent
-            //    //    .Where(p => p.DateTime > startIntervalDateTime && p.DateTime < endIntervalDateTime)
-            //    //    .GroupBy(p => p.Weight)
-            //    //    .Select(p => new { WeightSum = p.Sum(c => c.Weight) }); // Sum Weight Select-Statement
+            model.Length = _context.ChannelEvent
+                .Count(
+                    p => p.ChannelUserId == channelUserId &&
+                         p.DateTime > model.StartDateTime &&
+                         p.DateTime < model.EndDateTime
+                );
 
-            //    var eventItem = new WeightViewModel();
-            //    eventItem.StartDateTime = startIntervalDateTime;
-            //    eventItem.EndDateTime = endIntervalDateTime;
 
-            //    //if (contentUpdateStatusesExtended != null && contentUpdateStatusesExtended.Any() && contentUpdateStatusesExtended.FirstOrDefault() != null)
-            //    //{
-            //    //    eventItem.Weight = contentUpdateStatusesExtended.FirstOrDefault().WeightSum;
+            const int interval = 60 * 5; // 5 minutes
+            var i = dto.GetUnixTime(startDateTime);
+            while (i <= dto.GetUnixTime(endDateTime))
+            {
 
-            //    //}
+                var eventItem = new WeightViewModel();
+                eventItem.StartDateTime = dto.UnixTimeToDateTime(i);
+                eventItem.EndDateTime = dto.UnixTimeToDateTime(i + interval);
+                eventItem.Label = eventItem.StartDateTime.ToString("HH:mm");
 
-            //    eventItem.Weight = 0;
-            //    eventItem.Label = startIntervalDateTime.ToString("HH:mm");
+                var weightSum = _context.ChannelEvent
+                    .Where(
+                        p => p.ChannelUserId == channelUserId &&
+                             p.DateTime > eventItem.StartDateTime &&
+                             p.DateTime < eventItem.EndDateTime
+                    ).Select(p => p.Weight).Sum();
 
-            //    if (contentUpdateStatuses.Any())
-            //    {
-            //        foreach (var item in contentUpdateStatuses)
-            //        {
-            //            eventItem.Weight += item.Weight;
-            //        }
-            //    }
+                eventItem.Weight = weightSum;
+                model.AmountOfMotions.Add(eventItem);
+                i += interval;
+            }
+            return model;
 
-            //    model.AmountOfMotions.Add(eventItem);
+        }
 
-            //    i += interval;
-            //}
 
-            //model.Length = model.AmountOfMotions.Count();
 
-        } 
+    }
+
+
+
+        
 
 
         //public UpdateStatus Get(int id)
@@ -312,6 +281,4 @@ namespace tabletop.Services
         //}
 
 
-
-    }
 }
