@@ -13,13 +13,10 @@ export TABLETOP_SQL=$SQLSERVERSTRING
 FOLDER=false
 if [[ $OSTYPE == "darwin"* ]]; then
 	FOLDER="osx.10.11-x64"
+elif [[ $OSTYPE == "linux-gnueabihf" ]]; then
+	FOLDER="linux-arm"
 elif [[ $OSTYPE == "linux-gnu" ]]; then
-	if [[ arch == "i386" ]]; then
-		FOLDER="linux-x64"
-	fi
-	if [[ arch == "armv7l" ]]; then
-		FOLDER="linux-arm"
-	fi
+	FOLDER="linux-x64"
 fi
 # check types here: https://docs.microsoft.com/en-us/dotnet/core/rid-catalog
 
