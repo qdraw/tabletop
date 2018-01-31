@@ -35,7 +35,6 @@ var draw = {
         // var url = "api/getRecentByName?name=" + window.envName;
         // var url = "EventsOfficehours_name_tafelvoetbal_date_0.json?" + Date.now();
         var url = window.drawEnv.url.replace(/&amp;/ig,"&");
-        console.log(url);
     	draw.loadJSON(url,
     			 function(data) {
                      data = draw.checkData(data);
@@ -72,7 +71,7 @@ var draw = {
         document.querySelector('#preloader').style.display = "none";
 
         // console.log(window.drawEnv.relativeDate);
-        if (window.drawEnv.relativeDate == 0) {
+        if (window.drawEnv.relativeDate === 0) {
 
             document.querySelector('#data').classList.add("border");
             // console.log("hi");
@@ -127,11 +126,11 @@ var draw = {
        width = 800 + (margin.right - margin.left),
        height = 300 + (margin.top - margin.bottom);
 
-       d3.select("#data")
+       window.d3.select("#data")
            .attr("preserveAspectRatio", "xMinYMin meet")
            .attr("viewBox", "0 0 " + (width + margin.left + margin.right+5) + " " + (height +margin.top+15));
 
-       var bars = d3.select("#data .bars")
+       var bars = window.d3.select("#data .bars")
            // .attr("height", height + margin.top + margin.bottom)
            .attr("fill", "#fff")
            .attr("transform","translate(" + (margin.left+20) + "," + 0 + ")")
@@ -140,28 +139,27 @@ var draw = {
 
 
        // set the ranges
-       var x = d3.scaleBand()
+       var x = window.d3.scaleBand()
            .range([0, width]);
            // .padding(0.1);
-       var y = d3.scaleLinear()
+       var y = window.d3.scaleLinear()
            .range([height, 0]);
 
        // Scale the range of the data in the domains
-       var i = 0;
        x.domain(data.map(function(d) {return d.label; }));
-       y.domain([0, d3.max(data, function(d) { return d.weight; })]);
+       y.domain([0, window.d3.max(data, function(d) { return d.weight; })]);
 
-       svg = d3.select("#data .x_time")
+       var svg = window.d3.select("#data .x_time")
            .remove();
 
        // add the x Axis
-       svg = d3.select("#data");
+       svg = window.d3.select("#data");
        svg.append("g")
            .attr("class", "x_time")
            .attr("transform", "translate("+ (margin.left+3) + "," + (height+5) + ")")
            .call(
-               d3.axisBottom(x)
-                .tickFormat(function(d,i) {
+               window.d3.axisBottom(x)
+                .tickFormat(function(d) {
                     if (d.indexOf(":00") >= 0 || d.indexOf(":30") >= 0) {
                         //var offset = new Date().getTimezoneOffset() / 60 * -1;
                         //var time = Number(d.substr(0, 2)) + offset + ":" + d.substr(3, 2) ;
@@ -182,17 +180,17 @@ var draw = {
 
 
         // // add the y Axis
-        d3.select("#data .y_events")
+        window.d3.select("#data .y_events")
             .remove();
 
         svg.append("g")
             .attr("class", "y_events")
             .attr("transform", "translate("+ (margin.left+3) + "," + 5 + ")")
             .call(
-                d3.axisLeft(y)
+                window.d3.axisLeft(y)
             );
 
-       var tooltip = d3.select(".tooltip");
+       var tooltip = window.d3.select(".tooltip");
 
        // enter and update selection
        bars
@@ -204,7 +202,7 @@ var draw = {
          .attr("height", function(d) { return height - y(d.weight); })
          .on("mousemove", function(d){
              // console.log("sdf");
-             d3.select(this).attr("fill", "#00E062");
+             window.d3.select(this).attr("fill", "#00E062");
              var startTime = Number(d.label.substr(0, 2))  + ":" + d.label.substr(3, 2);
              var endTime = Number(d.label.substr(0, 2)) + ":" + draw.leadingZero(Number(d.label.substr(3, 2)) + 5);
              if (Number(d.label.substr(3, 2)) === 55 ) {
@@ -212,13 +210,13 @@ var draw = {
              }
 
             tooltip
-              .style("left", d3.event.pageX - 50 + "px")
-              .style("top", d3.event.pageY - 60 + "px")
+              .style("left", window.d3.event.pageX - 50 + "px")
+              .style("top", window.d3.event.pageY - 60 + "px")
               .style("display", "inline-block")
               .html((startTime) + "-" + endTime + "<br>" + "events: " + (d.weight) + "x");
           })
-    	  .on("mouseout", function(d){
-              d3.select(this).attr("fill", function() {
+    	  .on("mouseout", function(){
+              window.d3.select(this).attr("fill", function() {
                  return "";
               });
               tooltip.style("display", "none");

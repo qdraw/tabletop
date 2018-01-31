@@ -11,7 +11,6 @@ function idle() {
 	window.onclick = resetTimer;     // catches touchpad clicks
 	window.onscroll = resetTimer;    // catches scrolling with arrow keys
 	window.onkeypress = resetTimer;
-	var screensaver;
 
 	function idleHelper() {
 		isUserActive = false;

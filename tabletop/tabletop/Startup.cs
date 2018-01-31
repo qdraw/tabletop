@@ -24,8 +24,11 @@ namespace tabletop
         private string GetConnectionString()
         {
             var connectionString = Environment.GetEnvironmentVariable("TABLETOP_SQL");
+
             if (string.IsNullOrWhiteSpace(connectionString))
             {
+                Console.WriteLine(">> connectionString from .json file");
+
                 connectionString = _configuration.GetConnectionString("DefaultConnection");
             }
             return connectionString;

@@ -9,7 +9,6 @@ if (window.updateIsFreeEnv === undefined) {
 var updateIsFree = {
     index : function () {
         if (window.updateIsFreeEnv.url !== undefined && window.updateIsFreeEnv.url !== null ) {
-            //updateIsFree.start();
             var updateInterval = window.updateIsFreeEnv.updateInterval;
             if (!isNaN(updateInterval) && updateInterval !== null && updateInterval !== undefined ) {
                 setInterval(function(){
@@ -20,13 +19,12 @@ var updateIsFree = {
     },
 
     start : function () {
-        url = window.updateIsFreeEnv.url;
+       var url = window.updateIsFreeEnv.url;
        updateIsFree.loadJSON(url,
                 function(data) {
                     if (data.dateTime !== undefined && data.isFree !== undefined) {
                         var d = new Date(data.dateTime + "+00:00");
                         document.querySelector('#latestactivity').innerHTML = "Latest activity on location: "  + d.toLocaleDateString("NL-nl") + " " + d.toLocaleTimeString("NL-nl");
-    					// document.querySelector('#isfree').innerHTML = "Is Free?: "  + data.isFree;
 
     					if (data.isFree) {
                             document.querySelector('.databox').classList.remove("red");
@@ -84,25 +82,26 @@ var updateIsFree = {
         document.querySelector('#status').innerHTML = "...";
         document.querySelector('#online-indicator').className = "circle circle-big circle-blank";
     },
+
     loadJSON: function (path, success, error) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function()
-    {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                if (success)
-                    success(JSON.parse(xhr.responseText));
-            } else {
-                if (error) {
-                      console.log("err");
-                    error(xhr);
-                      }
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function()
+        {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    if (success)
+                        success(JSON.parse(xhr.responseText));
+                } else {
+                    if (error) {
+                          console.log("err");
+                        error(xhr);
+                          }
+                }
             }
-        }
-    };
-    xhr.open("GET", path, true);
-    xhr.send();
-  },
+        };
+        xhr.open("GET", path, true);
+        xhr.send();
+    }
 
 };
 
