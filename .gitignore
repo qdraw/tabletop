@@ -24,5 +24,6 @@
 
 tabletop/tabletop.tests/bin/Debug/netcoreapp2.0/
 
+appsettings.Production.json
 node_modules*
 .env
