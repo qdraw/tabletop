@@ -202,8 +202,41 @@ namespace tabletop.Services
             return isFreeStatus;
         }
 
-        public EventsOfficeHoursModel Events(DateTime startDateTime, DateTime endDateTime, string urlSafeName)
+        public EventsOfficeHoursModel EventsRecent(string urlSafeName)
         {
+            var dto = new DateDto();
+
+            var startDateTime =
+                dto.RoundDown(
+                    DateTime.UtcNow.Subtract(new TimeSpan(0, 8, 0, 0)),
+                    new TimeSpan(0, 0, 5, 0));
+
+            var endDateTime = dto.RoundUp(DateTime.UtcNow, new TimeSpan(0, 0, 5, 0));
+
+            var channelUser = GetChannelUserIdByUrlSafeName(urlSafeName, true);
+            if (channelUser == null)
+            {
+                return null;
+            }
+            var channelUserId = channelUser.NameId;
+
+            var channelEvents = _context.ChannelEvent
+                .Where(
+                    p => p.ChannelUserId == channelUserId &&
+                         p.DateTime > startDateTime &&
+                         p.DateTime < endDateTime
+                ).OrderBy(p => p.DateTime);
+
+            return ParseEvents(channelEvents.ToList(), startDateTime, endDateTime);
+        }
+
+        public EventsOfficeHoursModel EventsDayView(DateTime dateTime, string urlSafeName)
+        {
+            var dto = new DateDto();
+
+            var startDateTime = dateTime;
+            var endDateTime = dateTime.AddHours(24);
+
             var channelUser = GetChannelUserIdByUrlSafeName(urlSafeName, true);
             if (channelUser == null)
             {
@@ -212,6 +245,47 @@ namespace tabletop.Services
 
             var channelUserId = channelUser.NameId;
 
+            var channelEvents = _context.ChannelEvent
+                .Where(
+                    p => p.ChannelUserId == channelUserId &&
+                         p.DateTime > startDateTime &&
+                         p.DateTime < endDateTime
+                ).OrderBy(x => x.DateTime).ToList();
+
+            if (channelEvents.Count == 0)
+            {
+                var startEmthyDateTime =
+                    dto.RoundDown(
+                        DateTime.UtcNow.Subtract(new TimeSpan(0, 8, 0, 0)),
+                        new TimeSpan(0, 0, 5, 0));
+
+                var endEmthyDateTime = dto.RoundUp(DateTime.UtcNow, new TimeSpan(0, 0, 5, 0));
+
+                var model = new EventsOfficeHoursModel
+                {
+                    Day = startDateTime.DayOfWeek,
+                    StartDateTime = startEmthyDateTime,
+                    EndDateTime = endEmthyDateTime,
+                    AmountOfMotions = new List<WeightViewModel>(),
+                    Length = 0
+                };
+                return model;
+            }
+
+            var median = channelEvents.Skip(channelEvents.Count() / 2).First().DateTime;
+            startDateTime = dto.RoundDown(median.ToUniversalTime().AddHours(-4), new TimeSpan(0, 0, 5, 0));
+            endDateTime = dto.RoundUp(median.ToUniversalTime().AddHours(4), new TimeSpan(0, 0, 5, 0));
+
+            var channelParseEvents = channelEvents
+                .Where(p => p.DateTime > startDateTime &&
+                            p.DateTime < endDateTime);
+
+            return ParseEvents(channelParseEvents.ToList(), startDateTime, endDateTime);
+
+        }
+
+        public EventsOfficeHoursModel ParseEvents(List<ChannelEvent> channelEvents, DateTime startDateTime, DateTime endDateTime)
+        {
             var dto = new DateDto();
 
             var model = new EventsOfficeHoursModel
@@ -225,30 +299,31 @@ namespace tabletop.Services
 
             model.Length = _context.ChannelEvent
                 .Count(
-                    p => p.ChannelUserId == channelUserId &&
-                         p.DateTime > model.StartDateTime &&
+                    p => p.DateTime > model.StartDateTime &&
                          p.DateTime < model.EndDateTime
                 );
 
-            var channelEvents = _context.ChannelEvent
-                .Where(
-                    p => p.ChannelUserId == channelUserId &&
-                         p.DateTime > model.StartDateTime &&
-                         p.DateTime < model.EndDateTime
-                ).ToList();
+            //var channelEvents = _context.ChannelEvent
+            //    .Where(
+            //        p => p.DateTime > model.StartDateTime &&
+            //        p.DateTime < model.EndDateTime
+            //    ).ToList();
 
             const int interval = 60 * 5; // 5 minutes
             var i = dto.GetUnixTime(startDateTime);
             while (i <= dto.GetUnixTime(endDateTime))
             {
 
-                var eventItem = new WeightViewModel();
-                eventItem.StartDateTime = dto.UnixTimeToDateTime(i);
-                eventItem.EndDateTime = dto.UnixTimeToDateTime(i + interval);
-                eventItem.Label = eventItem.StartDateTime.ToString("HH:mm");
+                var eventItem = new WeightViewModel
+                {
+                    StartDateTime = dto.UnixTimeToDateTime(i),
+                    EndDateTime = dto.UnixTimeToDateTime(i + interval)
+                };
+                eventItem.LabelUtc = eventItem.StartDateTime.ToString("HH:mm");
+                eventItem.Label = dto.UtcDateTimeToAmsterdamDateTime(eventItem.StartDateTime).ToString("HH:mm");
 
                 var weightSum = channelEvents
-                    .Where(p => 
+                    .Where(p =>
                         p.DateTime > eventItem.StartDateTime &&
                         p.DateTime < eventItem.EndDateTime)
                     .Select(p => p.Weight).Sum();

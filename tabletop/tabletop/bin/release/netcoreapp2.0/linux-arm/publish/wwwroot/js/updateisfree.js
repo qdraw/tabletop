@@ -29,7 +29,9 @@ var updateIsFree = {
     					// document.querySelector('#isfree').innerHTML = "Is Free?: "  + data.isFree;
 
     					if (data.isFree) {
-                            document.querySelector(".databox").style.backgroundColor = "#607D8B";
+                            document.querySelector('.databox').classList.remove("red");
+                            document.querySelector('.databox').classList.add("green");
+
                             document.querySelector("link[rel*='icon']").href = "img/favicon_free.png";
                             document.title = document.title.replace(/^(is in use)|(free)|(Loading)/, "free");
 
@@ -44,7 +46,9 @@ var updateIsFree = {
 
     					}
                         if (!data.isFree) {
-                            document.querySelector(".databox").style.backgroundColor = "#FF8A65";
+                            document.querySelector('.databox').classList.remove("green");
+                            document.querySelector('.databox').classList.add("red");
+
                             document.querySelector("link[rel*='icon']").href = "img/favicon_inuse.png";
                             document.title = document.title.replace(/^(is in use)|(free)|(Loading)/, "is in use");
 
@@ -58,13 +62,29 @@ var updateIsFree = {
                             }
 
                         }
-
                     }
+                    if (data.dateTime === undefined && data.isFree === undefined) {
+                        updateIsFree.resetAll();
+                    }
+
+
                 },
-               function(xhr) { console.error(xhr); }
+                function (xhr) {
+                    updateIsFree.resetAll();
+                    console.error(xhr);
+               }
       );
-  },
-  loadJSON: function (path, success, error) {
+    },
+
+    resetAll:  function () {
+        document.querySelector('.databox').classList.remove("red");
+        document.querySelector('.databox').classList.remove("green");
+        document.querySelector('#data').classList.remove("border-red");
+        document.querySelector('#data').classList.remove("border-green");
+        document.querySelector('#status').innerHTML = "...";
+        document.querySelector('#online-indicator').className = "circle circle-big circle-blank";
+    },
+    loadJSON: function (path, success, error) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function()
     {

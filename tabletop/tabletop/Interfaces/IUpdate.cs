@@ -27,9 +27,11 @@ namespace tabletop.Interfaces
         IEnumerable<ChannelUser> GetAllChannelUsers();
 
         GetStatus IsFree(string channelUserId);
-        EventsOfficeHoursModel Events(DateTime startDateTime, DateTime endDateTime, string urlSafeName);
+        //EventsOfficeHoursModel Events(DateTime startDateTime, DateTime endDateTime, string urlSafeName);
+        EventsOfficeHoursModel EventsDayView(DateTime day, string urlSafeName);
+        EventsOfficeHoursModel EventsRecent(string urlSafeName);
 
-
+        
 
     }
 }

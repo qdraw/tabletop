@@ -9,5 +9,6 @@ namespace tabletop.ViewModels
         public DateTime EndDateTime { get; set; }
 
         public string Label { get; set; }
+        public string LabelUtc { get; set; }
     }
 }

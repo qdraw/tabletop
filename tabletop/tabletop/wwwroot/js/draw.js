@@ -111,9 +111,9 @@ var draw = {
 
     returnNowDate: function() {
        var now = new Date();
-       var utc_timestamp_unix = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
+       var utcTimestampUnix = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
             now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds())/1000;
-       return utc_timestamp_unix;
+       return utcTimestampUnix;
    },
 
     drawD3: function(data) {
@@ -163,9 +163,9 @@ var draw = {
                d3.axisBottom(x)
                 .tickFormat(function(d,i) {
                     if (d.indexOf(":00") >= 0 || d.indexOf(":30") >= 0) {
-                        var offset = new Date().getTimezoneOffset() / 60 * -1;
-                        var time = Number(d.substr(0, 2)) + offset + ":" + d.substr(3, 2) ;
-                        return time;
+                        //var offset = new Date().getTimezoneOffset() / 60 * -1;
+                        //var time = Number(d.substr(0, 2)) + offset + ":" + d.substr(3, 2) ;
+                        return d;
                     }
                     // if ((i % 10) == 0) {}
                     else {
@@ -205,9 +205,12 @@ var draw = {
          .on("mousemove", function(d){
              // console.log("sdf");
              d3.select(this).attr("fill", "#00E062");
-             var offset = new Date().getTimezoneOffset() / 60 * -1;
-             var startTime = Number(d.label.substr(0, 2)) + offset + ":" + d.label.substr(3, 2);
-             var endTime = Number(d.label.substr(0, 2)) + offset + ":" + draw.leadingZero(Number(d.label.substr(3, 2))+5);
+             var startTime = Number(d.label.substr(0, 2))  + ":" + d.label.substr(3, 2);
+             var endTime = Number(d.label.substr(0, 2)) + ":" + draw.leadingZero(Number(d.label.substr(3, 2)) + 5);
+             if (Number(d.label.substr(3, 2)) === 55 ) {
+                 endTime = Number(d.label.substr(0, 2))+1 + ":00";
+             }
+
             tooltip
               .style("left", d3.event.pageX - 50 + "px")
               .style("top", d3.event.pageY - 60 + "px")

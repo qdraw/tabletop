@@ -28,46 +28,46 @@ namespace tabletop.Controllers
         [Produces("application/json")]
         public IActionResult EventsRecent(DateDto dto)
         {
-            var startDateTime = 
-                dto.RoundDown(
-                    DateTime.UtcNow.Subtract(new TimeSpan(0, 8, 0, 0)),
-                    new TimeSpan(0, 0, 5, 0));
-
-            var endDateTime = dto.RoundUp(DateTime.UtcNow, new TimeSpan(0, 0, 5, 0));
-
             if (string.IsNullOrEmpty(dto.Name)) return BadRequest("name wrong");
-
-            var result =
-                _updateStatusContent.Events(startDateTime, endDateTime, dto.Name);
-
+            var result = _updateStatusContent.EventsRecent(dto.Name);
             if (result == null) return BadRequest("name error");
-
             return Json(result);
-
         }
 
 
         [HttpGet]
         [Produces("application/json")]
-        public IActionResult EventsOfficeHours(DateDto dto)
+        public IActionResult EventsDayView(DateDto dto)
         {
-
             var dateTime = dto.GetDateTime();
-            if (string.IsNullOrEmpty(dto.Name) && dateTime.Year > 2015 ) return BadRequest("name or date wrong");
-
-            var startDateTime = dateTime.ToUniversalTime().AddHours(9);
-            var endDateTime = dateTime.ToUniversalTime().AddHours(18);
+            if (string.IsNullOrEmpty(dto.Name) && dateTime.Year > 2015) return BadRequest("name or date wrong");
 
             var result =
-                _updateStatusContent.Events(startDateTime, endDateTime, dto.Name);
-
+                _updateStatusContent.EventsDayView(dateTime, dto.Name);
             if (result == null) return BadRequest("name error");
-
             return Json(result);
-
         }
-        
 
+
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public IActionResult EventsOfficeHours(DateDto dto)
+        //{
+
+        //    var dateTime = dto.GetDateTime();
+        //    if (string.IsNullOrEmpty(dto.Name) && dateTime.Year > 2015 ) return BadRequest("name or date wrong");
+
+        //    var startDateTime = dateTime.ToUniversalTime().AddHours(9);
+        //    var endDateTime = dateTime.ToUniversalTime().AddHours(18);
+
+        //    var result =
+        //        _updateStatusContent.Events(startDateTime, endDateTime, dto.Name);
+
+        //    if (result == null) return BadRequest("name error");
+
+        //    return Json(result);
+        //}
+        
         public IActionResult Index()
         {
             return View();
