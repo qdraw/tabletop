@@ -3,7 +3,7 @@
 Tabletop is a cloud-based, mobile-ready, event tracking system. We use it to see if the table footbal is free.
 
 ### Features
-  - Display if room is free or in use
+  - Display if room __is free__ or _in use_
   - History views per day
   - Display Latest Activity
   - Realtime Magic
@@ -59,7 +59,11 @@ curl -X POST -F 'status=1' -F 'name=test' -H 'Authorization: Bearer secret'
 ```
 #### Arduino client
 
+I use a [Arduino Ethernet shield](https://www.arduino.cc/en/Reference/Ethernet) with the [Ethernet2](https://github.com/adafruit/Ethernet2) library and a PIR-sensor. To Setup additional libraries check: https://www.arduino.cc/en/Guide/Libraries.
 
+The Arduino code is open source in the [tabletop_client](tabletop_client) folder
+
+Adjust the bearer and server in `tabletop/tabletop_client/tabletop_client.ino`
 ```cpp
 char clientName[] = "test";
 char Bearer[] = "secret";
@@ -67,9 +71,8 @@ char server[] = "qdraw.nl"; // without http://
 // the url will be: http://qdraw.nl/tabletop/api/update
 ```
 
+To setup the PIR-sensor please check this scheme:
 ![Tabletop Scheme](tabletop_client/tabletop_scheme.gif "Tabletop Scheme")
-
-[tabletop_client](tabletop_client)
 
 
 #### For production environments...
