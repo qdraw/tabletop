@@ -194,7 +194,8 @@ namespace tabletop.Services
                 Difference = difference
             };
 
-            if (difference.Minutes > 2)
+            var differentTimeSpan = (new TimeSpan(0, 2, 0)); // 2 minutes
+            if (difference >= differentTimeSpan) 
             {
                 isFreeStatus.IsFree = true;
             }
