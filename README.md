@@ -2,12 +2,18 @@
 
 Tabletop is a cloud-based, mobile-ready, event tracking system. We use it to see if the table footbal is free.
 
+### Features
+  - Display if room is free or in use
+  - History views per day
+  - Display Latest Activity
+  - Realtime Magic
+
+### Technial summary
   - .NET Core 2
   - ASP.NET MVC
   - Runs on Windows, Linux and Mac OS X
   - Send events from a Arduino with a PIR-Sensor
-  - D3 Datavisualisation
-  - Magic
+  - [D3.v4](https://d3js.org/) Javascript Datavisualisation
 
 And of course Tabletop itself is open source with a [public repository ](https://github.com/qdraw/tabletop) on GitHub.
 
@@ -40,23 +46,47 @@ Add a test user using the SQL command
 INSERT INTO [dbo].[ChannelUser] (NameId,Name,NameUrlSafe,IsAccessible,IsVisible,Bearer)
 VALUES ('cc9299c5-03a6-409a-be35-30981acfa7ac','Test Channel','test','true','true','secret')
 ```
-
-Add some test data
-```sh
-curl -X POST -F 'status=1' -F 'name=test' -H 'Authorization: Bearer secret'
-'http://localhost:5000/api/update'
-```
 **And finaly run the app**
 
 ```sh
 $ dotnet run
 ```
 
+Add some test data
+```sh
+curl -X POST -F 'status=1' -F 'name=test' -H 'Authorization: Bearer secret'
+'http://localhost:5000/api/update'
+```
+#### Arduino client
+
+
+```cpp
+char clientName[] = "test";
+char Bearer[] = "secret";
+char server[] = "qdraw.nl"; // without http://
+// the url will be: http://qdraw.nl/tabletop/api/update
+```
+
+![Tabletop Scheme](tabletop_client/tabletop_scheme.gif "Tabletop Scheme")
+
+[tabletop_client](tabletop_client)
+
+
 #### For production environments...
 
-Is use a pm2 wrapper on a Raspberry Pi
+You can use the environment variable `TABLETOP_SQL`. If there is no variable the app will check `appsettings.json` or `appsettings.Production.json`.
+
+Personaly I run this application on a linux-arm server and use PM2 to manage the process. [PM2](http://pm2.keymetrics.io/) is a production process manager for Node.js but you can be used to manage binary executables.
+
+##### Building for linux-arm
+Create a new build for linux-arm
 ```sh
+$ cd tabletop/tabletop
 $ ./publish-linux-arm.sh
+```
+##### Creating a new PM2 instance
+This bash script ask for a SQL Server connectionstring
+```sh
 $ ./new-pm2.sh
 Insert here the production SQL string
 ```
