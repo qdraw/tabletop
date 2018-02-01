@@ -2,7 +2,7 @@
 #include <Ethernet2.h>
 
 char clientName[] = "tafelvoetbal";
-char Bearer[] = "kHZ6ody2nQ9dmcMSCk5m";
+char Bearer[] = "secret";
 char server[] = "demo.colours.ai";    // without http://
 
 // assign a MAC address for the ethernet controller.
