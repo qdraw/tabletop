@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
 using tabletop.ViewModels;
 using tabletop.Dtos;
@@ -25,9 +26,32 @@ namespace tabletop.Controllers
             var tommorow = date.AddDays(1);
             var yesterday = date.AddDays(-1);
 
+            var allChannelUsers = _updateStatusContent.GetAllChannelUsers()
+                .Where(p => p.IsVisible && p.IsAccessible ).ToList();
+
+            // Show default page
             if (string.IsNullOrEmpty(urlSafeName))
             {
-                urlSafeName = "tafelvoetbal";
+                if (allChannelUsers.FirstOrDefault() == null)
+                {
+                    return BadRequest("Database connection succesfull; Please add a ChannelUser first to continue");
+                }
+
+                var find = allChannelUsers.Find(x => x.NameUrlSafe.Contains("tafelvoetbal"));
+
+                if (find != null)
+                {
+                    urlSafeName = find.NameUrlSafe;
+                }
+                else
+                {
+                    var selectItemUrlSafe = allChannelUsers.Single(p => p.NameUrlSafe.Length >= 1).NameUrlSafe;
+                    if (selectItemUrlSafe != null)
+                    {
+                        urlSafeName = selectItemUrlSafe;
+                    }
+                }
+
             }
 
             var channelUserObject = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName,false);
@@ -39,7 +63,7 @@ namespace tabletop.Controllers
 
             var model = new HomeViewModel
             {
-                List = _updateStatusContent.GetAllChannelUsers(),
+                List = allChannelUsers,
                 Name = channelUserObject.Name,
                 NameId = channelUserObject.NameId,
                 NameUrlSafe = channelUserObject.NameUrlSafe,

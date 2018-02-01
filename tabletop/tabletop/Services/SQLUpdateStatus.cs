@@ -303,12 +303,6 @@ namespace tabletop.Services
                          p.DateTime < model.EndDateTime
                 );
 
-            //var channelEvents = _context.ChannelEvent
-            //    .Where(
-            //        p => p.DateTime > model.StartDateTime &&
-            //        p.DateTime < model.EndDateTime
-            //    ).ToList();
-
             const int interval = 60 * 5; // 5 minutes
             var i = dto.GetUnixTime(startDateTime);
             while (i <= dto.GetUnixTime(endDateTime))
