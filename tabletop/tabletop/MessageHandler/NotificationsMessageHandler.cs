@@ -19,9 +19,12 @@ namespace tabletop.MessageHandler
             await InvokeClientMethodToAllAsync("receiveMessage", socketId, message);
         }
 
-        public async Task IsFree(bool isFree)
+        public async void IsFree(string groupId)
         {
-            await InvokeClientMethodToAllAsync("sendUpdate", isFree);
+
+            await InvokeClientMethodToGroupAsync(groupId,"isFree", false);
+
+            await InvokeClientMethodToAllAsync(groupId +"__", false);
         }
 
     }
