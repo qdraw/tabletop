@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,8 @@ using tabletop.Data;
 using tabletop.Interfaces;
 using tabletop.Services;
 using Microsoft.Extensions.Logging;
+using tabletop.MessageHandler;
+using tabletop.Services.WebSocketManager;
 
 namespace tabletop
 {
@@ -39,21 +42,29 @@ namespace tabletop
         {
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(GetConnectionString()));
             services.AddScoped<IUpdate, SqlUpdateStatus>();
+
+
             services.AddMvc(options =>
             {
                 options.RespectBrowserAcceptHeader = true; // false by default
             });
+
+            services.AddWebSocketManager();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app,
             IHostingEnvironment env,
-            ILogger<Startup> logger)
+            ILogger<Startup> logger,
+            IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseWebSockets();
+
 
             // https://stackoverflow.com/questions/45311393/asp-net-core-reverse-proxy-with-different-root
             app.UsePathBase("/tabletop");
@@ -62,8 +73,11 @@ namespace tabletop
 
             app.UseMvc(ConfigureRoutes);
 
+
             //app.UseDefaultFiles();
             app.UseStaticFiles();
+
+            app.MapWebSocketManager("/notifications", serviceProvider.GetService<NotificationsMessageHandler>());
 
 
             // app.Run(async (context) =>
@@ -78,6 +92,6 @@ namespace tabletop
             routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
         }
 
-
     }
+
 }

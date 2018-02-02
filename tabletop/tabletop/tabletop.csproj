@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <None Remove=".DS_Store" />
+    <None Remove="Services\.DS_Store" />
   </ItemGroup>
 
   <ItemGroup>
