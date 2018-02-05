@@ -13,18 +13,22 @@ namespace tabletop.Controllers
     public class HomeController : Controller
     {
         private readonly IUpdate _updateStatusContent;
-        private SocketHandler _socketHandler;
+        private NotificationsHandler NotificationsHandler { get; }
 
-        public HomeController(IUpdate updateStatusContent, SocketHandler socketHandler)
+        public HomeController(IUpdate updateStatusContent, NotificationsHandler notificationsHandler)
         {
             _updateStatusContent = updateStatusContent;
-            _socketHandler = socketHandler;
+            NotificationsHandler = notificationsHandler;
         }
 
 
-        public async Task<ContentResult> Test()
+        public IActionResult Test(string name)
         {
-            _socketHandler.SendHello();
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest("no name");
+            } 
+            NotificationsHandler.IsInUse(name);
             return Content("");
         }
 
