@@ -1,7 +1,7 @@
 ﻿@model tabletop.ViewModels.HomeViewModel
 
 @{
-    ViewBag.Canonical = @Url.Action("Index", "Home", new { name = @Model.Name });
+    ViewBag.Canonical = @Url.Action("Index", "Home", new { name = @Model.NameUrlSafe, date = @Model.RelativeDate });
     ViewBag.GreenOrRed = (Model.IsFree) ? "green" : "red";
     ViewBag.GreenOrBlank = (Model.IsFree) ? "green" : "blank";
     ViewBag.RedOrBlank = (Model.IsFree) ? "blank" : "red";

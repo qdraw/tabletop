@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Archive - " + @Model.Name + " (" + @Model.Day.Day + "-" + @Model.Day.Month + "-" + @Model.Day.Year + ") - tabletop";
-    ViewBag.Canonical = @Url.Action("Index", "Home", new { name = @Model.Name, date = @Model.Today });
+    ViewBag.Canonical = @Url.Action("Index", "Home", new { name = @Model.NameUrlSafe, date = @Model.Today });
     ViewBag.Favicon = "favicon_default.png";
 }
 
