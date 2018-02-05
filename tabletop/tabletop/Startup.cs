@@ -10,8 +10,7 @@ using tabletop.Data;
 using tabletop.Interfaces;
 using tabletop.Services;
 using Microsoft.Extensions.Logging;
-using tabletop.MessageHandler;
-using tabletop.Services.WebSocketManager;
+
 
 namespace tabletop
 {
@@ -49,7 +48,7 @@ namespace tabletop
                 options.RespectBrowserAcceptHeader = true; // false by default
             });
 
-            services.AddWebSocketManager();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,8 +76,10 @@ namespace tabletop
             //app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            app.MapWebSocketManager("/notifications", serviceProvider.GetService<NotificationsMessageHandler>());
-
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("chat");
+            });
 
             // app.Run(async (context) =>
             // {
