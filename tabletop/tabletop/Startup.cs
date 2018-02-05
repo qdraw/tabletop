@@ -70,16 +70,18 @@ namespace tabletop
 
             app.UseStatusCodePages("text/html", "Status code page, status code: {0}");
 
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("chat");
+            });
+
             app.UseMvc(ConfigureRoutes);
 
 
             //app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<ChatHub>("chat");
-            });
+
 
             // app.Run(async (context) =>
             // {

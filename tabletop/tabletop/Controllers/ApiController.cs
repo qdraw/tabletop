@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Rest.Azure;
 using tabletop.Dtos;
 using tabletop.Interfaces;
-using tabletop.MessageHandler;
 using tabletop.Models;
 
 //There is no ApiController class anymore since MVC and WebAPI have been merged in ASP.NET Core.
@@ -21,12 +20,10 @@ namespace tabletop.Controllers
     {
         private readonly IUpdate _updateStatusContent;
 
-        private NotificationsMessageHandler NotificationsMessageHandler { get; }
 
-        public ApiController(IUpdate updateStatusContent, NotificationsMessageHandler notificationsMessageHandler)
+        public ApiController(IUpdate updateStatusContent)
         {
             _updateStatusContent = updateStatusContent;
-            NotificationsMessageHandler = notificationsMessageHandler;
         }
 
         public IActionResult Index()
@@ -139,15 +136,13 @@ namespace tabletop.Controllers
 
         [HttpPost]
         [Produces("application/json")]
-        public async Task<IActionResult> Update(InputChannelEvent model)
+        public IActionResult Update(InputChannelEvent model)
         {
 
             if (!ModelState.IsValid) return BadRequest("Model is incomplete");
 
             var bearerValid = IsBearerValid(Request,model.Name);
             if (!bearerValid) return BadRequest("Authorisation Error");
-
-            NotificationsMessageHandler.IsFree(model.Name);
 
             try
             {
