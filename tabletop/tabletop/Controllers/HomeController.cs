@@ -1,8 +1,10 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
 using tabletop.ViewModels;
 using tabletop.Dtos;
+using tabletop.Handlers;
 
 
 namespace tabletop.Controllers
@@ -10,10 +12,19 @@ namespace tabletop.Controllers
     public class HomeController : Controller
     {
         private readonly IUpdate _updateStatusContent;
+        private readonly SocketHandler _socketHandler;
 
-        public HomeController(IUpdate updateStatusContent)
+        public HomeController(IUpdate updateStatusContent, SocketHandler socketHandler)
         {
             _updateStatusContent = updateStatusContent;
+            _socketHandler = socketHandler;
+        }
+
+
+        public async Task<ContentResult> Test()
+        {
+            //await _socketHandler.SendHello();
+            return Content("");
         }
 
         public IActionResult Index(DateDto dto)

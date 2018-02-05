@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +9,7 @@ using tabletop.Data;
 using tabletop.Interfaces;
 using tabletop.Services;
 using Microsoft.Extensions.Logging;
+using tabletop.Handlers;
 
 
 namespace tabletop
@@ -48,7 +48,6 @@ namespace tabletop
                 options.RespectBrowserAcceptHeader = true; // false by default
             });
 
-            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,20 +61,14 @@ namespace tabletop
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseWebSockets();
-
-
             // https://stackoverflow.com/questions/45311393/asp-net-core-reverse-proxy-with-different-root
             app.UsePathBase("/tabletop");
 
             app.UseStatusCodePages("text/html", "Status code page, status code: {0}");
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<ChatHub>("chat");
-            });
 
             app.UseMvc(ConfigureRoutes);
+            app.Map("/socket", SocketHandler.Map);
 
 
             //app.UseDefaultFiles();
