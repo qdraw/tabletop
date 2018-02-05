@@ -50,14 +50,14 @@ namespace tabletop.Handlers
             }
         }
 
-        private static async Task Acceptor(HttpContext hc, Func<Task> n)
+        private static async Task Acceptor(HttpContext httpContext, Func<Task> next)
         {
-            if (!hc.WebSockets.IsWebSocketRequest)
+            if (!httpContext.WebSockets.IsWebSocketRequest)
                 return;
 
-            var socket = await hc.WebSockets.AcceptWebSocketAsync();
-            var h = new SocketHandler(socket);
-            await h.EchoLoop();
+            var socket = await httpContext.WebSockets.AcceptWebSocketAsync();
+            var handler = new SocketHandler(socket);
+            await handler.SendHello();
         }
 
         public static void Map(IApplicationBuilder app)

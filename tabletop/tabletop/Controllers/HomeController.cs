@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
@@ -12,7 +13,7 @@ namespace tabletop.Controllers
     public class HomeController : Controller
     {
         private readonly IUpdate _updateStatusContent;
-        private readonly SocketHandler _socketHandler;
+        private SocketHandler _socketHandler;
 
         public HomeController(IUpdate updateStatusContent, SocketHandler socketHandler)
         {
@@ -23,7 +24,7 @@ namespace tabletop.Controllers
 
         public async Task<ContentResult> Test()
         {
-            //await _socketHandler.SendHello();
+            _socketHandler.SendHello();
             return Content("");
         }
 
