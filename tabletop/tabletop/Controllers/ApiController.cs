@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Rest.Azure;
@@ -24,6 +25,11 @@ namespace tabletop.Controllers
             _updateStatusContent = updateStatusContent;
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet]
         [Produces("application/json")]
         public IActionResult EventsRecent(DateDto dto)
@@ -37,7 +43,7 @@ namespace tabletop.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        public IActionResult EventsDayView(DateDto dto)
+        public IActionResult EventsDayView(DateDto dto, string ext)
         {
             var dateTime = dto.GetDateTime();
             if (string.IsNullOrEmpty(dto.Name) && dateTime.Year > 2015) return BadRequest("name or date wrong");
@@ -45,34 +51,69 @@ namespace tabletop.Controllers
             var result =
                 _updateStatusContent.EventsDayView(dateTime, dto.Name);
             if (result == null) return BadRequest("name error");
+
+            switch (ext)
+            {
+                case "csv":
+                    var resultCsv = "DateTime;Weight;Label\n";
+                    foreach (var item in result.AmountOfMotions)
+                    {
+                        resultCsv += $"{item.StartDateTime};{item.Weight};{item.Label}\n";
+                    }
+                    return Content(resultCsv);
+
+                case "json":
+                    return Json(result);
+                default:
+                    return Json(result);
+            }
+        }
+
+
+        [HttpGet]
+        [Produces("application/json")]
+        public IActionResult EventsOfficeHours(DateDto dto)
+        {
+            var dateTime = dto.GetDateTime();
+            if (string.IsNullOrEmpty(dto.Name) && dateTime.Year > 2015) return BadRequest("name or date wrong");
+
+            var startDateTime = dateTime.ToUniversalTime().AddHours(9);
+            var endDateTime = dateTime.ToUniversalTime().AddHours(18);
+
+            var getDataChannelEvents = _updateStatusContent.GetTimeSpanByName(dto.Name, startDateTime, endDateTime).ToList();
+            var result = _updateStatusContent.ParseEvents(getDataChannelEvents, startDateTime, endDateTime);
+
+            if (result == null) return BadRequest("name error");
+
             return Json(result);
         }
 
 
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public IActionResult EventsOfficeHours(DateDto dto)
-        //{
-
-        //    var dateTime = dto.GetDateTime();
-        //    if (string.IsNullOrEmpty(dto.Name) && dateTime.Year > 2015 ) return BadRequest("name or date wrong");
-
-        //    var startDateTime = dateTime.ToUniversalTime().AddHours(9);
-        //    var endDateTime = dateTime.ToUniversalTime().AddHours(18);
-
-        //    var result =
-        //        _updateStatusContent.Events(startDateTime, endDateTime, dto.Name);
-
-        //    if (result == null) return BadRequest("name error");
-
-        //    return Json(result);
-        //}
-        
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Export(string name, string ext)
         {
-            return View();
-        }
+            var getDataChannelEvents = _updateStatusContent.GetTimeSpanByName(name, new DateTime(2018, 01, 01), DateTime.Now).ToList();
+            var result = _updateStatusContent.ParseEvents(getDataChannelEvents, new DateTime(2018, 01, 01), DateTime.Now);
 
+            var bearerValid = IsBearerValid(Request, name);
+            if (!bearerValid) return BadRequest("Authorisation Error");
+
+            switch (ext)
+            {
+                case "csv":
+                    var resultCsv = "DateTime;Weight;Label\n";
+                    foreach (var item in result.AmountOfMotions)
+                    {
+                        resultCsv += $"{item.StartDateTime};{item.Weight};{item.Label}\n";
+                    }
+                    return Content(resultCsv);
+
+                case "json":
+                    return Json(result);
+                default:
+                    return Json(result);
+            }
+        }
 
         [HttpGet]
         [Produces("application/json")]
@@ -91,8 +132,6 @@ namespace tabletop.Controllers
             }
 
         }
-
-
 
         [HttpPost]
         [Produces("application/json")]
@@ -125,9 +164,7 @@ namespace tabletop.Controllers
             if ((Request.Headers["Authorization"].ToString() ?? "").Trim().Length > 0)
             {
                 var bearer = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-
                 var channelUser = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName,true);
-
                 return channelUser.Bearer == bearer;
             }
             else
