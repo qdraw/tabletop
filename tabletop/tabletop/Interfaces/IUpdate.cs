@@ -31,7 +31,10 @@ namespace tabletop.Interfaces
         EventsOfficeHoursModel EventsDayView(DateTime day, string urlSafeName);
         EventsOfficeHoursModel EventsRecent(string urlSafeName);
 
-        
+        EventsOfficeHoursModel ParseEvents(List<ChannelEvent> channelEvents, DateTime startDateTime,
+            DateTime endDateTime);
+
+
 
     }
 }

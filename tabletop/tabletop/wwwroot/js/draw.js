@@ -39,7 +39,7 @@ var draw = {
     			 function(data) {
                      data = draw.checkData(data);
                      draw.unHideUpdateElements(data);
-                     // data = draw.compareData(data);
+                     // data = draw.parseDataUnique(data);
                      draw.drawD3(data);
                  },
                 function(xhr) { console.error(xhr); }
@@ -54,14 +54,47 @@ var draw = {
         if (data.amountOfMotions !== undefined) {
             drawData =  data.amountOfMotions;
         }
+        return drawData;
+    },
+
+    parseDataUnique : function(drawData){
+        // Test function for sorting unique data
+        var uniqueDrawData = [];
+
+        for (var i = 0; i < drawData.length; i++) {
+            var label = drawData[i].label;
+
+            if (uniqueDrawData[label] === undefined) {
+                if (Number(drawData[i].label.substr(0, 2)) > 8 && Number(drawData[i].label.substr(0, 2)) < 21 ) {
+                    uniqueDrawData[label] = {
+                        weight : drawData[i].weight,
+                        // weight : 1,
+                        label : drawData[i].label
+                    };
+                }
+            }
+            else {
+                // if (drawData[i].weight >= 1) {
+                //     uniqueDrawData[label].weight += 1;
+                // }
+                uniqueDrawData[label].weight += drawData[i].weight;
+            }
+        }
+        var listOfUniqueDrawData = [];
+        for (var item in uniqueDrawData) {
+            listOfUniqueDrawData.push(uniqueDrawData[item]);
+        }
+        console.log(listOfUniqueDrawData);
+        return listOfUniqueDrawData;
+    },
+
+
         // var parseTime = d3.timeParse("%H:%M");
         // for (var i = 0; i < drawData.length; i++) {
         //     // drawData[i].label = parseTime(drawData[i].label);
-        //     // drawData[i].label = new Date(drawData[i].startDateTime);
+        //     drawData[i].label = new Date(drawData[i].startDateTime);
         // }
 
-        return drawData;
-    },
     unHideUpdateElements : function(data){
         if (data === null) {
             alert("data fails");
@@ -160,20 +193,21 @@ var draw = {
            .call(
                window.d3.axisBottom(x)
                 .tickFormat(function(d) {
-                    if (d.indexOf(":00") >= 0 || d.indexOf(":30") >= 0) {
-                        //var offset = new Date().getTimezoneOffset() / 60 * -1;
-                        //var time = Number(d.substr(0, 2)) + offset + ":" + d.substr(3, 2) ;
-                        return d;
-                    }
-                    // if ((i % 10) == 0) {}
-                    else {
-                        return null;
+                    if (typeof(d) === "string") {
+                        if (d.indexOf(":00") >= 0 || d.indexOf(":30") >= 0) {
+                            //var offset = new Date().getTimezoneOffset() / 60 * -1;
+                            //var time = Number(d.substr(0, 2)) + offset + ":" + d.substr(3, 2) ;
+                            return d;
+                        }
+                        // if ((i % 10) == 0) {}
+                        else {
+                            return null;
+                        }
                     }
                 })
             )
             .selectAll("text")
             .style("text-anchor", "end")
-            // .attr("fill", "#fff")
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
             .attr("transform", "rotate(-90)");
@@ -203,10 +237,18 @@ var draw = {
          .on("mousemove", function(d){
              // console.log("sdf");
              window.d3.select(this).attr("fill", "#00E062");
-             var startTime = Number(d.label.substr(0, 2))  + ":" + d.label.substr(3, 2);
-             var endTime = Number(d.label.substr(0, 2)) + ":" + draw.leadingZero(Number(d.label.substr(3, 2)) + 5);
-             if (Number(d.label.substr(3, 2)) === 55 ) {
-                 endTime = Number(d.label.substr(0, 2))+1 + ":00";
+             var startTime = "";
+             var endTime = "";
+
+             if (typeof(d.label) === "string") {
+                 startTime = Number(d.label.substr(0, 2))  + ":" + d.label.substr(3, 2);
+                 endTime = Number(d.label.substr(0, 2)) + ":" + draw.leadingZero(Number(d.label.substr(3, 2)) + 5);
+                 if (Number(d.label.substr(3, 2)) === 55 ) {
+                     endTime = Number(d.label.substr(0, 2))+1 + ":00";
+                 }
+             }
+             else {
+                 startTime = d.label;
              }
 
             tooltip
