@@ -9,8 +9,7 @@ using tabletop.Data;
 using tabletop.Interfaces;
 using tabletop.Services;
 using Microsoft.Extensions.Logging;
-using tabletop.Handlers;
-using tabletop.Services.WebSocketManager;
+using tabletop.Hubs;
 
 
 namespace tabletop
@@ -43,7 +42,19 @@ namespace tabletop
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(GetConnectionString()));
             services.AddScoped<IUpdate, SqlUpdateStatus>();
 
-            services.AddWebSocketManager();
+            services.AddSignalR();
+
+            services.AddCors(o =>
+            {
+                o.AddPolicy("Everything", p =>
+                {
+                   p.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin();
+                });
+            });
+
+
 
             services.AddMvc(options =>
             {
@@ -68,10 +79,12 @@ namespace tabletop
 
             app.UseStatusCodePages("text/html", "Status code page, status code: {0}");
 
-            app.UseWebSockets();
+            app.UseCors("Everything");
 
-            app.MapWebSocketManager("/socket", serviceProvider.GetService<NotificationsHandler>());
-
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<DataHub>("datahub");
+            });
 
             app.UseMvc(ConfigureRoutes);
 

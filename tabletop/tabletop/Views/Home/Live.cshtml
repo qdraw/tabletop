@@ -65,19 +65,18 @@
 <div class="tooltip"></div>
 
 <div class="databox @ViewBag.GreenOrRed">
-@* ReSharper disable once UnknownCssClass *@
-<svg id="data" class="border-@ViewBag.GreenOrRed">
-    <g class="bars"></g>
-</svg>
+    @* ReSharper disable once UnknownCssClass *@
+    <svg id="data" class="border-@ViewBag.GreenOrRed">
+        <g class="bars"></g>
+    </svg>
 </div>
 
 
 
 <script type="text/javascript">
     window.updateIsFreeEnv = {
-        "url": "@Url.Action("IsFree", "Api", new { name = @Model.NameId })",
-        "updateInterval": 10000,
-        "name": "@Model.Name"
+        "url": "ws://@Url.Content("~/")datahub",
+        "name": "@Model.NameId"
     };
     window.drawEnv = {
         "url": "@Url.Action("EventsRecent", "Api", new { name = @Model.NameUrlSafe })",
@@ -85,12 +84,15 @@
         "name": "@Model.Name",
         "relativeDate": @Model.RelativeDate
     };
+
 </script>
 
 
 <script type="text/javascript" src="@Url.Content("~/")js/vendor/d3.v4.min.js"></script>
+<script type="text/javascript" src="@Url.Content("~/")js/vendor/signalr.js"></script>
 <script type="text/javascript" src="@Url.Content("~/")js/draw.js"></script>
-<script type="text/javascript" src="@Url.Content("~/")js/updateisfree.js"></script>
+<script type="text/javascript" src="@Url.Content("~/")js/updateisfree-signalr.js"></script>
+<script type="text/javascript" src="@Url.Content("~/")js/join-signalr.js"></script>
 <script type="text/javascript" src="@Url.Content("~/")js/screensaver.js"></script>
 
 <!-- Google Analytics. -->

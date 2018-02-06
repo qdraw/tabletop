@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Rest.Azure;
 using tabletop.Dtos;
+using tabletop.Hubs;
 using tabletop.Interfaces;
 using tabletop.Models;
 
@@ -19,11 +22,12 @@ namespace tabletop.Controllers
     public class ApiController : Controller
     {
         private readonly IUpdate _updateStatusContent;
+        private readonly IHubContext<DataHub> _dataHubContext;
 
-
-        public ApiController(IUpdate updateStatusContent)
+        public ApiController(IUpdate updateStatusContent, IHubContext<DataHub> dataHubContext)
         {
             _updateStatusContent = updateStatusContent;
+            _dataHubContext = dataHubContext;
         }
 
         public IActionResult Index()
@@ -134,6 +138,13 @@ namespace tabletop.Controllers
 
         }
 
+        public async void IsFreeSocket(ChannelEvent model)
+        {
+            var newStatusContent = _updateStatusContent.IsFree(model.ChannelUserId);
+            await _dataHubContext.Clients.Group(model.ChannelUserId).InvokeAsync("Update", newStatusContent);
+        }
+
+
         [HttpPost]
         [Produces("application/json")]
         public IActionResult Update(InputChannelEvent model)
@@ -144,10 +155,15 @@ namespace tabletop.Controllers
             var bearerValid = IsBearerValid(Request,model.Name);
             if (!bearerValid) return BadRequest("Authorisation Error");
 
+
             try
             {
                 var newStatusContent = _updateStatusContent.AddOrUpdate(model);
+
+                IsFreeSocket(newStatusContent);
+
                 return Ok(newStatusContent.Weight);
+
             }
             catch (CloudException)
             {
@@ -158,6 +174,8 @@ namespace tabletop.Controllers
                 return BadRequest("Name does not exist");
             }
         }
+
+
 
 
         public bool IsBearerValid(Microsoft.AspNetCore.Http.HttpRequest request, string urlSafeName)

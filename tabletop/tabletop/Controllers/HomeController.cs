@@ -2,10 +2,11 @@
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using tabletop.Interfaces;
 using tabletop.ViewModels;
 using tabletop.Dtos;
-using tabletop.Handlers;
+using tabletop.Hubs;
 
 
 namespace tabletop.Controllers
@@ -13,24 +14,25 @@ namespace tabletop.Controllers
     public class HomeController : Controller
     {
         private readonly IUpdate _updateStatusContent;
-        private NotificationsHandler NotificationsHandler { get; }
+        private readonly IHubContext<DataHub> _dataHubContext;
 
-        public HomeController(IUpdate updateStatusContent, NotificationsHandler notificationsHandler)
+        public HomeController(IUpdate updateStatusContent, IHubContext<DataHub> dataHubContext)
         {
             _updateStatusContent = updateStatusContent;
-            NotificationsHandler = notificationsHandler;
+            _dataHubContext = dataHubContext;
         }
 
 
-        public IActionResult Test(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                return BadRequest("no name");
-            } 
-            NotificationsHandler.IsInUse(name);
-            return Content("");
-        }
+        //public IActionResult Test(string name)
+        //{
+        //    if (string.IsNullOrEmpty(name))
+        //    {
+        //        return BadRequest("no name");
+        //    }
+        //    _dataHubContext.Cl
+        //    _dataHubContext.Clients.All.InvokeAsync("test", true);
+        //    return Content("");
+        //}
 
         public IActionResult Index(DateDto dto)
         {
