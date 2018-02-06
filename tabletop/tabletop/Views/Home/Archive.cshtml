@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Archive - " + @Model.Name + " (" + @Model.Day.Day + "-" + @Model.Day.Month + "-" + @Model.Day.Year + ") - tabletop";
-    ViewBag.Canonical = @Url.Action("Index", "Home", new { name = @Model.Name, date = @Model.Today });
+    ViewBag.Canonical = @Url.Action("Index", "Home", new { name = @Model.NameUrlSafe, date = @Model.Today });
     ViewBag.Favicon = "favicon_default.png";
 }
 
@@ -116,6 +116,6 @@
         e=o.createElement(i);r=o.getElementsByTagName(i)[0];
         e.src='https://www.google-analytics.com/analytics.js';
         r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-    ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/?name=@Model.Name&date=@Model.Today' });
+    ga('create','UA-37345867-1','auto');ga('send','pageview',{ 'page': '/special/tabletop/?name=@Model.NameUrlSafe&date=@Model.Today' });
 </script>
 <!-- end Google Analytics. -->
