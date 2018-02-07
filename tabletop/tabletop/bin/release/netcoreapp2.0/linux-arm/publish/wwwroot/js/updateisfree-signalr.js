@@ -6,6 +6,7 @@ window.updateIsFree = {
 
         clearTimeout(this.idleTimer);
         this.idleTimer = setTimeout(function () {
+            console.log("isfree=true");
             window.updateIsFree.update({ "isFree": true });
         }, difference );
 
@@ -23,6 +24,10 @@ window.updateIsFree = {
             var maxDifference = difference;
             difference = (now - d);
 
+            console.log(d);
+
+            console.log(difference);
+
             if (difference <= maxDifference) {
                 difference = maxDifference - difference;
             }
@@ -33,10 +38,17 @@ window.updateIsFree = {
 
     getDate: function (dateString) {
 
-        var d = new Date(dateString);
+        var replaceDateString = dateString.replace(/&#x2B;/ig, "+");
+        var d = new Date(replaceDateString);
+        //d = new Date(d);
 
-        var offset = new Date().getTimezoneOffset() *-1/60;
-        d.setHours(d.getHours() + offset);
+        //console.log(d);
+        //d = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCFullYear(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()))
+
+        //console.log(d);
+        //var offset = new Date().getTimezoneOffset() * -1 / 60;
+        //d.setHours(d.getHours() + offset);
+        console.log(d);
 
         return d;
     },
@@ -60,7 +72,7 @@ window.updateIsFree = {
                 document.querySelector(".databox").classList.add("green");
 
                 document.querySelector("link[rel*='icon']").href = "img/favicon_free.png";
-                document.title = document.title.replace(/^(is in use)|(free)|(Loading)/, "free");
+                document.title = document.title.replace(/^(in use)|(free)|(Loading)/, "free");
 
                 document.querySelector("#online-indicator").className = "circle circle-big circle-green";
                 document.querySelector("#offline-indicator").className = "circle circle-big circle-blank";
@@ -77,7 +89,7 @@ window.updateIsFree = {
                 document.querySelector(".databox").classList.add("red");
 
                 document.querySelector("link[rel*='icon']").href = "img/favicon_inuse.png";
-                document.title = document.title.replace(/^(is in use)|(free)|(Loading)/, "is in use");
+                document.title = document.title.replace(/^(in use)|(free)|(Loading)/, "in use");
 
                 document.querySelector('#online-indicator').className = "circle circle-big circle-blank";
                 document.querySelector('#offline-indicator').className = "circle circle-big circle-red";

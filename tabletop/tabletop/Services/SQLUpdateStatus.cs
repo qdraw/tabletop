@@ -190,7 +190,7 @@ namespace tabletop.Services
 
             var isFreeStatus = new GetStatus
             {
-                DateTime = latestEvent.DateTime,
+                DateTime = DateTime.SpecifyKind(latestEvent.DateTime, DateTimeKind.Utc),
                 Difference = difference
             };
 

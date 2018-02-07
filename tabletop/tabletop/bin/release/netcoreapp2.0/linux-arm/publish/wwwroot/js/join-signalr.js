@@ -33,7 +33,7 @@ window.signalr = {
         }),
 
         window.signalr.connection.on("Update", msg => {
-            //console.log("Update > ", msg);
+            console.log("Update > ", msg);
             window.updateIsFree.index(msg);
        });
 
