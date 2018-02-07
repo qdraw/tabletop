@@ -21,10 +21,9 @@ window.updateIsFree = {
         if (data.dateTime !== undefined ) {
             var d = new Date(data.dateTime); //  + "+00:00"
             console.log(d);
-            document.querySelector('#latestactivity').innerHTML = "Latest activity on location: " +
+            document.querySelector('#latestactivity span').innerHTML =
                 d.toLocaleDateString("NL-nl") +
-                " " +
-                d.toLocaleTimeString("NL-nl");
+                " " + d.toLocaleTimeString("NL-nl");
         }
 
         if (data.isFree !== undefined) {
@@ -77,7 +76,11 @@ window.updateIsFree = {
     }
 }
 
-window.updateIsFree.index();
+
+window.updateIsFree.index({
+    dateTime: window.updateIsFreeEnv.latestactivity,
+    IsFree: window.updateIsFreeEnv.IsFree
+});
 
 //if (window.updateIsFreeEnv === undefined) {
 //    window.updateIsFreeEnv = {

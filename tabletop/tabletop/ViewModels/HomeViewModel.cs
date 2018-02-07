@@ -17,6 +17,8 @@ namespace tabletop.ViewModels
         public int YesterdayRelativeDate { get; set; }
         public bool IsFree { get; set; }
         public DateTime IsFreeLatestAmsterdamDateTime { get; set; }
+        public string IsFreeLatestUtcString { get; set; }
+
         public DateTime Day { get; set; }
         public string Yesterday { get; set; }
         public string Tomorrow { get; set; }

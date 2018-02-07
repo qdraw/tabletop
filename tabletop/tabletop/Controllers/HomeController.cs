@@ -98,6 +98,7 @@ namespace tabletop.Controllers
             {
                 var isFreeStatus = _updateStatusContent.IsFree(channelUserObject.NameId);
                 model.IsFree = isFreeStatus.IsFree;
+                model.IsFreeLatestUtcString = isFreeStatus.DateTime.ToString();
                 model.IsFreeLatestAmsterdamDateTime = dto.UtcDateTimeToAmsterdamDateTime(isFreeStatus.DateTime);
                 return View("Live", model);
             }

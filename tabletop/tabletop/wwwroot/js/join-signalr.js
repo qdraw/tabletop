@@ -1,5 +1,6 @@
 ﻿
 window.signalr = {
+// ReSharper disable once UnusedParameter
     invoke: function (connection, method, ...args) {
         if (!window.signalr.isConnected) {
             return;
@@ -14,7 +15,7 @@ window.signalr = {
                 //}
             })
             .catch(err => {
-                console.log('e');
+                console.log(err);
                 //addLine('message-list', err, 'red');
             });
     },
@@ -22,7 +23,8 @@ window.signalr = {
 
     signalr: function() {
         var transportType = signalR.TransportType[window.signalr.getParameterByName('transport')] || signalR.TransportType.WebSockets;
-        var http = new signalR.HttpConnection(`http://${document.location.host}/datahub`, { transport: transportType });
+        var url = window.updateIsFreeEnv.url || `http://${document.location.host}/datahub`;
+        var http = new signalR.HttpConnection(url, { transport: transportType });
         window.signalr.connection = new signalR.HubConnection(http);
 
         window.signalr.connection.on("Send", msg => {
@@ -37,8 +39,10 @@ window.signalr = {
 
         window.signalr.connection.onClosed = e => {
             if (e) {
+                console.log(e);
             }
             else {
+                console.log("e");
             }
         }
 
@@ -51,6 +55,7 @@ window.signalr = {
             })
             .catch(err => {
                 console.log("Connection fails");
+                console.log(err);
             }); 
     },
 
