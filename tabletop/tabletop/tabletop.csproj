@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <None Remove=".DS_Store" />
+    <None Remove="Services\.DS_Store" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +19,7 @@
 
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.0.1" />
+     <!--<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.0.1" />
@@ -30,17 +31,17 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization.Policy" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.AzureAppServicesIntegration" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization.Policy" Version="2.0.1" />-->
+    <!-- <PackageReference Include="Microsoft.AspNetCore.AzureAppServices.HostingStartup" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.AzureAppServicesIntegration" Version="2.0.1" /> -->
     <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Cryptography.Internal" Version="2.0.1" />
+    <!-- <PackageReference Include="Microsoft.AspNetCore.Cryptography.Internal" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.AzureStorage" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="2.0.1" /> -->
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.Abstractions" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="2.0.1" />
@@ -93,6 +94,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-alpha2-final" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.WebSockets" Version="2.0.1" />
@@ -104,14 +106,14 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="2.0.1" />
+    <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="2.0.1" /> -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="2.0.0" />
+    <!-- <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="2.0.0" /> -->
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="2.0.0" />
@@ -126,11 +128,11 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.DiagnosticAdapter" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="2.0.0" />
+    <!-- <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Composite" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="2.0.0" /> -->
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="2.0.1" />

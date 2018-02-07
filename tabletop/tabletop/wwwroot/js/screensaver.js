@@ -12,23 +12,33 @@ function idle() {
 	window.onscroll = resetTimer;    // catches scrolling with arrow keys
 	window.onkeypress = resetTimer;
 
-	function idleHelper() {
-		isUserActive = false;
-		console.log("Not active on screen");
-		window.drawEnv.updateInterval = false;
+    function idleHelper() {
+        window.updateIsFreeEnv.isUserActive = false;
+        console.log("Not active on screen");
 	}
 
 	function resetTimer() {
 		clearTimeout(t);
-		t = setTimeout(idleHelper, 90000);  // 90000 - time is in milliseconds 188400 == 3,14 minute
+        t = setTimeout(idleHelper, 90000);  // 90000 - time is in milliseconds 188400 == 3,14 minute
 
-		if (!isUserActive) {
+        if (!window.updateIsFreeEnv.isUserActive) {
 			console.log("User is back again");
-			window.draw.index();
-			window.drawEnv.updateInterval = 1;
+
+            window.signalr.pongSend();
+
+            setTimeout(function() {
+                var longTimeAgo = window.signalr.pongSend();
+                if (longTimeAgo) {
+                    // reset and update data
+                    window.updateIsFree.updateManualData();
+                    window.draw.start();
+                    window.signalr.connection = null;
+                    window.signalr.signalr();
+                }
+            }, 130);
 		}
 
-		isUserActive = true;
+	    window.updateIsFreeEnv.isUserActive = true;
 	}
 }
 

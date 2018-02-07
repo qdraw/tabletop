@@ -90,11 +90,6 @@
 
 
 <script type="text/javascript">
-    window.updateIsFreeEnv = {
-        "url": null,
-        "updateInterval": null,
-        "name": null
-    };
     window.drawEnv = {
         "url": "@Url.Action("EventsDayView", "Api", new { name = @Model.NameUrlSafe, date = @Model.RelativeDate })",
         "updateInterval": null,
@@ -106,7 +101,6 @@
 
 <script type="text/javascript" src="@Url.Content("~/")js/vendor/d3.v4.min.js"></script>
 <script type="text/javascript" src="@Url.Content("~/")js/draw.js"></script>
-<script type="text/javascript" src="@Url.Content("~/")js/updateisfree.js"></script>
 
 <!-- Google Analytics. -->
 <script type="text/javascript">

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Rest.Azure;
 using tabletop.Dtos;
+using tabletop.Hubs;
 using tabletop.Interfaces;
 using tabletop.Models;
 
@@ -19,10 +20,12 @@ namespace tabletop.Controllers
     public class ApiController : Controller
     {
         private readonly IUpdate _updateStatusContent;
+        private readonly IHubContext<DataHub> _dataHubContext;
 
-        public ApiController(IUpdate updateStatusContent, IConfiguration iconfiguration)
+        public ApiController(IUpdate updateStatusContent, IHubContext<DataHub> dataHubContext)
         {
             _updateStatusContent = updateStatusContent;
+            _dataHubContext = dataHubContext;
         }
 
         public IActionResult Index()
@@ -133,6 +136,17 @@ namespace tabletop.Controllers
 
         }
 
+        public async void UpdateIsFreeSocket(ChannelEvent model)
+        {
+            var newStatusContent = _updateStatusContent.IsFree(model.ChannelUserId);
+            await _dataHubContext.Clients.Group(model.ChannelUserId).InvokeAsync("Update", newStatusContent);
+
+            var result = _updateStatusContent.EventsRecent(model.ChannelUser.NameUrlSafe);
+            await _dataHubContext.Clients.Group(model.ChannelUserId).InvokeAsync("EventsRecent", result);
+
+        }
+
+
         [HttpPost]
         [Produces("application/json")]
         public IActionResult Update(InputChannelEvent model)
@@ -146,7 +160,11 @@ namespace tabletop.Controllers
             try
             {
                 var newStatusContent = _updateStatusContent.AddOrUpdate(model);
+
+                UpdateIsFreeSocket(newStatusContent);
+
                 return Ok(newStatusContent.Weight);
+
             }
             catch (CloudException)
             {
@@ -157,6 +175,8 @@ namespace tabletop.Controllers
                 return BadRequest("Name does not exist");
             }
         }
+
+
 
 
         public bool IsBearerValid(Microsoft.AspNetCore.Http.HttpRequest request, string urlSafeName)

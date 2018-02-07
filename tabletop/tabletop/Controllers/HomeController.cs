@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using tabletop.Interfaces;
 using tabletop.ViewModels;
@@ -15,6 +16,7 @@ namespace tabletop.Controllers
         {
             _updateStatusContent = updateStatusContent;
         }
+
 
         public IActionResult Index(DateDto dto)
         {
@@ -80,6 +82,7 @@ namespace tabletop.Controllers
             {
                 var isFreeStatus = _updateStatusContent.IsFree(channelUserObject.NameId);
                 model.IsFree = isFreeStatus.IsFree;
+                model.IsFreeLatestUtcString = isFreeStatus.DateTime.ToString(CultureInfo.InvariantCulture);
                 model.IsFreeLatestAmsterdamDateTime = dto.UtcDateTimeToAmsterdamDateTime(isFreeStatus.DateTime);
                 return View("Live", model);
             }

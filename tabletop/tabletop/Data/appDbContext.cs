@@ -24,8 +24,6 @@ namespace tabletop.Data
                 .WithMany(b => b.ChannelEvents);
                 //.OnDelete(deleteBehavior: DeleteBehavior.Restrict);
 
-            //modelBuilder.Entity<ChannelEvent>().ToTable("ChannelEvent");
-            //modelBuilder.Entity<ChannelUser>().ToTable("ChannelUser");
         }
     }
 
