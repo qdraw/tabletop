@@ -22,22 +22,29 @@ window.signalr = {
 
 
     signalr: function() {
-        var transportType = signalR.TransportType[window.signalr.getParameterByName('transport')] || signalR.TransportType.WebSockets;
+        var transportType = signalR.TransportType[window.signalr.getParameterByName("transport")] || signalR.TransportType.WebSockets;
         var url = window.updateIsFreeEnv.url || `http://${document.location.host}/datahub`;
         var http = new signalR.HttpConnection(url, { transport: transportType });
         window.signalr.connection = new signalR.HubConnection(http);
 
-        window.signalr.connection.on("Send", msg => {
-            console.log("Send > ", msg);
+        window.signalr.connection.on("Pong", msg => {
+            console.log("Pong > ", msg);
+            this.pongDate = Date.now();
         }),
 
         window.signalr.connection.on("Update", msg => {
             //console.log("Update > ", msg);
             window.updateIsFree.index(msg);
+       });
+
+
+        window.signalr.connection.on("EventsRecent", msg => {
+            window.draw.drawD3(msg.amountOfMotions);
         });
 
 
         window.signalr.connection.onClosed = e => {
+            this.isConnected = false;
             if (e) {
                 console.log(e);
             }
@@ -59,10 +66,23 @@ window.signalr = {
             }); 
     },
 
+    pongDate : 0,
+
+    pongSend: function () {
+
+        var latestpong = Date.now() - this.pongDate;
+        var longTimeAgo = false;
+        if (latestpong >= 2000) {
+            longTimeAgo = true;
+        }
+
+        if (this.isConnected) {
+            window.signalr.connection.invoke("Pong","true");
+        }
+        return longTimeAgo;
+    },
+
     isConnected : false,
-    //connection: null,
-
-
 
     getParameterByName: function (name, url) {
         if (!url) {

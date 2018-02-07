@@ -2,24 +2,54 @@
 window.updateIsFree = {
     index: function (data) {
 
+        var difference = this.remainingDifference(data.dateTime);
+
         clearTimeout(this.idleTimer);
         this.idleTimer = setTimeout(function () {
             window.updateIsFree.update({ "isFree": true });
-        } , 120000);
+        }, difference );
 
-        if (data !== undefined) {
-            this.update(data);
-        }
+        this.update(data);
     },
 
     idleTimer: null,
 
+    remainingDifference: function (dateString) {
+        var difference = 120000;
+        if (dateString !== undefined) {
+            var d = this.getDate(dateString);
+            var now = new Date();
+
+            var maxDifference = difference;
+            difference = (now - d);
+
+            if (difference <= maxDifference) {
+                difference = maxDifference - difference;
+            }
+            //console.log(difference);
+        }
+        return difference;
+    },
+
+    getDate: function (dateString) {
+        var d = new Date();
+
+        if (dateString.indexOf("T") === -1) {
+            d = new Date(dateString + "+00:00");
+        }
+        if (dateString.indexOf("T") >= 0) {
+            d = new Date(dateString);
+        }
+        return d;
+    },
+
     update: function (data) {
 
-        console.log(data);
+        //console.log(data);
 
-        if (data.dateTime !== undefined ) {
-            var d = new Date(data.dateTime); //  + "+00:00"
+        if (data.dateTime !== undefined) {
+            var d = this.getDate(data.dateTime);
+
             console.log(d);
             document.querySelector('#latestactivity span').innerHTML =
                 d.toLocaleDateString("NL-nl") +
@@ -73,6 +103,39 @@ window.updateIsFree = {
         document.querySelector('#data').classList.remove("border-green");
         document.querySelector('#status').innerHTML = "...";
         document.querySelector('#online-indicator').className = "circle circle-big circle-blank";
+    },
+
+    loadJSON: function (path, success, error) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function()
+        {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    if (success)
+                        success(JSON.parse(xhr.responseText));
+                } else {
+                    if (error) {
+                          console.log("err");
+                        error(xhr);
+                          }
+                }
+            }
+        };
+        xhr.open("GET", path, true);
+        xhr.send();
+    },
+
+    updateManualData: function () {
+        var url = window.updateIsFreeEnv.updateManualDataUrl;
+        updateIsFree.loadJSON(url,
+            function(data) {
+                window.updateIsFree.index(data)
+            },
+            function (xhr) {
+                updateIsFree.resetAll();
+                console.error(xhr);
+            }
+        );
     }
 }
 

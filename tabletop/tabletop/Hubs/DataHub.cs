@@ -21,20 +21,25 @@ namespace tabletop.Hubs
             await Clients.All.InvokeAsync("Send", $"{Context.ConnectionId} joined");
         }
 
-        public override async Task OnDisconnectedAsync(Exception ex)
+        public Task Pong(string message)
         {
-            await Clients.All.InvokeAsync("Send", $"{Context.ConnectionId} left");
+            return Clients.Client(Context.ConnectionId).InvokeAsync("Pong", $"{Context.ConnectionId}: {message}");
         }
+
+        //public override async Task OnDisconnectedAsync(Exception ex)
+        //{
+        //    await Clients.All.InvokeAsync("Send", $"{Context.ConnectionId} left");
+        //}
 
         public Task Send(string message)
         {
             return Clients.All.InvokeAsync("Send", $"{Context.ConnectionId}: {message}");
         }
 
-        public Task SendToGroup(string groupName, string message)
-        {
-            return Clients.Group(groupName).InvokeAsync("Send", $"{Context.ConnectionId}@{groupName}: {message}");
-        }
+        //public Task SendToGroup(string groupName, string message)
+        //{
+        //    return Clients.Group(groupName).InvokeAsync("Send", $"{Context.ConnectionId}@{groupName}: {message}");
+        //}
 
         public async Task JoinGroup(string groupName)
         {
@@ -43,16 +48,16 @@ namespace tabletop.Hubs
             await Clients.Group(groupName).InvokeAsync("Send", $"{Context.ConnectionId} joined {groupName}");
         }
 
-        public async Task LeaveGroup(string groupName)
-        {
-            await Groups.RemoveAsync(Context.ConnectionId, groupName);
+        //public async Task LeaveGroup(string groupName)
+        //{
+        //    await Groups.RemoveAsync(Context.ConnectionId, groupName);
 
-            await Clients.Group(groupName).InvokeAsync("Send", $"{Context.ConnectionId} left {groupName}");
-        }
+        //    await Clients.Group(groupName).InvokeAsync("Send", $"{Context.ConnectionId} left {groupName}");
+        //}
 
-        public Task Echo(string message)
-        {
-            return Clients.Client(Context.ConnectionId).InvokeAsync("Send", $"{Context.ConnectionId}: {message}");
-        }
+        //public Task Echo(string message)
+        //{
+        //    return Clients.Client(Context.ConnectionId).InvokeAsync("Send", $"{Context.ConnectionId}: {message}");
+        //}
     }
 }

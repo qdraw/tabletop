@@ -41,20 +41,7 @@ namespace tabletop
         {
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(GetConnectionString()));
             services.AddScoped<IUpdate, SqlUpdateStatus>();
-
             services.AddSignalR();
-
-            services.AddCors(o =>
-            {
-                o.AddPolicy("Everything", p =>
-                {
-                   p.AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowAnyOrigin();
-                });
-            });
-
-
 
             services.AddMvc(options =>
             {
@@ -78,8 +65,6 @@ namespace tabletop
             app.UsePathBase("/tabletop");
 
             app.UseStatusCodePages("text/html", "Status code page, status code: {0}");
-
-            app.UseCors("Everything");
 
             app.UseSignalR(routes =>
             {

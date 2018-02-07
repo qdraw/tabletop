@@ -1,12 +1,9 @@
-﻿using System.Linq;
-using System.Net.WebSockets;
-using System.Threading.Tasks;
+﻿using System.Globalization;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using tabletop.Interfaces;
 using tabletop.ViewModels;
 using tabletop.Dtos;
-using tabletop.Hubs;
 
 
 namespace tabletop.Controllers
@@ -14,25 +11,12 @@ namespace tabletop.Controllers
     public class HomeController : Controller
     {
         private readonly IUpdate _updateStatusContent;
-        private readonly IHubContext<DataHub> _dataHubContext;
 
-        public HomeController(IUpdate updateStatusContent, IHubContext<DataHub> dataHubContext)
+        public HomeController(IUpdate updateStatusContent)
         {
             _updateStatusContent = updateStatusContent;
-            _dataHubContext = dataHubContext;
         }
 
-
-        //public IActionResult Test(string name)
-        //{
-        //    if (string.IsNullOrEmpty(name))
-        //    {
-        //        return BadRequest("no name");
-        //    }
-        //    _dataHubContext.Cl
-        //    _dataHubContext.Clients.All.InvokeAsync("test", true);
-        //    return Content("");
-        //}
 
         public IActionResult Index(DateDto dto)
         {
@@ -98,7 +82,7 @@ namespace tabletop.Controllers
             {
                 var isFreeStatus = _updateStatusContent.IsFree(channelUserObject.NameId);
                 model.IsFree = isFreeStatus.IsFree;
-                model.IsFreeLatestUtcString = isFreeStatus.DateTime.ToString();
+                model.IsFreeLatestUtcString = isFreeStatus.DateTime.ToString(CultureInfo.InvariantCulture);
                 model.IsFreeLatestAmsterdamDateTime = dto.UtcDateTimeToAmsterdamDateTime(isFreeStatus.DateTime);
                 return View("Live", model);
             }
