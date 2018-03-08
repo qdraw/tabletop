@@ -43,7 +43,8 @@ function httpUpdate() {
 					headers: {
 						'Content-Length': querystring.stringify(formquery).length,
 						'Content-Type': 'application/x-www-form-urlencoded',
-                        'Authorization': 'Bearer ' + process.env.BEARER
+						'User-Agent': 'scooter',
+			                        'Authorization': 'Bearer ' + process.env.BEARER
 					},
 					uri: 'http://demo.colours.ai/tabletop/api/update',
 					body: querystring.stringify(formquery),
@@ -53,7 +54,7 @@ function httpUpdate() {
 						console.log(body);
 
 						if (res.statusCode === 200) { // success
-							console.log("succes");
+							console.log("succes call");
                             resolve();
 						}
 
