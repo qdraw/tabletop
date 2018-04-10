@@ -4,7 +4,7 @@
 
 char clientName[] = "test";
 char Bearer[] = "secret";
-char url[] = "http://demo.colours.ai/tabletop/api/update";   
+char url[] = "http://demo.colours.ai/tabletop/api/update";
 char wifiSSID[] = "2";
 char wifiPass[] = "2";
 
@@ -16,7 +16,7 @@ int inputValue = 0;
 int disconnected = 0;
 
 void setup() {
- 
+
   Serial.begin(115200);                                  //Serial connection
   WiFi.begin(wifiSSID, wifiPass);
   pinMode(inputPin, INPUT);     // declare sensor as input
@@ -28,14 +28,14 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  
+
   Serial.println("******");
 
 }
 
 void(* resetFunc) (void) = 0; //declare reset function @ address 0
 
-    
+
 void loop() {
 
   inputValue = analogRead(inputPin);     // read the input pin
@@ -44,10 +44,10 @@ void loop() {
     val = HIGH;
   }
   else {
-    val = LOW;  
+    val = LOW;
   }
 
- 
+
   if (val == HIGH) {            // check if the input is HIGH
     //digitalWrite(ledPin, HIGH);  // turn LED ON
     if (pirState == LOW) {
@@ -68,8 +68,8 @@ void loop() {
       pirState = LOW;
     }
   }
-   
-   if(WiFi.status() != WL_CONNECTED){ 
+
+   if(WiFi.status() != WL_CONNECTED){
       Serial.println(connectionStatus(WiFi.status()));
       resetFunc();  //call reset
    }
@@ -77,35 +77,34 @@ void loop() {
    // Very important to avoid https://github.com/esp8266/Arduino/issues/1634
    delay(50);
 }
- 
+
 void httpRequest() {
- 
+
  if(WiFi.status() == WL_CONNECTED){   //Check WiFi connection status
- 
+
    HTTPClient http;    //Declare object of class HTTPClient
- 
-   http.begin(String(url));   
-   http.addHeader("Content-Type", "application/x-www-form-urlencoded");  
-   http.addHeader("Authorization", "Bearer " + String(Bearer)); 
-   http.addHeader("User-Agent", "Test");  //Specify content-type header
+
+   http.begin(String(url));
+   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+   http.addHeader("Authorization", "Bearer " + String(Bearer));
 
    int httpCode = http.POST("status=" + String(1) + "&name=" + clientName);   //Send the request
    String payload = http.getString();                  //Get the response payload
- 
+
    Serial.println(httpCode);   //Print HTTP return code
    Serial.println(payload);    //Print request response payload
- 
+
    http.end();  //Close connection
- 
+
  }else{
- 
-    Serial.println("Error in WiFi connection");   
+
+    Serial.println("Error in WiFi connection");
     Serial.println(connectionStatus(WiFi.status()));
 
     resetFunc();  //call reset
-    
+
  }
- 
+
 }
 
 
@@ -142,6 +141,3 @@ String connectionStatus ( int which )
             break;
     }
 }
-
-
-
