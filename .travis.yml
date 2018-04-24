@@ -1,0 +1,7 @@
+language: csharp
+mono: none
+dotnet: 2.0.7
+script:
+  - dotnet restore ./tabletop/
+  - dotnet build ./tabletop/
+  - dotnet test ./tabletop/tabletop.tests
