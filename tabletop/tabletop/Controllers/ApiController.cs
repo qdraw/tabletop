@@ -32,8 +32,17 @@ namespace tabletop.Controllers
         {
             return View();
         }
+        
+        // Used for end2end test
+        [HttpGet]
+        [HttpHead]
+        public IActionResult Env()
+        {
+            return Ok();
+        }
 
         [HttpGet]
+        [HttpHead]
         [Produces("application/json")]
         public IActionResult EventsRecent(DateDto dto)
         {
@@ -45,6 +54,7 @@ namespace tabletop.Controllers
 
 
         [HttpGet]
+        [HttpHead]
         [Produces("application/json")]
         public IActionResult EventsDayView(DateDto dto, string ext)
         {
@@ -74,6 +84,7 @@ namespace tabletop.Controllers
 
 
         [HttpGet]
+        [HttpHead]
         [Produces("application/json")]
         public IActionResult EventsOfficeHours(DateDto dto)
         {
@@ -119,6 +130,7 @@ namespace tabletop.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         [Produces("application/json")]
         public IActionResult IsFree(string name)
         {

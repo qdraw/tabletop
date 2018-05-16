@@ -29,3 +29,5 @@ tabletop/tabletop/bin/Debug/netcoreapp2.0/
 appsettings.Production.json
 node_modules*
 .env
+**/.idea/*
+.idea
