@@ -30,7 +30,7 @@ clone_depth: 1
 test_script:
   # restore packages for our unit tests
   - cmd: dotnet restore ./tabletop/tabletop.tests/tabletop.tests.csproj --verbosity m
-  - cmd: dotnet test
+  - cmd: dotnet test ./tabletop/tabletop.tests/tabletop.tests.csproj
 on_finish :
   # any cleanup in here
 deploy: off
