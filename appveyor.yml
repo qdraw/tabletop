@@ -3,7 +3,7 @@ image: Visual Studio 2017
 
 environment:
   COVERALLS_REPO_TOKEN:
-    62ee19d7-1f5e-47c9-95a9-b18a0d809553
+    secure: q6V0pTjMedkIXA/sZTBQB3nApTSGg29BBqFnI6/PbqXS5DmdAhgbbMqIAcf13/I5
 branches:
   only:
   - master
@@ -15,15 +15,16 @@ install:
 before_build:
   # Display .NET Core version
   - cmd: dotnet --version
+  - cmd: mkdir publish
   # Display minimal restore text
   - cmd: dotnet restore ./tabletop/tabletop/tabletop.csproj --verbosity m
 build_script:
   # output will be in ./src/bin/debug/netcoreapp1.1/publish
-  - cmd: dotnet publish ./tabletop/tabletop/tabletop.csproj
+  - cmd: dotnet publish ./tabletop/tabletop/tabletop.csproj --output ./publish
 after_build:
   # For once the build has completed
 artifacts:
- - path: '\src\bin\Debug\netcoreapp1.1\publish'
+ - path: './publish'
    name: WebSite
    type: WebDeployPackage
 clone_depth: 1
