@@ -2,6 +2,9 @@
 
 Tabletop is a cloud-based, mobile-ready, event tracking system. We use it to see if the table footbal is free.
 
+## Builds
+[![Travis](https://img.shields.io/travis/qdraw/tabletop.svg)](https://travis-ci.org/qdraw/tabletop/) [![Build status](https://ci.appveyor.com/api/projects/status/fw7gojff1220kj0r/branch/master?svg=true)](https://ci.appveyor.com/project/qdraw/tabletop/branch/master) [![codecov](https://codecov.io/gh/qdraw/tabletop/branch/master/graph/badge.svg)](https://codecov.io/gh/qdraw/tabletop) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/qdrawmedia)
+
 ### Features
   - Display if room __is free__ or _in use_
   - History views per day
