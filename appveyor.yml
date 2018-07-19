@@ -33,7 +33,7 @@ test_script:
   # restore packages for our unit tests
   - cmd: dotnet restore ./tabletop/tabletop.tests/tabletop.tests.csproj --verbosity m
   - cmd: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover ./tabletop/tabletop.tests/tabletop.tests.csproj
-  - cmd: codecov -f ./tabletop/tabletop.tests/coverage.opencover.xml
+  - cmd: codecov -f ./tabletop/tabletop.tests/coverage.opencover.xml -t $(COVERALLS_REPO_TOKEN)
 on_finish :
   # any cleanup in here
 deploy: off
