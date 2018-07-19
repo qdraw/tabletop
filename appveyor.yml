@@ -14,6 +14,7 @@ install:
   # Install repo specific stuff here
 before_build:
   # Display .NET Core version
+  - cmd: choco install codecov
   - cmd: dotnet --version
   - cmd: mkdir publish
   # Display minimal restore text
@@ -31,7 +32,8 @@ clone_depth: 1
 test_script:
   # restore packages for our unit tests
   - cmd: dotnet restore ./tabletop/tabletop.tests/tabletop.tests.csproj --verbosity m
-  - cmd: dotnet test ./tabletop/tabletop.tests/tabletop.tests.csproj
+  - cmd: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover ./tabletop/tabletop.tests/tabletop.tests.csproj
+  - cmd: codecov -f ./tabletop/tabletop.tests/coverage.opencover.xml
 on_finish :
   # any cleanup in here
 deploy: off

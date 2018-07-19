@@ -31,3 +31,5 @@ node_modules*
 .env
 **/.idea/*
 .idea
+
+/tabletop/tabletop.tests/coverage.opencover.xml
