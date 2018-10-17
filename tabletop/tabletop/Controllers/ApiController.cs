@@ -128,23 +128,17 @@ namespace tabletop.Controllers
                     return Json(result);
             }
         }
-
-        [HttpGet]
-        [HttpHead]
+	
+		[HttpGet]
+		[HttpHead]
         [Produces("application/json")]
         public IActionResult IsFree(string name)
         {
             var channelUserId = name;
+	        if (string.IsNullOrEmpty(channelUserId)) return BadRequest("channelUserId is invalid");
 
-            if (!string.IsNullOrEmpty(channelUserId))
-            {
-                var newStatusContent = _updateStatusContent.IsFree(channelUserId);
-                return Json(newStatusContent);
-            }
-            else
-            {
-                return BadRequest("channelUserId is invalid");
-            }
+	        var newStatusContent = _updateStatusContent.IsFree(channelUserId);
+	        return Json(newStatusContent);
 
         }
 
