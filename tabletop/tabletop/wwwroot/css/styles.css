@@ -129,6 +129,13 @@ body {
 	left: 120px;
 }
 
+.warning {
+    padding: 10px;
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
 .noscript-warning,
 #preloader {
     position: absolute;
