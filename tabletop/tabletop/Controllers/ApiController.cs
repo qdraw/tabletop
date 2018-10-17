@@ -8,11 +8,11 @@ using tabletop.Hubs;
 using tabletop.Interfaces;
 using tabletop.Models;
 
-//There is no ApiController class anymore since MVC and WebAPI have been merged in ASP.NET Core.
-//However, the Controller class of MVC brings in a bunch of features you probably won't need
-//when developing just a Web API, such as a views and model binding.
-//For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-//https://stackoverflow.com/questions/38667445/is-apicontroller-deprecated-in-net-core/38672681
+// There is no ApiController class anymore since MVC and WebAPI have been merged in ASP.NET Core.
+// However, the Controller class of MVC brings in a bunch of features you probably won't need
+// when developing just a Web API, such as a views and model binding.
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+// https://stackoverflow.com/questions/38667445/is-apicontroller-deprecated-in-net-core/38672681
 
 
 namespace tabletop.Controllers
@@ -128,23 +128,17 @@ namespace tabletop.Controllers
                     return Json(result);
             }
         }
-
-        [HttpGet]
-        [HttpHead]
+	
+		[HttpGet]
+		[HttpHead]
         [Produces("application/json")]
         public IActionResult IsFree(string name)
         {
             var channelUserId = name;
+	        if (string.IsNullOrEmpty(channelUserId)) return BadRequest("channelUserId is invalid");
 
-            if (!string.IsNullOrEmpty(channelUserId))
-            {
-                var newStatusContent = _updateStatusContent.IsFree(channelUserId);
-                return Json(newStatusContent);
-            }
-            else
-            {
-                return BadRequest("channelUserId is invalid");
-            }
+	        var newStatusContent = _updateStatusContent.IsFree(channelUserId);
+	        return Json(newStatusContent);
 
         }
 
