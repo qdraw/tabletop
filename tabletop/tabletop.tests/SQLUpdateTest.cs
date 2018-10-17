@@ -21,7 +21,7 @@ namespace tabletop.tests
             var _options = builder.Options;
 
             _context = new AppDbContext(_options);
-            _sqlStatus = new SqlUpdateStatus(_context);
+            _sqlStatus = new SqlUpdateStatus(_context,null);
         }
 
         private readonly AppDbContext _context;

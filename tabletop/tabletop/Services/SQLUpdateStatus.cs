@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Rest.Azure;
 using tabletop.Data;
 using tabletop.Dtos;
@@ -15,10 +16,12 @@ namespace tabletop.Services
     public class SqlUpdateStatus : IUpdate
     {
         private readonly AppDbContext _context;
+        private readonly IMemoryCache _cache;
 
-        public SqlUpdateStatus(AppDbContext context)
+        public SqlUpdateStatus(AppDbContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         public IEnumerable<ChannelEvent> GetTimeSpanByName(string urlsafename, DateTime startDateTime,
@@ -134,7 +137,16 @@ namespace tabletop.Services
 
         public IEnumerable<ChannelUser> GetAllChannelUsers()
         {
-            return _context.ChannelUser; // return null if not there
+            // Cached for a long time
+            // To update a user, please query a sql and restart the application
+            
+            const string queryCacheName = "GetAllChannelUsers";
+            if (_cache.TryGetValue(queryCacheName, out var channelUserObject))  
+                return channelUserObject as IEnumerable<ChannelUser>;
+
+            var channelUserList = (IEnumerable<ChannelUser>) _context.ChannelUser.ToList();
+            _cache.Set(queryCacheName, channelUserList);
+            return channelUserList; // return null if not there
         }
 
         public ChannelUser AddUser(string name)
@@ -172,8 +184,23 @@ namespace tabletop.Services
             return lastMinuteRequests;
         }
 
-
+        /// <summary>
+        /// Cached query to check if the channel is free
+        /// </summary>
+        /// <param name="channelUserId">a guid</param>
+        /// <returns>GetStatus object</returns>
         public GetStatus IsFree(string channelUserId)
+        {
+            var queryCacheName = "IsFree_" + channelUserId;
+            if (_cache.TryGetValue(queryCacheName, out var isFreeStatusObject))  
+                return isFreeStatusObject as GetStatus;
+
+            var isFreeStatus = IsFreeQuery(channelUserId);
+            _cache.Set(queryCacheName, isFreeStatus);
+            return isFreeStatus; // return null if not there
+        }
+
+        private GetStatus IsFreeQuery(string channelUserId)
         {
             var latestEvent = _context.ChannelEvent
                 .LastOrDefault(b => b.ChannelUserId == channelUserId);

@@ -47,6 +47,7 @@ namespace tabletop
             {
                 options.RespectBrowserAcceptHeader = true; // false by default
             });
+            services.AddMemoryCache();
 
         }
 
