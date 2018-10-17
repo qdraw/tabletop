@@ -71,6 +71,7 @@ namespace tabletop.Services
                 var firstLastMinuteContent = lastMinuteContent.FirstOrDefault();
 
 
+		            
                 if (!lastMinuteContent.Any())
                 {
                     var newStatusContent = new ChannelEvent
@@ -82,6 +83,10 @@ namespace tabletop.Services
                     };
                     _context.ChannelEvent.Add(newStatusContent);
                     _context.SaveChanges();
+	                
+	                // update isfree cache
+	                CacheIsFreeUpdateItem(channelUserId.NameId, newStatusContent);
+		                
                     return newStatusContent;
                 }
 
@@ -92,6 +97,10 @@ namespace tabletop.Services
                 firstLastMinuteContent.DateTime = DateTime.UtcNow;
                 _context.Attach(firstLastMinuteContent).State = EntityState.Modified;
                 _context.SaveChanges();
+	            
+	            // update isfree cache
+	            CacheIsFreeUpdateItem(channelUserId.NameId, firstLastMinuteContent);
+	            
                 return firstLastMinuteContent;
             }
             else
@@ -100,7 +109,9 @@ namespace tabletop.Services
             }
         }
 
-        public bool IsUserInDatabase(string nameUrlSafe)
+	    
+
+	    public bool IsUserInDatabase(string nameUrlSafe)
         {
             var count = _context.ChannelUser.Count(r => r.NameUrlSafe == nameUrlSafe);
             switch (count)
@@ -191,20 +202,39 @@ namespace tabletop.Services
         /// <returns>GetStatus object</returns>
         public GetStatus IsFree(string channelUserId)
         {
-            var queryCacheName = "IsFree_" + channelUserId;
-            if (_cache.TryGetValue(queryCacheName, out var isFreeStatusObject))  
-                return isFreeStatusObject as GetStatus;
+            var queryCacheName = cacheIsFreeName(channelUserId);
+            if (_cache.TryGetValue(queryCacheName, out var latestEventObject))  
+                return IsFree(latestEventObject as ChannelEvent);
 
             var isFreeStatus = IsFreeQuery(channelUserId);
             _cache.Set(queryCacheName, isFreeStatus);
-            return isFreeStatus; // return null if not there
+            return IsFree(isFreeStatus); // return null if not there
         }
 
-        private GetStatus IsFreeQuery(string channelUserId)
-        {
-            var latestEvent = _context.ChannelEvent
-                .LastOrDefault(b => b.ChannelUserId == channelUserId);
+	    private string cacheIsFreeName(string channelUserId)
+	    {
+		    return "IsFree_latestEventObject_" + channelUserId;
+	    }
+	    
+	    public void CacheIsFreeUpdateItem(string channelUserId, ChannelEvent latestChannelEvent)
+	    {
+		    if( _cache == null) return;
+		    var queryCacheName = cacheIsFreeName(channelUserId);
 
+		    if (!_cache.TryGetValue(queryCacheName, out var _)) return;
+		    _cache.Remove(queryCacheName);
+		    _cache.Set(queryCacheName, latestChannelEvent); // no timeout
+	    }
+
+	    private ChannelEvent IsFreeQuery(string channelUserId)
+	    {
+		    var latestEvent = _context.ChannelEvent
+			    .LastOrDefault(b => b.ChannelUserId == channelUserId);
+		    return latestEvent;
+	    }
+
+	    private GetStatus IsFree(ChannelEvent latestEvent)
+        {
             if (latestEvent == null)
             {
                 return new GetStatus
