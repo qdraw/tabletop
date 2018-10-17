@@ -202,16 +202,16 @@ namespace tabletop.Services
         /// <returns>GetStatus object</returns>
         public GetStatus IsFree(string channelUserId)
         {
-            var queryCacheName = cacheIsFreeName(channelUserId);
+            var queryCacheName = CacheIsFreeName(channelUserId);
             if (_cache.TryGetValue(queryCacheName, out var latestEventObject))  
                 return IsFree(latestEventObject as ChannelEvent);
 
             var isFreeStatus = IsFreeQuery(channelUserId);
-            _cache.Set(queryCacheName, isFreeStatus);
+	        if(isFreeStatus != null) _cache.Set(queryCacheName, isFreeStatus);
             return IsFree(isFreeStatus); // return null if not there
         }
 
-	    private string cacheIsFreeName(string channelUserId)
+	    private string CacheIsFreeName(string channelUserId)
 	    {
 		    return "IsFree_latestEventObject_" + channelUserId;
 	    }
@@ -219,11 +219,11 @@ namespace tabletop.Services
 	    public void CacheIsFreeUpdateItem(string channelUserId, ChannelEvent latestChannelEvent)
 	    {
 		    if( _cache == null) return;
-		    var queryCacheName = cacheIsFreeName(channelUserId);
+		    var queryCacheName = CacheIsFreeName(channelUserId);
 
 		    if (!_cache.TryGetValue(queryCacheName, out var _)) return;
 		    _cache.Remove(queryCacheName);
-		    _cache.Set(queryCacheName, latestChannelEvent); // no timeout
+		    _cache.Set(queryCacheName, latestChannelEvent); // no timeout, or delete after timespan
 	    }
 
 	    private ChannelEvent IsFreeQuery(string channelUserId)

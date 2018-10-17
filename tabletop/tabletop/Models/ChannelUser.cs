@@ -25,6 +25,9 @@ namespace tabletop.Models
         public bool IsVisible { get; set; }
         public bool IsAccessible { get; set; }
 
+	    [NotMapped]
+	    public bool IsHealthPingEnabled { get; set; } = true;
+
         [MaxLength(100)]
         public string Bearer { get; set; }
 

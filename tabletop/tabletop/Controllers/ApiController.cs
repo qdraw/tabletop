@@ -7,6 +7,7 @@ using tabletop.Dtos;
 using tabletop.Hubs;
 using tabletop.Interfaces;
 using tabletop.Models;
+using tabletop.Services;
 
 // There is no ApiController class anymore since MVC and WebAPI have been merged in ASP.NET Core.
 // However, the Controller class of MVC brings in a bunch of features you probably won't need
@@ -21,11 +22,14 @@ namespace tabletop.Controllers
     {
         private readonly IUpdate _updateStatusContent;
         private readonly IHubContext<DataHub> _dataHubContext;
+	    private readonly IHealthStatus _healthStatus;
 
-        public ApiController(IUpdate updateStatusContent, IHubContext<DataHub> dataHubContext)
+	    public ApiController(IUpdate updateStatusContent, 
+	        IHubContext<DataHub> dataHubContext, IHealthStatus healthStatus)
         {
             _updateStatusContent = updateStatusContent;
             _dataHubContext = dataHubContext;
+	        _healthStatus = healthStatus;
         }
 
         public IActionResult Index()
@@ -181,6 +185,30 @@ namespace tabletop.Controllers
                 return BadRequest("Name does not exist");
             }
         }
+	    
+	    
+	    [HttpGet]
+	    [HttpHead]
+	    [Produces("application/json")]
+	    public IActionResult HealthStatus(string name)
+	    {
+		    var nameUrlSafe = name;
+		    if (string.IsNullOrEmpty(nameUrlSafe)) return BadRequest("nameUrlSafe is invalid");
+		    
+		    _healthStatus.Update(nameUrlSafe);
+		    return Ok();
+
+	    }
+
+	    [HttpPost]
+	    [Produces("application/json")]
+	    public IActionResult UpdateHealth(InputChannelEvent model)
+	    {
+		    // IsHealthPingEnabled
+		    return Ok();
+	    }
+
+	    
 
 
 

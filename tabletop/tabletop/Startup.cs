@@ -41,6 +41,8 @@ namespace tabletop
         {
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(GetConnectionString()));
             services.AddScoped<IUpdate, SqlUpdateStatus>();
+	        services.AddScoped<IHealthStatus, HealthStatus>();
+
             services.AddSignalR();
 
             services.AddMvc(options =>
