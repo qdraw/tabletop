@@ -83,13 +83,15 @@ void loop() {
    }
 
    count++;
-   if(count < 6000 && count != 300) {
+   if(count < 600 && count != 30) {
      // Very important to avoid https://github.com/esp8266/Arduino/issues/1634
-     delay(60);
+     delay(500);
    }
    else 
    {
-       count = 0;
+       if(count != 30) {
+          count = 0;
+       }
        httpRequest(String(heartbeaturl));
        Serial.println("> 100");
    }
