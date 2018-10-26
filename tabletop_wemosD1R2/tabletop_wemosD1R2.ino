@@ -85,7 +85,7 @@ void loop() {
    count++;
    if(count < 6000 && count != 300) {
      // Very important to avoid https://github.com/esp8266/Arduino/issues/1634
-     delay(50);
+     delay(60);
    }
    else 
    {
