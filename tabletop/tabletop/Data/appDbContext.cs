@@ -16,6 +16,7 @@ namespace tabletop.Data
         }
         public DbSet<ChannelEvent> ChannelEvent { get; set; }
         public DbSet<ChannelUser> ChannelUser { get; set; }
+	    public DbSet<ChannelOperations> ChannelOperations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,7 +24,10 @@ namespace tabletop.Data
                 .HasOne(p => p.ChannelUser)
                 .WithMany(b => b.ChannelEvents);
                 //.OnDelete(deleteBehavior: DeleteBehavior.Restrict);
-
+	        
+	        modelBuilder.Entity<ChannelOperations>()
+		        .HasOne(p => p.ChannelUser)
+		        .WithMany(b => b.ChannelOperations);
         }
     }
 

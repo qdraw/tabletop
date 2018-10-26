@@ -32,6 +32,7 @@ namespace tabletop.Models
         public string Bearer { get; set; }
 
         public IEnumerable<ChannelEvent> ChannelEvents { get; set; }
+	    public IEnumerable<ChannelOperations> ChannelOperations { get; set; }
 
     }
 }
