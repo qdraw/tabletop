@@ -1,8 +1,10 @@
-﻿namespace tabletop.Interfaces
+﻿using System;
+
+namespace tabletop.Interfaces
 {
 	public interface IHealthStatus
 	{
 		void Update(string channelUserId);
-		void Get(string channelUserId);
+		DateTime Get(string channelUserId);
 	}
 }

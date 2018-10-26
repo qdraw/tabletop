@@ -12,7 +12,8 @@ using tabletop.Services;
 // There is no ApiController class anymore since MVC and WebAPI have been merged in ASP.NET Core.
 // However, the Controller class of MVC brings in a bunch of features you probably won't need
 // when developing just a Web API, such as a views and model binding.
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+// For more information on enabling Web API for empty projects,
+// visit https://go.microsoft.com/fwlink/?LinkID=397860
 // https://stackoverflow.com/questions/38667445/is-apicontroller-deprecated-in-net-core/38672681
 
 
@@ -98,7 +99,8 @@ namespace tabletop.Controllers
             var startDateTime = dateTime.ToUniversalTime().AddHours(9);
             var endDateTime = dateTime.ToUniversalTime().AddHours(18);
 
-            var getDataChannelEvents = _updateStatusContent.GetTimeSpanByName(dto.Name, startDateTime, endDateTime).ToList();
+            var getDataChannelEvents = _updateStatusContent
+	            .GetTimeSpanByName(dto.Name, startDateTime, endDateTime).ToList();
             var result = _updateStatusContent.ParseEvents(getDataChannelEvents, startDateTime, endDateTime);
 
             if (result == null) return BadRequest("name error");
@@ -110,8 +112,10 @@ namespace tabletop.Controllers
         [HttpGet]
         public IActionResult Export(string name, string ext)
         {
-            var getDataChannelEvents = _updateStatusContent.GetTimeSpanByName(name, new DateTime(2018, 01, 01), DateTime.Now).ToList();
-            var result = _updateStatusContent.ParseEvents(getDataChannelEvents, new DateTime(2018, 01, 01), DateTime.Now);
+            var getDataChannelEvents = _updateStatusContent
+	            .GetTimeSpanByName(name, new DateTime(2018, 01, 01), DateTime.Now).ToList();
+            var result = _updateStatusContent
+	            .ParseEvents(getDataChannelEvents, new DateTime(2018, 01, 01), DateTime.Now);
 
             var bearerValid = IsBearerValid(Request, name);
             if (!bearerValid) return BadRequest("Authorisation Error");
@@ -190,22 +194,26 @@ namespace tabletop.Controllers
 	    [HttpGet]
 	    [HttpHead]
 	    [Produces("application/json")]
-	    public IActionResult HealthStatus(string name)
+	    public IActionResult Heartbeat(string name)
 	    {
 		    var nameUrlSafe = name;
 		    if (string.IsNullOrEmpty(nameUrlSafe)) return BadRequest("nameUrlSafe is invalid");
 		    
-		    _healthStatus.Update(nameUrlSafe);
-		    return Ok();
+		    return Json(_healthStatus.Get(name));
 
 	    }
 
 	    [HttpPost]
 	    [Produces("application/json")]
-	    public IActionResult UpdateHealth(InputChannelEvent model)
+	    public IActionResult Heartbeat(InputChannelEvent model)
 	    {
-		    // IsHealthPingEnabled
-		    return Ok();
+		    if (!ModelState.IsValid) return BadRequest("Model is incomplete");
+
+		    var bearerValid = IsBearerValid(Request,model.Name);
+		    if (!bearerValid) return BadRequest("Authorisation Error");
+		    _healthStatus.Update(model.Name);
+
+		    return Json(_healthStatus.Get(model.Name));
 	    }
 
 	    

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using tabletop.Data;
 using tabletop.Interfaces;
+using tabletop.Models;
 
 namespace tabletop.Services
 {
@@ -35,9 +36,21 @@ namespace tabletop.Services
 			
 		}
 
-		public void Get(string channelUserId)
+		public DateTime Get(string nameUrlSafe)
 		{
-			throw new System.NotImplementedException();
+			var channelUser = new SqlUpdateStatus(_context, _cache)
+				.GetChannelUserIdByUrlSafeName(nameUrlSafe, true);
+			
+			if(channelUser == null) return new DateTime();
+			
+			var queryCacheName = CacheIsFreeName(channelUser.NameId);
+			if ( _cache.TryGetValue(queryCacheName, out var latestEventObject) )
+			{
+				return ( DateTime ) latestEventObject;
+			}
+
+			return new DateTime();
+
 		}
 	}
 }
