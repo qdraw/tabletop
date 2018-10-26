@@ -5,8 +5,10 @@
 char clientName[] = "test";
 char Bearer[] = "secret";
 char url[] = "http://demo.colours.ai/tabletop/api/update";
+char heartbeaturl[] = "http://demo.colours.ai/tabletop/api/heartbeat";
 char wifiSSID[] = "2";
 char wifiPass[] = "2";
+
 
 
 int inputPin = A0;               // choose the input pin (for PIR sensor)
@@ -14,6 +16,8 @@ int pirState = LOW;             // we start, assuming no motion detected
 int val = 0;                    // variable for reading the pin status
 int inputValue = 0;
 int disconnected = 0;
+
+int count = 0;
 
 void setup() {
 
@@ -27,6 +31,10 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {  //Wait for the WiFI connection completion
     delay(500);
     Serial.print(".");
+    if(WiFi.status() == WL_NO_SSID_AVAIL || WiFi.status() == WL_CONNECT_FAILED) {
+      Serial.print(connectionStatus ( WiFi.status() ) );
+      return;
+    }
   }
 
   Serial.println("******");
@@ -53,7 +61,7 @@ void loop() {
     if (pirState == LOW) {
       // we have just turned on
       Serial.println("Motion detected!");
-      httpRequest();
+      httpRequest(String(url));
 
       // We only want to print on the output change, not state
       pirState = HIGH;
@@ -74,22 +82,35 @@ void loop() {
       resetFunc();  //call reset
    }
 
-   // Very important to avoid https://github.com/esp8266/Arduino/issues/1634
-   delay(50);
+   count++;
+   if(count < 6000 && count != 300) {
+     // Very important to avoid https://github.com/esp8266/Arduino/issues/1634
+     delay(50);
+   }
+   else 
+   {
+       count = 0;
+       httpRequest(String(heartbeaturl));
+       Serial.println("> 100");
+   }
 }
 
-void httpRequest() {
+void httpRequest(String requestUrl) {
 
  if(WiFi.status() == WL_CONNECTED){   //Check WiFi connection status
 
    HTTPClient http;    //Declare object of class HTTPClient
+   
+   Serial.println(requestUrl); 
 
-   http.begin(String(url));
+   http.begin(requestUrl);
    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
    http.addHeader("Authorization", "Bearer " + String(Bearer));
 
    int httpCode = http.POST("status=" + String(1) + "&name=" + clientName);   //Send the request
    String payload = http.getString();                  //Get the response payload
+
+   Serial.println("httpCode");   //Print HTTP return code
 
    Serial.println(httpCode);   //Print HTTP return code
    Serial.println(payload);    //Print request response payload
