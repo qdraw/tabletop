@@ -13,17 +13,17 @@ namespace tabletop.Hubs
                 // Do not Broadcast to Caller:
                 .AllExcept(new[] { Context.ConnectionId })
                 // Broadcast to all connected clients:
-                .InvokeAsync("Broadcast", sender, measurement);
+                .SendAsync("Broadcast", sender, measurement);
         }
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.InvokeAsync("Send", $"{Context.ConnectionId} joined");
+            await Clients.All.SendAsync("Send", $"{Context.ConnectionId} joined");
         }
 
         public Task Pong(string message)
         {
-            return Clients.Client(Context.ConnectionId).InvokeAsync("Pong", $"{Context.ConnectionId}: {message}");
+            return Clients.Client(Context.ConnectionId).SendAsync("Pong", $"{Context.ConnectionId}: {message}");
         }
 
         //public override async Task OnDisconnectedAsync(Exception ex)
@@ -33,7 +33,7 @@ namespace tabletop.Hubs
 
         public Task Send(string message)
         {
-            return Clients.All.InvokeAsync("Send", $"{Context.ConnectionId}: {message}");
+            return Clients.All.SendAsync("Send", $"{Context.ConnectionId}: {message}");
         }
 
         //public Task SendToGroup(string groupName, string message)
@@ -43,9 +43,9 @@ namespace tabletop.Hubs
 
         public async Task JoinGroup(string groupName)
         {
-            await Groups.AddAsync(Context.ConnectionId, groupName);
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
-            await Clients.Group(groupName).InvokeAsync("Send", $"{Context.ConnectionId} joined {groupName}");
+            await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} joined {groupName}");
         }
 
         //public async Task LeaveGroup(string groupName)

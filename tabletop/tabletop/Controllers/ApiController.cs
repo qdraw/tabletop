@@ -145,10 +145,10 @@ namespace tabletop.Controllers
         public async void UpdateIsFreeSocket(ChannelEvent model)
         {
             var newStatusContent = _updateStatusContent.IsFree(model.ChannelUserId);
-            await _dataHubContext.Clients.Group(model.ChannelUserId).InvokeAsync("Update", newStatusContent);
+            await _dataHubContext.Clients.Group(model.ChannelUserId).SendAsync("Update", newStatusContent);
 
             var result = _updateStatusContent.EventsRecent(model.ChannelUser.NameUrlSafe);
-            await _dataHubContext.Clients.Group(model.ChannelUserId).InvokeAsync("EventsRecent", result);
+            await _dataHubContext.Clients.Group(model.ChannelUserId).SendAsync("EventsRecent", result);
 
         }
 
