@@ -22,10 +22,10 @@ window.signalr = {
 
 
     signalr: function() {
-        var transportType = signalR.TransportType[window.signalr.getParameterByName("transport")] || signalR.TransportType.WebSockets;
-        var url = window.updateIsFreeEnv.url || `http://${document.location.host}/datahub`;
-        var http = new signalR.HttpConnection(url, { transport: transportType });
-        window.signalr.connection = new signalR.HubConnection(http);
+
+		window.signalr.connection = new signalR.HubConnectionBuilder()
+			.withUrl("/datahub")
+			.build();
 
         window.signalr.connection.on("Pong", msg => {
             console.log("Pong > ", msg);
@@ -63,7 +63,7 @@ window.signalr = {
             .catch(err => {
                 console.log("Connection fails");
                 console.log(err);
-            }); 
+            });
     },
 
     pongDate : 0,
@@ -98,6 +98,3 @@ window.signalr = {
 };
 
 window.signalr.signalr();
-
-
-
