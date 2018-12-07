@@ -10,31 +10,5 @@ read -p "Enter: " SQLSERVERSTRING
 
 export TABLETOP_SQL=$SQLSERVERSTRING
 
-FOLDER=false
-if [[ $OSTYPE == "darwin"* ]]; then
-	FOLDER="osx.10.11-x64"
-elif [[ $OSTYPE == "linux-gnueabihf" ]]; then
-	FOLDER="linux-arm"
-elif [[ $OSTYPE == "linux-gnu" ]]; then
-	FOLDER="linux-x64"
-fi
-# check types here: https://docs.microsoft.com/en-us/dotnet/core/rid-catalog
-
-echo "select arch type: "$FOLDER
-
-if [ $FOLDER != false ]; then
-
-	if [ ! -d "tabletop/bin/release/netcoreapp2.0/$FOLDER/publish" ]; then
-		echo "no folder"
-		exit
-	fi
-	cd tabletop/bin/release/netcoreapp2.0/$FOLDER/publish
-	pm2 start --name tabletop ./tabletop
-	echo "tabletop started"
-
-	pm2 status
-fi
-
-
-#start on mac
-#dotnet run --launch-profile Production
+chmod +x ./tabletop
+pm2 start --name tabletop ./tabletop
