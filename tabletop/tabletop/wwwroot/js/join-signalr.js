@@ -22,9 +22,10 @@ window.signalr = {
 
 
     signalr: function() {
+		var url = window.updateIsFreeEnv.url || `/datahub`;
 
 		window.signalr.connection = new signalR.HubConnectionBuilder()
-			.withUrl("/datahub")
+			.withUrl(url)
 			.build();
 
         window.signalr.connection.on("Pong", msg => {

@@ -75,7 +75,7 @@
 
 <script type="text/javascript">
     window.updateIsFreeEnv = {
-        "url": document.location.protocol + "//" + document.location.host + "@Url.Content("~/")" + "datahub",
+        "url": "@Url.Content("~/")" + "datahub",
         "updateManualDataUrl":  "@Url.Action("IsFree", "Api", new { name = @Model.NameId })",
         "latestactivity": "@Model.IsFreeLatestUtcString",
         "isUserActive": true,
