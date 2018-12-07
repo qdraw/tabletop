@@ -24,8 +24,11 @@
 **/bin/release*
 
 tabletop/tabletop.tests/bin/Debug/netcoreapp2.0/
+tabletop/tabletop.tests/bin/Debug/netcoreapp2.1/
+
 
 tabletop/tabletop/bin/Debug/netcoreapp2.0/
+tabletop/tabletop/bin/Debug/netcoreapp2.1/
 
 appsettings.Production.json
 node_modules*

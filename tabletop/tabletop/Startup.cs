@@ -71,21 +71,13 @@ namespace tabletop
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<DataHub>("datahub");
+                routes.MapHub<DataHub>("/datahub");
             });
 
             app.UseMvc(ConfigureRoutes);
 
-
-            //app.UseDefaultFiles();
             app.UseStaticFiles();
 
-
-
-            // app.Run(async (context) =>
-            // {
-            //     await context.Response.WriteAsync("Hello World!");
-            // });
         }
 
         private static void ConfigureRoutes(IRouteBuilder routeBuilder)
