@@ -36,14 +36,14 @@ namespace tabletop.tests
 	    private readonly IMemoryCache _memoryCache;
 
 	    [TestMethod]
-        public void AddTestAccountUser() { 
+        public void AddTestAccountUserTest() { 
             _sqlStatus.AddUser("Test Account");
             var userIdChannelUser = _sqlStatus.GetChannelUserIdByUrlSafeName("testaccount", true);
             Assert.AreEqual(userIdChannelUser.Name, "Test Account");
         }
 
         [TestMethod]
-        public void AddTestAccountUserNull()
+        public void AddTestAccountUserNullTest()
         {
             var addUserObject = _sqlStatus.AddUser(null);
             Assert.AreEqual(addUserObject, null);
@@ -51,13 +51,14 @@ namespace tabletop.tests
 
         public string AddTestAccountUserAndGetId()
         {
-            _sqlStatus.AddUser("Test Account");
             var userIdChannelUser = _sqlStatus.GetChannelUserIdByUrlSafeName("testaccount", true);
-            return  userIdChannelUser.NameId;
+            if ( !string.IsNullOrEmpty(userIdChannelUser.Name) ) return userIdChannelUser.NameId;
+            _sqlStatus.AddUser("Test Account");
+            return _sqlStatus.GetChannelUserIdByUrlSafeName("testaccount", true).NameId;;
         }
 
         [TestMethod]
-        public void AddOrUpdate()
+        public void AddOrUpdateTest()
         {
             AddTestAccountUserAndGetId();
 
@@ -77,7 +78,7 @@ namespace tabletop.tests
         }
 
         [TestMethod]
-        public void IsFreeFalseRecentCall()
+        public void IsFreeFalseRecentCallTest()
         {
             var userid = AddTestAccountUserAndGetId();
 
@@ -93,7 +94,7 @@ namespace tabletop.tests
         }
 
         [TestMethod]
-        public void IsFreeTrueEventLongTimeAgo()
+        public void IsFreeTrueEventLongTimeAgoTest()
         {
             var userid = AddTestAccountUserAndGetId();
 
