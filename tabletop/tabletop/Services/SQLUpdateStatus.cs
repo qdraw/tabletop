@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Rest.Azure;
 using tabletop.Data;
 using tabletop.Dtos;
 using tabletop.Interfaces;
@@ -91,7 +90,7 @@ namespace tabletop.Services
                 }
 
                 if (firstLastMinuteContent == null)
-                    throw new CloudException("", new Exception("request from database went wrong"));
+                    throw new ApplicationException("", new Exception("request from database went wrong"));
 
                 firstLastMinuteContent.Weight++;
                 firstLastMinuteContent.DateTime = DateTime.UtcNow;

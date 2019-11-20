@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Rest.Azure;
 using tabletop.Dtos;
 using tabletop.Hubs;
 using tabletop.Interfaces;
@@ -172,7 +171,7 @@ namespace tabletop.Controllers
                 return Ok(newStatusContent.Weight);
 
             }
-            catch (CloudException)
+            catch (ApplicationException)
             {
                 return new StatusCodeResult(500);
             }

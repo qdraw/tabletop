@@ -72,16 +72,16 @@ namespace tabletop
                 routes.MapHub<DataHub>("/datahub");
             });
 
-            app.UseMvc(ConfigureRoutes);
+	        app.UseEndpoints(ConfigureRoutes);
 
             app.UseStaticFiles();
 
         }
 
-        private static void ConfigureRoutes(IRouteBuilder routeBuilder)
+        private static void ConfigureRoutes(IEndpointRouteBuilder routeBuilder)
         {
             // Home/Index/4 > HomeController
-            routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
+            routeBuilder.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
         }
 
     }
