@@ -29,7 +29,7 @@ namespace tabletop.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return NotFound();
         }
         
         // Used for end2end test
