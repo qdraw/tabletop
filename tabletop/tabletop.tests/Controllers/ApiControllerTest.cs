@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -8,7 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using tabletop.Controllers;
 using tabletop.Data;
 using tabletop.Dtos;
-using tabletop.Interfaces;
 using tabletop.Models;
 using tabletop.Services;
 using tabletop.ViewModels;
@@ -18,8 +18,8 @@ namespace tabletop.tests.Controllers
 	[TestClass]
 	public class ApiControllerTest
 	{
-		private IMemoryCache _memoryCache;
-		private AppDbContext _context;
+		private readonly IMemoryCache _memoryCache;
+		private readonly AppDbContext _context;
 		private SqlUpdateStatus _sqlStatus;
 
 		public ApiControllerTest()
@@ -105,5 +105,45 @@ namespace tabletop.tests.Controllers
 			Assert.AreEqual(1,firstWeight.Weight);
 		}
 		
+		[TestMethod]
+		public void EventsOfficeHours_Test()
+		{
+			var eventsEventsOfficeJson = new ApiController(_sqlStatus, null)
+				.EventsOfficeHours(new DateDto{Name = "testaccount", Date = "0"}) as JsonResult;
+			var eventsEventsOffice = eventsEventsOfficeJson.Value as EventsOfficeHoursModel;
+			
+			Assert.AreEqual(109,eventsEventsOffice.AmountOfMotions.Count);
+		}
+		
+		[TestMethod]
+		public void Export_Test()
+		{
+			_context.ChannelUser.FirstOrDefault(p => p.NameUrlSafe == "testaccount").Bearer =
+				"fake_token_here";
+			
+			var apiController = new ApiController(_sqlStatus, null)
+			{
+				ControllerContext =
+					new ControllerContext {HttpContext = new DefaultHttpContext()}
+			};
+			apiController.ControllerContext.HttpContext.Request.Headers["Authorization"] = "fake_token_here"; 
+			
+			var eventsExportJson = apiController
+				.Export("testaccount","json") as JsonResult;
+			var eventsExport = eventsExportJson.Value as EventsOfficeHoursModel;
+			
+			var firstWeight = eventsExport.AmountOfMotions.LastOrDefault(p => p.Weight == 1);
+			Assert.AreEqual(1,firstWeight.Weight);
+		}
+
+		[TestMethod]
+		public void IsFree_Test()
+		{
+			
+			var eventsRecentJson = new ApiController(_sqlStatus, null)
+				.IsFree("testaccount") as JsonResult;
+			var eventsRecent = eventsRecentJson.Value as GetStatus;
+			Assert.IsTrue(eventsRecent.Difference <= new TimeSpan(0,1,0));
+		}
 	}
 }

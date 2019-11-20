@@ -173,7 +173,7 @@ namespace tabletop.Services
                 Name = name,
                 IsVisible = true,
                 IsAccessible = true,
-                NameUrlSafe = nameUrlSafe
+                NameUrlSafe = nameUrlSafe,
             };
 
             _context.ChannelUser.Add(newChannelUser);

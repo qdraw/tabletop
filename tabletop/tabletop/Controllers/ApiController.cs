@@ -189,8 +189,10 @@ namespace tabletop.Controllers
 	        if ( ( Request.Headers["Authorization"].ToString() ?? "" ).Trim().Length <= 0 )
 		        return false;
 	        
-	        var bearer = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-	        var channelUser = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName,true);
+	        var bearer = Request.Headers["Authorization"]
+		        .ToString().Replace("Bearer ", "");
+	        var channelUser = _updateStatusContent
+		        .GetChannelUserIdByUrlSafeName(urlSafeName,true);
 	        return channelUser.Bearer == bearer;
         }
 
