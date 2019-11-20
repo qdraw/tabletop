@@ -125,8 +125,9 @@ namespace tabletop.Services
 
         public ChannelUser GetChannelUserIdByUrlSafeName(string nameUrlSafe, bool internalRequest)
         {
-            var userIdObjectIsAccessible = _context.ChannelUser.LastOrDefault(p => p.NameUrlSafe == nameUrlSafe);
-
+            var userIdObjectIsAccessible = _context.ChannelUser.OrderByDescending(p => p.NameId)
+	            .FirstOrDefault(p => p.NameUrlSafe == nameUrlSafe);
+            
             if (userIdObjectIsAccessible == null) return null;
 
             if (!internalRequest)
@@ -228,7 +229,8 @@ namespace tabletop.Services
 	    private ChannelEvent IsFreeQuery(string channelUserId)
 	    {
 		    var latestEvent = _context.ChannelEvent
-			    .LastOrDefault(b => b.ChannelUserId == channelUserId);
+			    .OrderByDescending(p => p.Id)
+			    .FirstOrDefault(b => b.ChannelUserId == channelUserId);
 		    return latestEvent;
 	    }
 
