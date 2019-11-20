@@ -186,16 +186,12 @@ namespace tabletop.Controllers
 
         public bool IsBearerValid(Microsoft.AspNetCore.Http.HttpRequest request, string urlSafeName)
         {
-            if ((Request.Headers["Authorization"].ToString() ?? "").Trim().Length > 0)
-            {
-                var bearer = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                var channelUser = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName,true);
-                return channelUser.Bearer == bearer;
-            }
-            else
-            {
-                return false;
-            }
+	        if ( ( Request.Headers["Authorization"].ToString() ?? "" ).Trim().Length <= 0 )
+		        return false;
+	        
+	        var bearer = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+	        var channelUser = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName,true);
+	        return channelUser.Bearer == bearer;
         }
 
     }

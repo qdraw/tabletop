@@ -37,6 +37,10 @@ namespace tabletop.tests.Controllers
 			_sqlStatus = new SqlUpdateStatus(_context,_memoryCache);
 			
 			// Add example data
+		
+			var existAccount = _sqlStatus.GetChannelUserIdByUrlSafeName("testaccount", true);
+			if(existAccount != null) return;
+			
 			_sqlStatus.AddUser("Test Account");
 			
 			var newUpdateStatus = new InputChannelEvent
@@ -66,6 +70,35 @@ namespace tabletop.tests.Controllers
 		public void EventsRecentTest()
 		{
 			var eventsRecentJson = new ApiController(_sqlStatus, null).EventsRecent(new DateDto{Name = "testaccount", Date = "0"}) as JsonResult;
+			var eventsRecent = eventsRecentJson.Value as EventsOfficeHoursModel;
+			var firstWeight = eventsRecent.AmountOfMotions.LastOrDefault(p => p.Weight == 1);
+			
+			Assert.AreEqual(1,firstWeight.Weight);
+		}
+		
+		[TestMethod]
+		public void EventsRecent_NotFound_Test()
+		{
+			var eventsRecentJson = new ApiController(_sqlStatus, null).EventsRecent(new DateDto{Name = "notfound", Date = "0"}) as BadRequestObjectResult;
+			Assert.AreEqual(400,eventsRecentJson.StatusCode);
+		}
+		
+		[TestMethod]
+		public void EventsDayView_csv_Test()
+		{
+			var eventsRecentJson = new ApiController(_sqlStatus, null)
+				.EventsDayView(new DateDto{Name = "testaccount", Date = "0"},"csv") as ContentResult;
+			var eventsRecent = eventsRecentJson.Content;
+			
+			Assert.IsTrue(eventsRecent.Contains("DateTime;Weight;Label"));
+			Assert.IsTrue(eventsRecent.Contains(";1;"));
+		}
+		
+		[TestMethod]
+		public void EventsDayView_json_Test()
+		{
+			var eventsRecentJson = new ApiController(_sqlStatus, null)
+				.EventsDayView(new DateDto{Name = "testaccount", Date = "0"},"json") as JsonResult;
 			var eventsRecent = eventsRecentJson.Value as EventsOfficeHoursModel;
 			var firstWeight = eventsRecent.AmountOfMotions.LastOrDefault(p => p.Weight == 1);
 			
