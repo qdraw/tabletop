@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 2.1.500
+dotnet: 3.0.101
 script:
   - dotnet restore ./tabletop/
   - dotnet build ./tabletop/

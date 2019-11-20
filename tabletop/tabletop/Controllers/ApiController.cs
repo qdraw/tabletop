@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Rest.Azure;
 using tabletop.Dtos;
 using tabletop.Hubs;
 using tabletop.Interfaces;
@@ -30,7 +29,7 @@ namespace tabletop.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return NotFound();
         }
         
         // Used for end2end test
@@ -172,7 +171,7 @@ namespace tabletop.Controllers
                 return Ok(newStatusContent.Weight);
 
             }
-            catch (CloudException)
+            catch (ApplicationException)
             {
                 return new StatusCodeResult(500);
             }
@@ -187,16 +186,14 @@ namespace tabletop.Controllers
 
         public bool IsBearerValid(Microsoft.AspNetCore.Http.HttpRequest request, string urlSafeName)
         {
-            if ((Request.Headers["Authorization"].ToString() ?? "").Trim().Length > 0)
-            {
-                var bearer = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                var channelUser = _updateStatusContent.GetChannelUserIdByUrlSafeName(urlSafeName,true);
-                return channelUser.Bearer == bearer;
-            }
-            else
-            {
-                return false;
-            }
+	        if ( ( Request.Headers["Authorization"].ToString() ?? "" ).Trim().Length <= 0 )
+		        return false;
+	        
+	        var bearer = Request.Headers["Authorization"]
+		        .ToString().Replace("Bearer ", "");
+	        var channelUser = _updateStatusContent
+		        .GetChannelUserIdByUrlSafeName(urlSafeName,true);
+	        return channelUser.Bearer == bearer;
         }
 
     }

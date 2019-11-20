@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Rest.Azure;
 using tabletop.Data;
 using tabletop.Dtos;
 using tabletop.Interfaces;
@@ -91,7 +90,7 @@ namespace tabletop.Services
                 }
 
                 if (firstLastMinuteContent == null)
-                    throw new CloudException("", new Exception("request from database went wrong"));
+                    throw new ApplicationException("", new Exception("request from database went wrong"));
 
                 firstLastMinuteContent.Weight++;
                 firstLastMinuteContent.DateTime = DateTime.UtcNow;
@@ -126,8 +125,11 @@ namespace tabletop.Services
 
         public ChannelUser GetChannelUserIdByUrlSafeName(string nameUrlSafe, bool internalRequest)
         {
-            var userIdObjectIsAccessible = _context.ChannelUser.LastOrDefault(p => p.NameUrlSafe == nameUrlSafe);
-
+	        var userIdObjectIsAcces1sible = _context.ChannelUser.ToList();
+	        
+            var userIdObjectIsAccessible = _context.ChannelUser.OrderByDescending(p => p.NameId)
+	            .FirstOrDefault(p => p.NameUrlSafe == nameUrlSafe);
+            
             if (userIdObjectIsAccessible == null) return null;
 
             if (!internalRequest)
@@ -171,7 +173,7 @@ namespace tabletop.Services
                 Name = name,
                 IsVisible = true,
                 IsAccessible = true,
-                NameUrlSafe = nameUrlSafe
+                NameUrlSafe = nameUrlSafe,
             };
 
             _context.ChannelUser.Add(newChannelUser);
@@ -229,7 +231,8 @@ namespace tabletop.Services
 	    private ChannelEvent IsFreeQuery(string channelUserId)
 	    {
 		    var latestEvent = _context.ChannelEvent
-			    .LastOrDefault(b => b.ChannelUserId == channelUserId);
+			    .OrderByDescending(p => p.Id)
+			    .FirstOrDefault(b => b.ChannelUserId == channelUserId);
 		    return latestEvent;
 	    }
 

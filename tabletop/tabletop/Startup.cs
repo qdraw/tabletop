@@ -53,9 +53,7 @@ namespace tabletop
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app,
-            IHostingEnvironment env,
-            ILogger<Startup> logger,
-            IServiceProvider serviceProvider)
+            IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -72,16 +70,16 @@ namespace tabletop
                 routes.MapHub<DataHub>("/datahub");
             });
 
-            app.UseMvc(ConfigureRoutes);
+	        app.UseEndpoints(ConfigureRoutes);
 
             app.UseStaticFiles();
 
         }
 
-        private static void ConfigureRoutes(IRouteBuilder routeBuilder)
+        private static void ConfigureRoutes(IEndpointRouteBuilder routeBuilder)
         {
             // Home/Index/4 > HomeController
-            routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
+            routeBuilder.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
         }
 
     }

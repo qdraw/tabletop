@@ -12,10 +12,16 @@ namespace tabletop.Models
         [Display(Name = "Channel")]
         public string Name { get; set; }
 
+        private string NameIdPrivate { get; set; }
+
         [Key]
         [MaxLength(80)]
         [Column(Order = 1)]
-        public string NameId { get; set; }
+        public string NameId
+        {
+	        get => string.IsNullOrEmpty(NameIdPrivate) ? string.Empty : NameIdPrivate;
+	        set => NameIdPrivate = value;
+        }
 
         [Required]
         [MaxLength(80)]
