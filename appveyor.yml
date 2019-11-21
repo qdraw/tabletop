@@ -10,30 +10,14 @@ branches:
 init:
   # Good practise, because Windows line endings are different from Unix/Linux ones
   - cmd: git config --global core.autocrlf true
-install:
-  # Install repo specific stuff here
-before_build:
-  # Display .NET Core version
-  - cmd: choco install codecov
-  - cmd: dotnet --version
-  - cmd: mkdir publish
-  # Display minimal restore text
-  - cmd: dotnet restore ./tabletop/tabletop/tabletop.csproj --verbosity m
-build_script:
-  # output will be in ./src/bin/debug/netcoreapp1.1/publish
-  - cmd: dotnet publish ./tabletop/tabletop/tabletop.csproj --output ./publish
-after_build:
-  # For once the build has completed
 artifacts:
- - path: './publish'
-   name: WebSite
+ - path: './linux-arm64'
+   name: tabletop-linux-arm64
    type: WebDeployPackage
 clone_depth: 1
 test_script:
-  # restore packages for our unit tests
-  - cmd: dotnet restore ./tabletop/tabletop.tests/tabletop.tests.csproj --verbosity m
-  - cmd: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover ./tabletop/tabletop.tests/tabletop.tests.csproj
-  - cmd: codecov -f ./tabletop/tabletop.tests/coverage.opencover.xml -t $(COVERALLS_REPO_TOKEN)
+  - ps: ./tabletop/cake.ps1 -target=linux-arm64
+  - cmd: codecov -f ./tabletop/tabletop.test/netcore-coverage.cobertura.xml -t $(COVERALLS_REPO_TOKEN)
 on_finish :
   # any cleanup in here
 deploy: off
