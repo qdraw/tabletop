@@ -10,6 +10,10 @@ branches:
 init:
   # Good practise, because Windows line endings are different from Unix/Linux ones
   - cmd: git config --global core.autocrlf true
+before_build:
+  # Display .NET Core version
+  - cmd: choco install codecov
+  - cmd: dotnet --version
 artifacts:
  - path: './linux-arm64'
    name: tabletop-linux-arm64
