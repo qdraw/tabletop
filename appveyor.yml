@@ -15,10 +15,10 @@ before_build:
   - cmd: choco install codecov
   - cmd: dotnet --version
   - ps: cd tabletop
-  - ps: ./build.ps1 -target=linux-arm64
+  - ps: ./build.ps1
 artifacts:
- - path: './linux-arm64'
-   name: tabletop-linux-arm64
+ - path: './tabletop/generic-netcore.zip'
+   name: tabletop-generic-netcore
    type: WebDeployPackage
 clone_depth: 1
 test_script:
