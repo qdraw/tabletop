@@ -14,7 +14,7 @@ before_build:
   # Display .NET Core version
   - cmd: choco install codecov
   - cmd: dotnet --version
-  - ps: ./tabletop/build.ps1 -target=linux-arm64
+  - ps: cd tabletop && ./build.ps1 -target=linux-arm64
 artifacts:
  - path: './linux-arm64'
    name: tabletop-linux-arm64
