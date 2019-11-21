@@ -22,7 +22,8 @@ artifacts:
    type: WebDeployPackage
 clone_depth: 1
 test_script:
-  - ps: codecov -f ./tabletop.test/netcore-coverage.cobertura.xml -t $(COVERALLS_REPO_TOKEN)
+  - cmd: dir
+  - cmd: codecov -f ./tabletop.test/netcore-coverage.cobertura.xml -t $(COVERALLS_REPO_TOKEN)
 on_finish :
   # any cleanup in here
 deploy: off
