@@ -3,4 +3,4 @@ mono: none
 dotnet: 3.0.101
 script:
   - cd tabletop
-  - ./build.sh --target="linux-arm64"
+  - ./build.sh
