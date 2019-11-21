@@ -22,19 +22,19 @@ steps:
   displayName: 'Publish code coverage from $(Build.SourcesDirectory)\tabletop\tabletop.test\netcore-coverage.cobertura.xml'
   inputs:
     codeCoverageTool: Cobertura
-    summaryFileLocation: '$(Build.SourcesDirectory)\tabletop\tabletop.test\netcore-coverage.cobertura.xml'
+    summaryFileLocation: 'tabletop\tabletop.test\netcore-coverage.cobertura.xml'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: linux-arm64'
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\tabletop\tabletop-linux-arm64.zip'
+    PathtoPublish: 'tabletop\tabletop-linux-arm64.zip'
     ArtifactName: 'linux-arm'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: generic-netcore'
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\tabletop\tabletop-generic-netcore.zip'
+    PathtoPublish: 'tabletop\tabletop-generic-netcore.zip'
     ArtifactName: 'tabletop-generic-netcore'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: coverage.report zip'
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\tabletop\tabletop.test\coverage-report.zip'
+    PathtoPublish: 'tabletop\tabletop.test\coverage-report.zip'
     ArtifactName: coverage-report
