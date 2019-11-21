@@ -11,7 +11,9 @@ pool:
 
 steps:
 - task: PowerShell@2
+  displayName: 'Cake Powershell'
   inputs:
-    filePath: '$(Build.SourcesDirectory)\tabletop\build.ps1'
-    arguments: '--Target="linux-arm64"'
+    targetType: filePath
+    filePath: './$(Build.SourcesDirectory)\tabletop\build.ps1'
+    arguments: '-ScriptArgs ''-runtime="linux-arm64"'''
     workingDirectory: '$(Build.SourcesDirectory)\tabletop\'
