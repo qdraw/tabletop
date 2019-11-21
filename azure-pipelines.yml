@@ -1,8 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - master
 
@@ -14,6 +9,26 @@ steps:
   displayName: 'Cake Powershell'
   inputs:
     targetType: filePath
-    filePath: './$(Build.SourcesDirectory)\tabletop\build.ps1'
+    filePath: './$(Build.SourcesDirectory)\tabletop\tabletop\build.ps1'
     arguments: '-ScriptArgs ''-runtime="linux-arm64"'''
-    workingDirectory: '$(Build.SourcesDirectory)\tabletop\'
+    workingDirectory: '$(Build.SourcesDirectory)\tabletop\tabletop\'
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage from $(Build.SourcesDirectory)\tabletop\tabletop.test\netcore-coverage.cobertura.xml'
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)\tabletop\tabletop.test\netcore-coverage.cobertura.xml'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: linux-arm64'
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)\tabletop\tabletop-linux-arm64.zip'
+    ArtifactName: 'linux-arm'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: generic-netcore'
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)\tabletop\tabletop-generic-netcore.zip'
+    ArtifactName: 'tabletop-generic-netcore'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: coverage.report zip'
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)\tabletop\tabletop.test\coverage-report.zip'
+    ArtifactName: coverage-report
