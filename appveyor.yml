@@ -14,13 +14,13 @@ before_build:
   # Display .NET Core version
   - cmd: choco install codecov
   - cmd: dotnet --version
+  - ps: ./tabletop/build.ps1 -target=linux-arm64
 artifacts:
  - path: './linux-arm64'
    name: tabletop-linux-arm64
    type: WebDeployPackage
 clone_depth: 1
 test_script:
-  - ps: ./tabletop/cake.ps1 -target=linux-arm64
   - cmd: codecov -f ./tabletop/tabletop.test/netcore-coverage.cobertura.xml -t $(COVERALLS_REPO_TOKEN)
 on_finish :
   # any cleanup in here
