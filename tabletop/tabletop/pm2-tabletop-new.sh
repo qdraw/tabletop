@@ -10,6 +10,8 @@ read -p "Enter: " SQLSERVERSTRING
 
 export TABLETOP_SQL=$SQLSERVERSTRING
 
+chmod +x tabletop
+
 pm2 start --name tabletop ./tabletop
 echo "tabletop started"
 
