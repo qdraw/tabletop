@@ -27,7 +27,7 @@ steps:
   displayName: 'Publish Artifact: linux-arm64'
   inputs:
     PathtoPublish: 'tabletop\tabletop-linux-arm64.zip'
-    ArtifactName: 'linux-arm'
+    ArtifactName: 'linux-arm64'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: generic-netcore'
   inputs:
