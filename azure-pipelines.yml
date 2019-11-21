@@ -6,10 +6,16 @@ pool:
 
 steps:
 - task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      ls
+    workingDirectory: './$(Build.SourcesDirectory)/tabletop'
+- task: PowerShell@2
   displayName: 'Cake Powershell'
   inputs:
     targetType: filePath
-    filePath: './$(Build.SourcesDirectory)\tabletop\tabletop\build.ps1'
+    filePath: 'tabletop\tabletop\build.ps1'
     arguments: '-ScriptArgs ''-runtime="linux-arm64"'''
     workingDirectory: '$(Build.SourcesDirectory)\tabletop\tabletop\'
 - task: PublishCodeCoverageResults@1
