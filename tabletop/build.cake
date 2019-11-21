@@ -45,7 +45,7 @@ var projectNames = new List<string>{
 
 
 var testProjectNames = new List<string>{
-    "tabletop.tests"
+    "tabletop.test"
 };
 
 // Deletes the contents of the Artifacts folder if it contains anything from a previous build.
