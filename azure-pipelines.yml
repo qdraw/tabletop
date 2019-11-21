@@ -10,14 +10,14 @@ steps:
     targetType: 'inline'
     script: |
       ls
-    workingDirectory: 'tabletop'
+    workingDirectory: 'tabletop\tabletop'
 - task: PowerShell@2
   displayName: 'Cake Powershell'
   inputs:
     targetType: filePath
-    filePath: 'tabletop\tabletop\build.ps1'
+    filePath: 'build.ps1'
     arguments: '-ScriptArgs ''-runtime="linux-arm64"'''
-    workingDirectory: '$(Build.SourcesDirectory)\tabletop\tabletop\'
+    workingDirectory: 'tabletop\tabletop\'
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage from $(Build.SourcesDirectory)\tabletop\tabletop.test\netcore-coverage.cobertura.xml'
   inputs:
