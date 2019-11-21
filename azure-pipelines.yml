@@ -10,7 +10,7 @@ steps:
     targetType: 'inline'
     script: |
       ls
-    workingDirectory: './$(Build.SourcesDirectory)'
+    workingDirectory: 'tabletop'
 - task: PowerShell@2
   displayName: 'Cake Powershell'
   inputs:
