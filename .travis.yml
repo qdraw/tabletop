@@ -1,6 +1,7 @@
 language: csharp
-mono: latest
+mono: none
 dotnet: 3.0.101
 script:
   - cd tabletop
-  - ./build.sh --target="linux-arm64"
+  - dotnet tool install --global Cake.Tool
+  - dotnet cake build.cake --target="linux-arm64"
