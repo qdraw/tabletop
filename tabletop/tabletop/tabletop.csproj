@@ -10,4 +10,12 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.1" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="pm2-tabletop-new.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="pm2-deploy-tabletop.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

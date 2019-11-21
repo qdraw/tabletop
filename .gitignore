@@ -23,8 +23,7 @@
 **/.vs*
 **/bin/release*
 
-tabletop/tabletop.tests/bin/Debug/netcoreapp2.0/
-tabletop/tabletop.tests/bin/Debug/netcoreapp*/
+tabletop/tabletop.test/bin/*
 
 
 tabletop/tabletop/bin/Debug/netcoreapp2.0/
@@ -36,4 +35,35 @@ node_modules*
 **/.idea/*
 .idea
 
-/tabletop/tabletop.tests/coverage.opencover.xml
+/tabletop/tabletop.test/coverage.opencover.xml
+
+
+**/osx.10.12-x64/*
+**/linux-arm/*
+**/linux-arm64/*
+**/win7-x86/*
+**/generic-netcore/*
+**/generic-netcore-starskyonly/*
+**/netframework-msbuild/*
+
+tabletop-linux-arm.zip
+tabletop-linux-arm64.zip
+tabletop-osx.10.12-x64.zip
+tabletop-win7-x86.zip
+tabletop-generic-netcore*.zip
+
+
+**/Cake/*
+**/tools/nuget.exe
+**/tools/packages.config*
+**/tools/Addins/*/**
+**/tools/ReportGenerator*/*
+**/tools/MSBuild.SonarQube.Runner.Tool*/*
+**/tools/OpenCoverToCoberturaConverter*/*
+**/coveragereport/*
+**/coverage.report/*
+**/coverage-report/*
+**/coverage-report.zip
+**/netcore-coverage.opencover.xml
+**/jest-coverage.cobertura.xml
+**/coverage-merge-report/*
