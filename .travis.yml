@@ -2,6 +2,5 @@ language: csharp
 mono: none
 dotnet: 3.0.101
 script:
-  - dotnet restore ./tabletop/
-  - dotnet build ./tabletop/
-  - dotnet test ./tabletop/tabletop.tests
+  - cd tabletop
+  - ./build.sh --target="linux-arm64"

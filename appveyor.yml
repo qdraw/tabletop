@@ -17,12 +17,12 @@ before_build:
   - ps: cd tabletop
   - ps: ./build.ps1
 artifacts:
- - path: './tabletop/generic-netcore.zip'
+ - path: './generic-netcore.zip'
    name: tabletop-generic-netcore
    type: WebDeployPackage
 clone_depth: 1
 test_script:
-  - cmd: codecov -f ./tabletop/tabletop.test/netcore-coverage.cobertura.xml -t $(COVERALLS_REPO_TOKEN)
+  - ps: codecov -f ./tabletop.test/netcore-coverage.cobertura.xml -t $(COVERALLS_REPO_TOKEN)
 on_finish :
   # any cleanup in here
 deploy: off
