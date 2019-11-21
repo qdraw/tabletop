@@ -15,7 +15,7 @@ steps:
   displayName: 'Cake Powershell'
   inputs:
     targetType: filePath
-    filePath: 'build.ps1'
+    filePath: 'tabletop\build.ps1'
     arguments: '-ScriptArgs ''-runtime="linux-arm64"'''
     workingDirectory: 'tabletop'
 - task: PublishCodeCoverageResults@1
