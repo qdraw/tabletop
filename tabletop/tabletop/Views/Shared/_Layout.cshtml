@@ -1,22 +1,16 @@
 ﻿<!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
     <title>@ViewBag.Title</title>
     <meta charset="utf-8" />
     <link rel="shortcut icon" type="image/png" id="dynamic-favicon" href="@Url.Content("~/")img/@ViewBag.Favicon" sizes="32x32" />
-    @Html.Partial("_Favicons")
+    @Html.PartialAsync("_Favicons").Result
     <meta name="viewport" content="width=device-width" />
     <link rel="canonical" href="@ViewBag.Canonical" />
-
     @RenderSection("head", required: false)
     <link rel="stylesheet" href="@Url.Content("~/")css/styles.css" asp-append-version="true">
-
 </head>
-
 <body>
-
     @RenderBody()
-
 </body>
 </html>
