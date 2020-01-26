@@ -39,19 +39,19 @@ namespace tabletop.tests.Controllers
 			
 			
 			var services = new ServiceCollection();
-			services.AddSingleton<IHubClients, FakeIHubClients>();
-			services.AddSingleton<IHubContext<DataHub>, FakeDataHub>();
+			// services.AddSingleton<IHubClients, FakeIHubClients>();
+			// services.AddSingleton<IHubContext<DataHub>, FakeDataHub>();
 
 			_context = new AppDbContext(options);
 			_sqlStatus = new SqlUpdateStatus(_context,_memoryCache);
 			
 			var serviceProvider = services.BuildServiceProvider();
 
-			_hubClients = serviceProvider.GetRequiredService<IHubClients>();
-			_dataHubContext = serviceProvider.GetRequiredService<IHubContext<DataHub>>();
+			// _hubClients = serviceProvider.GetRequiredService<IHubClients>();
+			// _dataHubContext = serviceProvider.GetRequiredService<IHubContext<DataHub>>();
+			
 			
 			// Add example data
-		
 			var existAccount = _sqlStatus.GetChannelUserIdByUrlSafeName("testaccount", true);
 			if(existAccount != null) return;
 			
