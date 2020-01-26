@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using tabletop.Data;
 using tabletop.Interfaces;
 using tabletop.Services;
@@ -52,8 +53,7 @@ namespace tabletop
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app,
-            IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -64,22 +64,18 @@ namespace tabletop
             app.UsePathBase("/tabletop");
 
             app.UseStatusCodePages("text/html", "Status code page, status code: {0}");
-
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<DataHub>("/datahub");
-            });
-
+           
+            app.UseRouting();
 	        app.UseEndpoints(ConfigureRoutes);
-
+	        
             app.UseStaticFiles();
-
         }
 
         private static void ConfigureRoutes(IEndpointRouteBuilder routeBuilder)
         {
             // Home/Index/4 > HomeController
             routeBuilder.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
+            routeBuilder.MapHub<DataHub>("/datahub");
         }
 
     }

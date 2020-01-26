@@ -105,11 +105,14 @@ namespace tabletop.Controllers
         [HttpGet]
         public IActionResult Export(string name, string ext)
         {
-            var getDataChannelEvents = _updateStatusContent.GetTimeSpanByName(name, new DateTime(2018, 01, 01), DateTime.Now).ToList();
-            var result = _updateStatusContent.ParseEvents(getDataChannelEvents, new DateTime(2018, 01, 01), DateTime.Now);
-
-            var bearerValid = IsBearerValid(Request, name);
-            if (!bearerValid) return BadRequest("Authorisation Error");
+	        var bearerValid = IsBearerValid(Request, name);
+	        if (!bearerValid) return BadRequest("Authorisation Error");
+	        
+	        var startExportDate = _updateStatusContent.FirstMentionByUrlSafeName(name);
+	        if ( startExportDate.Year == 0 ) return NotFound("Name does not exist");
+	        
+            var getDataChannelEvents = _updateStatusContent.GetTimeSpanByName(name, startExportDate, DateTime.Now).ToList();
+            var result = _updateStatusContent.ParseEvents(getDataChannelEvents, startExportDate, DateTime.Now);
 
             switch (ext)
             {

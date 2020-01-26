@@ -23,6 +23,13 @@ namespace tabletop.Services
             _cache = cache;
         }
 
+        public DateTime FirstMentionByUrlSafeName(string urlSafeName)
+        {
+	        var result = _context.ChannelEvent
+		        .FirstOrDefault(p => p.ChannelUser.NameUrlSafe == urlSafeName);
+	        return result?.DateTime ?? DateTime.MinValue;
+        }
+
         public IEnumerable<ChannelEvent> GetTimeSpanByName(string urlsafename, DateTime startDateTime,
             DateTime endDateTime)
         {
