@@ -12,7 +12,7 @@ Tabletop is a cloud-based, mobile-ready, event tracking system. We use it to see
   - Realtime Magic
 
 ### Technical summary
-  - .NET Core 3.0
+  - .NET Core 3.1
   - ASP.NET MVC
   - Runs on Windows, Linux and Mac OS X
   - Send events from a Arduino with a PIR-Sensor
@@ -22,7 +22,7 @@ And of course Tabletop itself is open source with a [public repository ](https:/
 
 ### Installation
 
-Tabletop requires [.NET Core](https://www.microsoft.com/net/core) v3.0 to run.
+Tabletop requires [.NET Core](https://www.microsoft.com/net/core) v3.1 to run.
 
 Install the dependencies
 ```sh
