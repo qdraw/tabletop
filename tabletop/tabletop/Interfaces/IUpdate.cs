@@ -12,6 +12,7 @@ namespace tabletop.Interfaces
         ChannelEvent AddOrUpdate(InputChannelEvent updateStatusContent);
 
 
+        DateTime FirstMentionByUrlSafeName(string urlSafeName);
         //IEnumerable<UpdateStatus> GetLastMinute(string name);
 
 

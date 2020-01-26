@@ -65,11 +65,6 @@ namespace tabletop
 
             app.UseStatusCodePages("text/html", "Status code page, status code: {0}");
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<DataHub>("/datahub");
-            });
-
 	        app.UseEndpoints(ConfigureRoutes);
 
             app.UseStaticFiles();
@@ -80,6 +75,7 @@ namespace tabletop
         {
             // Home/Index/4 > HomeController
             routeBuilder.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
+            routeBuilder.MapHub<DataHub>("/datahub");
         }
 
     }
