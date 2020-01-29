@@ -76,4 +76,4 @@ fi
 pm2 start $PM2NAME
 
 echo "!> done with deploying"
-echo "!> to warmup, you need to run: ./pm2-warmup.sh --port 4823"
+echo "!> to warmup, you need to run: ./pm2-warmup.sh --port 5145"
