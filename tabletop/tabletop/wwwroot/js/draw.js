@@ -143,9 +143,8 @@ var draw = {
 
     returnNowDate: function() {
        var now = new Date();
-       var utcTimestampUnix = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
-            now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds())/1000;
-       return utcTimestampUnix;
+		return Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+		   now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds()) / 1000;
    },
 
     drawD3: function(data) {
@@ -153,7 +152,6 @@ var draw = {
             console.log("no update");
             return;
         }
-        // console.log(data);
 
        var margin = {top: 25, right: 0, bottom: 30, left: 30},
        width = 800 + (margin.right - margin.left),
@@ -164,7 +162,6 @@ var draw = {
            .attr("viewBox", "0 0 " + (width + margin.left + margin.right+5) + " " + (height +margin.top+15));
 
        var bars = window.d3.select("#data .bars")
-           // .attr("height", height + margin.top + margin.bottom)
            .attr("fill", "#fff")
            .attr("transform","translate(" + (margin.left+20) + "," + 0 + ")")
            .selectAll("rect")
@@ -233,7 +230,10 @@ var draw = {
          .attr("x", function(d) { return x(d.label)-5; })
          .attr("width", x.bandwidth())
          .attr("y", function(d) { return y(d.weight)+5; })
-         .attr("height", function(d) { return height - y(d.weight); })
+         .attr("height", function(d) { 
+         	if(d.weight === 0) { return 0}
+         	return height - y(d.weight); 
+         })
          .on("mousemove", function(d){
              // console.log("sdf");
              window.d3.select(this).attr("fill", "#00E062");
