@@ -5,11 +5,6 @@ namespace tabletop.Data
 {
     public class AppDbContext : DbContext
     {
-        //// Contructor for testing
-        //public AppDbContext()
-        //{
-        //}
-
         public AppDbContext(DbContextOptions options) : base(options)
         {
 
@@ -22,8 +17,6 @@ namespace tabletop.Data
             modelBuilder.Entity<ChannelEvent>()
                 .HasOne(p => p.ChannelUser)
                 .WithMany(b => b.ChannelEvents);
-                //.OnDelete(deleteBehavior: DeleteBehavior.Restrict);
-
         }
     }
 
