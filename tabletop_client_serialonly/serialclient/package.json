@@ -3,18 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "serialclient.js",
-  "dependencies": {
-    "dotenv": "^8.2.0",
-    "querystring": "^0.2.0",
-    "remove": "^0.1.5",
-    "request": "^2.88.0",
-    "requests": "^0.3.0",
-    "serialport": "^8.0.6"
-  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "querystring": "^0.2.0",
+    "remove": "^0.1.5",
+    "request": "^2.88.2",
+    "serialport": "^8.0.7"
+  }
 }
