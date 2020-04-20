@@ -14,7 +14,9 @@ namespace tabletop.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ChannelEvent>()
+	        // needed for mysql:
+	        modelBuilder.Entity<ChannelUser>(entity => entity.Property(m => m.NameId).HasMaxLength(80));
+	        modelBuilder.Entity<ChannelEvent>()
                 .HasOne(p => p.ChannelUser)
                 .WithMany(b => b.ChannelEvents);
         }

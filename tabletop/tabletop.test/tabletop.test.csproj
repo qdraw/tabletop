@@ -17,4 +17,18 @@
     <ProjectReference Include="..\tabletop\tabletop.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="coverage-report\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="coverage-report\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="coverage-report\**" />
+    <None Remove="netcore-coverage.cobertura.xml" />
+    <None Remove="coverage-report.zip" />
+  </ItemGroup>
+
 </Project>
