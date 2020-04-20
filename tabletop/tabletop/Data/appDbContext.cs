@@ -5,11 +5,6 @@ namespace tabletop.Data
 {
     public class AppDbContext : DbContext
     {
-        //// Contructor for testing
-        //public AppDbContext()
-        //{
-        //}
-
         public AppDbContext(DbContextOptions options) : base(options)
         {
 
@@ -19,11 +14,11 @@ namespace tabletop.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ChannelEvent>()
+	        // needed for mysql:
+	        modelBuilder.Entity<ChannelUser>(entity => entity.Property(m => m.NameId).HasMaxLength(80));
+	        modelBuilder.Entity<ChannelEvent>()
                 .HasOne(p => p.ChannelUser)
                 .WithMany(b => b.ChannelEvents);
-                //.OnDelete(deleteBehavior: DeleteBehavior.Restrict);
-
         }
     }
 

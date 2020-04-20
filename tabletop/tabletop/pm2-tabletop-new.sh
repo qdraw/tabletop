@@ -10,6 +10,14 @@ read -p "Enter: " SQLSERVERSTRING
 
 export TABLETOP_SQL=$SQLSERVERSTRING
 
+echo "Enter the database type: sqlite, mysql, sqlserver [ENTER]:"
+echo "for example: "
+echo "sqlite"
+echo ">>>"
+read -p "Enter: " DATABASETYPE
+
+export TABLETOP_DATABASETYPE=$DATABASETYPE
+
 chmod +x tabletop
 
 pm2 start --name tabletop ./tabletop

@@ -31,13 +31,15 @@ namespace tabletop.Controllers
             var allChannelUsers = _updateStatusContent.GetAllChannelUsers()
                 .Where(p => p.IsVisible && p.IsAccessible ).ToList();
 
+            if (!allChannelUsers.Any())
+            {
+	            return BadRequest("Database connection successful; Please add a ChannelUser first to continue; You need to restart the application");
+            }
+            
             // Show default page
             if (string.IsNullOrEmpty(urlSafeName))
             {
-                if (allChannelUsers.FirstOrDefault() == null)
-                {
-                    return BadRequest("Database connection succesfull; Please add a ChannelUser first to continue");
-                }
+
 
                 var find = allChannelUsers.Find(x => x.NameUrlSafe.Contains("tafelvoetbal"));
 
