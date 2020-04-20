@@ -35,7 +35,8 @@ $ dotnet restore
 ```json
 {
     "ConnectionStrings": {
-        "DefaultConnection": "Server=tcp:database.database.windows.net,1433;Database=databasename;Persist Security Info=False;User ID=adminusername;Password=adminpassword;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+        "DefaultConnection": "Data Source=data.db",
+        "DatabaseType": "sqlite"
     }
 }
 ```
