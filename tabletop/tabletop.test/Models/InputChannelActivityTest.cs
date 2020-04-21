@@ -1,5 +1,6 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using tabletop.Dtos;
 using tabletop.Models;
 
 namespace tabletop.tests.Models
@@ -13,7 +14,7 @@ namespace tabletop.tests.Models
 			var model = new InputChannelActivity {OccurredAt = "April 21, 2020 at 10:45AM"};
 
 			var dateTime = new DateTime(2020, 04, 21, 10, 45,00);
-			Assert.AreEqual(dateTime,model.DateTime.ToLocalTime());
+			Assert.AreEqual(new DateDto().AmsterdamDateTimeToUTc(dateTime),model.DateTime);
 		}
 		
 		[TestMethod]
@@ -22,7 +23,7 @@ namespace tabletop.tests.Models
 			var model = new InputChannelActivity {OccurredAt = "April 2, 2020 at 02:15PM"};
 
 			var dateTime = new DateTime(2020, 04, 2, 14, 15,00);
-			Assert.AreEqual(dateTime,model.DateTime.ToLocalTime());
+			Assert.AreEqual(new DateDto().AmsterdamDateTimeToUTc(dateTime),model.DateTime);
 		}
 		
 		[TestMethod]
