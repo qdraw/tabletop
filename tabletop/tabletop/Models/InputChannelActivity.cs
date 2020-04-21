@@ -13,17 +13,17 @@ namespace tabletop.Models
 		/// <summary>
 		/// Number of milliseconds needed
 		/// </summary>
-		public string Value1 { get; set; }
+		public string TimeString { get; set; }
 		
 		/// <summary>
 		/// Description
 		/// </summary>
-		public string Value2 { get; set; }
+		public string Description { get; set; }
 
 		/// <summary>
 		/// Is Successful
 		/// </summary>
-		public string Value3 { get; set; }
+		public string SuccessString { get; set; }
 
 		/// <summary>
 		/// OccurredAt => Output value
@@ -50,12 +50,12 @@ namespace tabletop.Models
 		{
 			get
 			{
-				if ( string.IsNullOrWhiteSpace(Value3) )
+				if ( string.IsNullOrWhiteSpace(SuccessString) )
 				{
 					return default;
 				}
 
-				bool.TryParse(Value3, out var result);
+				bool.TryParse(SuccessString, out var result);
 				return result;
 			}
 		}
@@ -64,26 +64,14 @@ namespace tabletop.Models
 		{
 			get
 			{
-				if ( string.IsNullOrWhiteSpace(Value1)  )
+				if ( string.IsNullOrWhiteSpace(TimeString)  )
 				{
 					return default;
 				}
 
-				int.TryParse(Value1, NumberStyles.Integer, CultureInfo.InvariantCulture,
+				int.TryParse(TimeString, NumberStyles.Any, CultureInfo.InvariantCulture,
 					out var number);
 				return TimeSpan.FromMilliseconds(number);
-			}
-		}
-		
-		public string Description
-		{
-			get
-			{
-				if ( string.IsNullOrWhiteSpace(Value2)  )
-				{
-					return default;
-				}
-				return Value2;
 			}
 		}
 

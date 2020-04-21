@@ -29,21 +29,21 @@ namespace tabletop.tests.Models
 		[TestMethod]
 		public void InputChannelActivityTest_True()
 		{
-			var model = new InputChannelActivity {Value3 = "true"};
+			var model = new InputChannelActivity {SuccessString = "true"};
 			Assert.AreEqual(true,model.Success);
 		}
 		
 		[TestMethod]
 		public void InputChannelActivityTest_False()
 		{
-			var model = new InputChannelActivity {Value3 = "False"};
+			var model = new InputChannelActivity {SuccessString = "False"};
 			Assert.AreEqual(false,model.Success);
 		}
 
 		[TestMethod]
 		public void InputChannelActivityTest_TimeSpan()
 		{
-			var model = new InputChannelActivity{Value1 = "300"};
+			var model = new InputChannelActivity{TimeString = "300"};
 			Assert.AreEqual(TimeSpan.FromMilliseconds(300),model.TimeSpan);
 		}
 		
