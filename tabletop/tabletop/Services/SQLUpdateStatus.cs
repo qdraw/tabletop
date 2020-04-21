@@ -132,8 +132,6 @@ namespace tabletop.Services
 
         public ChannelUser GetChannelUserIdByUrlSafeName(string nameUrlSafe, bool internalRequest)
         {
-	        var userIdObjectIsAcces1sible = _context.ChannelUser.ToList();
-	        
             var userIdObjectIsAccessible = _context.ChannelUser.OrderByDescending(p => p.NameId)
 	            .FirstOrDefault(p => p.NameUrlSafe == nameUrlSafe);
             

@@ -40,7 +40,16 @@ namespace tabletop.Dtos
         {
             var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             // https://github.com/joeaudette/cloudscribe.SimpleContent/issues/1
-            return TimeZoneInfo.ConvertTime(inputUtcDateTime, TimeZoneInfo.Utc, TimeZoneInfo.FindSystemTimeZoneById(isWindows ? "W. Europe Standard Time" : "Europe/Berlin"));
+            return TimeZoneInfo.ConvertTime(inputUtcDateTime, TimeZoneInfo.Utc, 
+	            TimeZoneInfo.FindSystemTimeZoneById(isWindows ? "W. Europe Standard Time" : "Europe/Berlin"));
+        }
+        
+        public DateTime AmsterdamDateTimeToUTc(DateTime inputUtcDateTime)
+        {
+	        var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+	        return TimeZoneInfo.ConvertTime(inputUtcDateTime, 
+		        TimeZoneInfo.FindSystemTimeZoneById(isWindows ? "W. Europe Standard Time" : "Europe/Berlin"), 
+		        TimeZoneInfo.Utc);
         }
 
         public DateTime GetDateTime()
