@@ -1,0 +1,117 @@
+@model List<tabletop.ViewModels.LastAvailableViewModel>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>title</title>
+    
+    <style>
+    body {line-height:1.5;}
+    #dashboard-status {
+      margin-top:10px; 
+      padding-left:0px;
+    }
+    #dashboard-status ul {
+      list-style-type: none;
+      padding-left: 0px;
+    }
+    #dashboard-status > button {
+      font-size: 14px;
+      background-color: #eee;
+      color: #444;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      text-align: left;
+      border: none;
+      outline: none;
+      transition: 0.4s;
+    }
+
+    .panel {
+      padding: 0 18px;
+      background-color: white;
+      display: none;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .panel pre,        
+    .panel code{
+      word-break: break-all;
+    }
+
+    #dashboard-status > button:after {
+      content: '\02795'; /* Unicode character for "plus" sign (+) */
+      font-size: 13px;
+      color: red !important;
+      float: right;
+      margin-left: 5px;
+    }
+
+    #dashboard-status > button.active:after {
+      content: "\2796"; /* Unicode character for "minus" sign (-) */
+    }
+
+    pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+    .string { color: green; }
+    .number { color: darkorange; }
+    .boolean { color: blue; }
+    .null { color: magenta; }
+    .key { color: red; }
+
+    </style>
+</head>
+<body>
+<div id="dashboard-status">
+
+    @foreach (var item in @Model )
+    {
+        if (item.Success )
+        {
+            <button style="margin-bottom: 8px; padding: 8px; color: white; background-color: green;">
+                @item.ChannelUser.Name<br> <em> Updated: @item.DateTime</em>
+            </button>
+        }
+        else
+        {
+            <button style="margin-bottom: 8px; padding: 8px; color: white; background-color: red;">
+                @item.ChannelUser.Name<br> <em> Updated: @item.DateTime LastAvailable @item.LastAvailable</em>
+            </button>
+        }
+        <div class="panel">@item.Description</div>
+        <h2></h2>
+    }
+
+</div>
+
+    <script>
+      // now add clicks
+      var acc = document.querySelectorAll("#dashboard-status > button");
+      var i;
+
+   
+
+      for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+          /* Toggle between adding and removing the "active" class,
+          to highlight the button that controls the panel */
+          this.classList.toggle("active");
+
+          /* Toggle between hiding and showing the active panel */
+          var panel = this.nextElementSibling;
+          if (panel.style.display === "block") {
+            panel.style.display = "none";
+          } else {
+            panel.style.display = "block";
+          }
+        });
+      } 
+
+    </script>
+</body>
+</html>

@@ -15,7 +15,12 @@ namespace tabletop.Controllers
 			_activityUpdate = activityUpdate;
 			_bearerValid = bearerValid;
 		}
-		
+
+		public IActionResult Index()
+		{
+			return View(_activityUpdate.IsAvailable());
+		}
+
 		[HttpPost]
 		[Produces("application/json")]
 		public async Task<IActionResult> Add(InputChannelActivity inputModel)
