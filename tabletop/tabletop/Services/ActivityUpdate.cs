@@ -55,7 +55,9 @@ namespace tabletop.Services
 				lastResult.ChannelUser.ChannelActivities = null;
 				lastResult.ChannelUser.Bearer = null;
 
-				var lastAvailable = result.FirstOrDefault(p => p.Success).DateTime;
+				var lastAvailable = result.FirstOrDefault(p => p.Success)?.DateTime;
+				// longer than 20 times == null
+
 				parsedRecentChannelActivities.Add(new LastAvailableViewModel
 				{
 					LastAvailable = new DateDto().UtcDateTimeToAmsterdamDateTime(lastAvailable),

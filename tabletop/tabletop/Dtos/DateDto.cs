@@ -35,12 +35,15 @@ namespace tabletop.Dtos
 
             return date.Year >= 2015 ? differenceDateTime.Days : 0;
         }
-
-        public DateTime UtcDateTimeToAmsterdamDateTime(DateTime inputUtcDateTime)
+        
+        public DateTime UtcDateTimeToAmsterdamDateTime(DateTime? inputUtcDateTime)
         {
-            var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+	        DateTime updatedTime = inputUtcDateTime ?? new DateTime();
+	        if ( updatedTime.Year == 1 ) return updatedTime;  // to avoid convert issues
+
+	        var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             // https://github.com/joeaudette/cloudscribe.SimpleContent/issues/1
-            return TimeZoneInfo.ConvertTime(inputUtcDateTime, TimeZoneInfo.Utc, 
+            return TimeZoneInfo.ConvertTime(updatedTime, TimeZoneInfo.Utc, 
 	            TimeZoneInfo.FindSystemTimeZoneById(isWindows ? "W. Europe Standard Time" : "Europe/Berlin"));
         }
         
@@ -102,8 +105,6 @@ namespace tabletop.Dtos
             var delta = dt.Ticks % d.Ticks;
             return new DateTime(dt.Ticks - delta, dt.Kind);
         }
-
-
-
+        
     }
 }
