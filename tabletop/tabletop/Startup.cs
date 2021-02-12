@@ -78,6 +78,9 @@ namespace tabletop
             }
             
             services.AddScoped<IUpdate, SqlUpdateStatus>();
+            services.AddScoped<IBearerValid, BearerValid>();
+            services.AddScoped<IActivityUpdate, ActivityUpdate>();
+
             services.AddSignalR();
 
             services.AddMvc(options =>
