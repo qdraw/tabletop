@@ -12,6 +12,8 @@ namespace tabletop.Data
         public DbSet<ChannelEvent> ChannelEvent { get; set; }
         public DbSet<ChannelUser> ChannelUser { get; set; }
 
+        public DbSet<ChannelActivity> ChannelActivity { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 	        // needed for mysql:
@@ -19,6 +21,10 @@ namespace tabletop.Data
 	        modelBuilder.Entity<ChannelEvent>()
                 .HasOne(p => p.ChannelUser)
                 .WithMany(b => b.ChannelEvents);
+	        
+	        modelBuilder.Entity<ChannelActivity>()
+		        .HasOne(p => p.ChannelUser)
+		        .WithMany(b => b.ChannelActivities);
         }
     }
 
