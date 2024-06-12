@@ -6,6 +6,7 @@ using tabletop.Dtos;
 using tabletop.Hubs;
 using tabletop.Interfaces;
 using tabletop.Models;
+using tabletop.Services;
 
 // There is no ApiController class anymore since MVC and WebAPI have been merged in ASP.NET Core.
 // However, the Controller class of MVC brings in a bunch of features you probably won't need
@@ -20,11 +21,13 @@ namespace tabletop.Controllers
     {
         private readonly IUpdate _updateStatusContent;
         private readonly IHubContext<DataHub> _dataHubContext;
+        private readonly BearerValid _bearerValid;
 
         public ApiController(IUpdate updateStatusContent, IHubContext<DataHub> dataHubContext)
         {
             _updateStatusContent = updateStatusContent;
             _dataHubContext = dataHubContext;
+            _bearerValid = new BearerValid(_updateStatusContent);
         }
 
         public IActionResult Index()
@@ -105,7 +108,7 @@ namespace tabletop.Controllers
         [HttpGet]
         public IActionResult Export(string name, string ext)
         {
-	        var bearerValid = IsBearerValid(Request, name);
+	        var bearerValid = _bearerValid.IsBearerValid(Request, name);
 	        if (!bearerValid) return BadRequest("Authorisation Error");
 	        
 	        var startExportDate = _updateStatusContent.FirstMentionByUrlSafeName(name);
@@ -162,7 +165,7 @@ namespace tabletop.Controllers
 
             if (!ModelState.IsValid) return BadRequest("Model is incomplete");
 
-            var bearerValid = IsBearerValid(Request,model.Name);
+            var bearerValid = _bearerValid.IsBearerValid(Request,model.Name);
             if (!bearerValid) return BadRequest("Authorisation Error");
 
             try
@@ -182,21 +185,6 @@ namespace tabletop.Controllers
             {
                 return BadRequest("Name does not exist");
             }
-        }
-
-
-
-
-        public bool IsBearerValid(Microsoft.AspNetCore.Http.HttpRequest request, string urlSafeName)
-        {
-	        if ( ( Request.Headers["Authorization"].ToString() ?? "" ).Trim().Length <= 0 )
-		        return false;
-	        
-	        var bearer = Request.Headers["Authorization"]
-		        .ToString().Replace("Bearer ", "");
-	        var channelUser = _updateStatusContent
-		        .GetChannelUserIdByUrlSafeName(urlSafeName,true);
-	        return channelUser.Bearer == bearer;
         }
 
     }
