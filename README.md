@@ -1,5 +1,7 @@
 # Tabletop
 
+# Not maintained anymore: the project targets .NET Core 3.1 and no updates are planned
+
 Tabletop is a cloud-based, mobile-ready, event tracking system. We use it to see if the table footbal is free.
 
 ## Builds
